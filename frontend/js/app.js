@@ -1,56 +1,86 @@
-const API_URL = 'http://localhost:8000';
+import { ApiGateway } from './infrastructure/api_gateway.js';
+import { MachineConfig } from './domain/machine_config.js';
+
+const api = new ApiGateway('http://localhost:8000');
 
 async function loadConfig() {
     try {
-        const response = await fetch(`${API_URL}/config`);
-        if (response.ok) {
-            const data = await response.json();
-            document.getElementById('name').value = data.name;
-            document.getElementById('width').value = data.width;
-            document.getElementById('height').value = data.height;
-            document.getElementById('pen_up').value = data.pen_up_command;
-            document.getElementById('pen_down').value = data.pen_down_command;
+        const data = await api.getConfig();
+        document.getElementById('name').value = data.name;
+        document.getElementById('width').value = data.width;
+        document.getElementById('height').value = data.height;
+        document.getElementById('pen_up').value = data.pen_up_command;
+        document.getElementById('pen_down').value = data.pen_down_command;
+    } catch (e) {
+        console.error('Error al cargar configuración:', e);
+        // Si no es un error crítico, podemos advertir
+        if (e.message.includes('not found')) {
+            console.warn('Configuración no encontrada en el servidor.');
         }
-    } catch (error) { console.error('Error cargando config:', error); }
+    }
 }
 
 document.getElementById('configForm').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const config = {
-        name: document.getElementById('name').value,
-        width: parseFloat(document.getElementById('width').value),
-        height: parseFloat(document.getElementById('height').value),
-        pen_up_command: document.getElementById('pen_up').value,
-        pen_down_command: document.getElementById('pen_down').value,
-        feedrate_draw: 1000.0,
-        feedrate_move: 2000.0
-    };
-    
-    await fetch(`${API_URL}/config`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(config)
-    });
-    alert('Configuración guardada');
+    try {
+        const config = new MachineConfig({
+            name: document.getElementById('name').value,
+            width: document.getElementById('width').value,
+            height: document.getElementById('height').value,
+            pen_up_command: document.getElementById('pen_up').value,
+            pen_down_command: document.getElementById('pen_down').value
+        });
+        
+        await api.saveConfig(config.toDTO());
+        alert('Configuración guardada exitosamente');
+    } catch (e) {
+        console.error('Error al guardar configuración:', e);
+        alert('Error: ' + e.message);
+    }
 });
 
 document.getElementById('convertBtn').addEventListener('click', async () => {
     const file = document.getElementById('svgFile').files[0];
-    if (!file) return alert('Selecciona un SVG');
+    if (!file) {
+        console.warn('Intento de conversión sin archivo seleccionado.');
+        return alert('Selecciona un SVG primero');
+    }
     
-    const formData = new FormData();
-    formData.append('file', file);
+    try {
+        const data = await api.convertSvg(file);
+        const blob = new Blob([data.gcode], { type: 'text/plain' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'output.gcode';
+        a.click();
+        window.URL.revokeObjectURL(url);
+    } catch (e) {
+        console.error('Error en conversión de archivo:', e);
+        alert('Error al convertir SVG: ' + e.message);
+    }
+});
+
+document.getElementById('convertUrlBtn').addEventListener('click', async () => {
+    const url = document.getElementById('svgUrl').value;
+    if (!url) {
+        console.warn('Intento de conversión sin URL.');
+        return alert('Ingresa una URL');
+    }
     
-    const response = await fetch(`${API_URL}/convert`, { method: 'POST', body: formData });
-    if (!response.ok) return alert('Error en conversión');
-    
-    const data = await response.json();
-    const blob = new Blob([data.gcode], { type: 'text/plain' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'output.gcode';
-    a.click();
+    try {
+        const data = await api.convertSvgFromUrl(url);
+        const blob = new Blob([data.gcode], { type: 'text/plain' });
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = downloadUrl;
+        a.download = 'output_url.gcode';
+        a.click();
+        window.URL.revokeObjectURL(downloadUrl);
+    } catch (e) {
+        console.error('Error en conversión desde URL:', e);
+        alert('Error al convertir desde URL: ' + e.message);
+    }
 });
 
 loadConfig();

@@ -33,6 +33,19 @@ def get_config(controller: Annotated[GCodeController, Depends(get_gcode_controll
     config = controller.get_config()
     return config
 
+class UrlSchema(BaseModel):
+    url: str
+
+@router.post("/convert/url")
+def convert_svg_url(
+    data: UrlSchema,
+    controller: Annotated[GCodeController, Depends(get_gcode_controller)]
+):
+    from urllib.request import urlopen
+    with urlopen(data.url) as response:
+        content = response.read().decode("utf-8")
+    return controller.convert_svg(content)
+
 @router.post("/convert")
 async def convert_svg(
     file: Annotated[UploadFile, File()],
