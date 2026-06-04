@@ -39,5 +39,4 @@ async def convert_svg(
     controller: Annotated[GCodeController, Depends(get_gcode_controller)]
 ):
     content = await file.read()
-    # Ya no hay try-except aquí, lo maneja el Exception Handler global
     return controller.convert_svg(content.decode("utf-8"))

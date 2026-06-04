@@ -12,7 +12,10 @@ class SvgPathToolsParser(VectorParser):
         self.wrapper = wrapper
 
     def parse_svg(self, svg_content: str) -> List[DomainPath]:
-        paths = self.wrapper.get_paths_from_str(svg_content)
+        try:
+            paths = self.wrapper.get_paths_from_str(svg_content)
+        except Exception as e:
+            raise ValueError(f"Failed to parse SVG: {str(e)}")
         
         domain_paths: List[DomainPath] = []
         for path in paths:
