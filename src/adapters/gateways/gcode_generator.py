@@ -4,15 +4,19 @@ Path: src/adapters/gateways/gcode_generator.py
 
 from typing import Tuple, List
 from src.application.boundaries.gateways import GCodeGenerator
+from src.application.boundaries.infrastructure_interfaces import GCodeLibraryWrapper
 from src.domain.entities.machine_config import Path, MachineConfig
 
 class PyGCodeGenerator(GCodeGenerator):
+    def __init__(self, wrapper: GCodeLibraryWrapper):
+        self.wrapper = wrapper
+
     def generate(self, paths: List[Path], config: MachineConfig) -> str:
         gcode_lines: List[str] = [
-            f'G21 ; Units in mm',
-            f'G90 ; Absolute coordinates',
-            f'G0 F{config.feedrate_move}',
-            f'G1 F{config.feedrate_draw}'
+            self.wrapper.format_line("G21") + " " + self.wrapper.get_comment("Units in mm"),
+            self.wrapper.format_line("G90") + " " + self.wrapper.get_comment("Absolute coordinates"),
+            self.wrapper.format_line("G0", {"F": config.feedrate_move}),
+            self.wrapper.format_line("G1", {"F": config.feedrate_draw})
         ]
 
         scale: float = 1.0
@@ -31,21 +35,17 @@ class PyGCodeGenerator(GCodeGenerator):
         for path in paths:
             if not path.points:
                 continue
-            
             first = path.points[0]
             fx, fy = self._transform(first.x, first.y, scale, config)
-            
             gcode_lines.append(config.pen_up_command)
-            gcode_lines.append(f'G0 X{fx:.3f} Y{fy:.3f}')
+            gcode_lines.append(self.wrapper.format_line("G0", {"X": fx, "Y": fy}))
             gcode_lines.append(config.pen_down_command)
-            
             for p in path.points[1:]:
                 tx, ty = self._transform(p.x, p.y, scale, config)
-                gcode_lines.append(f'G1 X{tx:.3f} Y{ty:.3f}')
-            
+                gcode_lines.append(self.wrapper.format_line("G1", {"X": tx, "Y": ty}))
             gcode_lines.append(config.pen_up_command)
 
-        gcode_lines.append('G0 X0 Y0 ; Return home')
+        gcode_lines.append(self.wrapper.format_line("G0", {"X": 0, "Y": 0}) + " " + self.wrapper.get_comment("Return home"))
         return '\n'.join(gcode_lines)
 
     def _transform(self, x: float, y: float, scale: float, config: MachineConfig) -> Tuple[float, float]:
