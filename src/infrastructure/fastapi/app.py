@@ -5,8 +5,9 @@ Path: src/infrastructure/fastapi/app.py
 from typing import Dict, Any
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from src.infrastructure.fastapi.routes import router as gcode_router
 from src.infrastructure.database.models import init_db
 from src.infrastructure.settings.config import settings
@@ -36,6 +37,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Servir archivos estáticos del frontend
+app.mount("/js", StaticFiles(directory="frontend/js"), name="js")
+app.mount("/css", StaticFiles(directory="frontend/css"), name="css")
+
 @app.exception_handler(ValueError)
 async def value_error_handler(request: Request, exc: ValueError) -> JSONResponse:
     logger.warning(f"Value Error: {exc}")
@@ -53,6 +58,10 @@ async def type_error_handler(request: Request, exc: TypeError) -> JSONResponse:
     )
 
 @app.get("/")
+def serve_frontend():
+    return FileResponse("frontend/index.html")
+
+@app.get("/health")
 def health_check() -> Dict[str, Any]:
     return {
         "status": "online", 
