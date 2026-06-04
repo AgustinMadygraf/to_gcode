@@ -33,6 +33,6 @@ class GCodeController:
             "scale_to_fit": config.scale_to_fit
         }
 
-    def convert_svg(self, svg_content: str) -> Dict[str, str]:
-        gcode = self.converter.execute(svg_content)
+    def convert_svg(self, svg_content: str, test_mode: bool = False) -> Dict[str, str]:
+        gcode = self.converter.execute(svg_content, test_mode=test_mode)
         return {"gcode": gcode}

@@ -13,7 +13,6 @@ async function loadConfig() {
         document.getElementById('pen_down').value = data.pen_down_command;
     } catch (e) {
         console.error('Error al cargar configuración:', e);
-        // Si no es un error crítico, podemos advertir
         if (e.message.includes('not found')) {
             console.warn('Configuración no encontrada en el servidor.');
         }
@@ -41,13 +40,14 @@ document.getElementById('configForm').addEventListener('submit', async (e) => {
 
 document.getElementById('convertBtn').addEventListener('click', async () => {
     const file = document.getElementById('svgFile').files[0];
+    const testMode = document.getElementById('testMode').checked;
     if (!file) {
         console.warn('Intento de conversión sin archivo seleccionado.');
         return alert('Selecciona un SVG primero');
     }
     
     try {
-        const data = await api.convertSvg(file);
+        const data = await api.convertSvg(file, testMode);
         const blob = new Blob([data.gcode], { type: 'text/plain' });
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -63,13 +63,14 @@ document.getElementById('convertBtn').addEventListener('click', async () => {
 
 document.getElementById('convertUrlBtn').addEventListener('click', async () => {
     const url = document.getElementById('svgUrl').value;
+    const testMode = document.getElementById('testMode').checked;
     if (!url) {
         console.warn('Intento de conversión sin URL.');
         return alert('Ingresa una URL');
     }
     
     try {
-        const data = await api.convertSvgFromUrl(url);
+        const data = await api.convertSvgFromUrl(url, testMode);
         const blob = new Blob([data.gcode], { type: 'text/plain' });
         const downloadUrl = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
