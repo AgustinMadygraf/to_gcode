@@ -1,0 +1,38 @@
+import pytest
+from unittest.mock import MagicMock
+from src.adapters.gateways.machine_config_repository import SQLAlchemyMachineConfigRepository
+from src.domain.entities.machine_config import MachineConfig
+
+@pytest.fixture
+def mock_provider():
+    return MagicMock()
+
+@pytest.fixture
+def repo(mock_provider):
+    return SQLAlchemyMachineConfigRepository(provider=mock_provider)
+
+def test_get_config_calls_provider(repo, mock_provider):
+    mock_provider.find_first.return_value = {
+        "name": "test", "width": 100.0, "height": 100.0,
+        "pen_up_command": "M5", "pen_down_command": "M3",
+        "feedrate_draw": 10.0, "feedrate_move": 10.0,
+        "invert_y": True, "scale_to_fit": True
+    }
+    
+    config = repo.get_config()
+    
+    mock_provider.find_first.assert_called_once()
+    assert config.name == "test"
+
+def test_save_config_calls_provider(repo, mock_provider):
+    config = MachineConfig(
+        name="test", width=100.0, height=100.0,
+        pen_up_command="M5", pen_down_command="M3",
+        feedrate_draw=10.0, feedrate_move=10.0
+    )
+    repo.save_config(config)
+    
+    assert mock_provider.upsert.called
+    args = mock_provider.upsert.call_args[0]
+    assert args[0] == "test"
+    assert args[1]["width"] == 100.0

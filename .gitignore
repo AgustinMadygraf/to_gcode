@@ -3,3 +3,6 @@ docs/TMP.md
 __pycache__/
 .env
 .coverage
+!data/.gitkeep
+data/*
+!data/.gitkeep
