@@ -1,10 +1,12 @@
-# TODO - to_gcode
+# Lista de Tareas (TODO)
 
-## Fase 7: Frontend (HTML + Bootstrap + Vanilla JS)
-- [ ] Implementar estructura HTML.
-- [ ] Implementar lógica de cliente JS (fetch API).
-- [ ] Integrar con Backend.
+## Completado
+- [x] Refactorizar frontend a Bootstrap 5.
+- [x] Implementar Arquitectura Limpia en frontend (ES Modules).
+- [x] Implementar soporte de conversión desde URL.
+- [x] Implementar "Modo Test" (truncado a 100 líneas).
+- [x] Centralizar manejo de errores y logging en UI.
 
-## Fase 8: Evolución (V2.0)
-- [ ] Implementar Path Ordering (Optimización de saltos de pen).
-- [ ] Soporte para múltiples capas/colores.
+## Pendiente
+- [ ] Implementar previsualización de SVG en el navegador (Análisis en docs/TMP.md).
+- [ ] Mejorar la validación de la configuración de máquina con Zod (opcional).

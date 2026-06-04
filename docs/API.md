@@ -1,23 +1,16 @@
-# Documentación de la API - to_gcode
-
-## Visión General
-Esta API permite configurar parámetros de máquina plotter y convertir archivos SVG a G-code siguiendo Clean Architecture.
+# API Documentation
 
 ## Endpoints
 
 ### 1. Configuración
-- **POST /config**: Establece o actualiza la configuración de la máquina.
-  - Payload: ConfigSchema (name, width, height, etc.)
-  - Respuesta: 201 Created
-- **GET /config**: Recupera la configuración actual.
-  - Respuesta: 200 OK + ConfigSchema
+- GET /config: Obtiene la configuración actual de la máquina.
+- POST /config: Guarda la configuración de la máquina.
 
 ### 2. Conversión
-- **POST /convert**: Convierte un archivo SVG subido.
-  - Payload: Multipart file (file)
-  - Respuesta: 200 OK + {"gcode": "..."}
-  - Error: 400 Bad Request (SVG inválido o configuración no encontrada)
+- POST /convert: Convierte un archivo SVG local a GCode.
+    - Multipart form: file (SVG), test_mode (boolean, optional).
+- POST /convert/url: Convierte un SVG desde una URL remota a GCode.
+    - JSON: {"url": "...", "test_mode": boolean}.
 
-## Acceso Interactivo
-- **Swagger UI**: /docs
-- **ReDoc**: /redoc
+## Notas
+- El parámetro test_mode=true trunca la salida a las primeras 100 líneas.
