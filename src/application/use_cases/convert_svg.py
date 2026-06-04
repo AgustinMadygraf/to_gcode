@@ -6,7 +6,6 @@ from src.application.boundaries.gateways import VectorParser, GCodeGenerator
 from src.application.boundaries.machine_config_repository import MachineConfigRepository
 
 class ConvertSVGToGCode:
-    "Caso de uso para convertir un archivo SVG a G-code."
     def __init__(
         self, 
         parser: VectorParser, 
