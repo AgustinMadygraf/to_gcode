@@ -3,7 +3,7 @@ Path: src/infrastructure/database/persistence_impl.py
 """
 
 from typing import Optional, Dict, Any
-from sqlalchemy import select
+from sqlalchemy import select, update
 from sqlalchemy.orm import Session
 from src.application.boundaries.infrastructure_interfaces import ConfigPersistenceProvider
 from src.infrastructure.database.models import MachineConfigModel
@@ -15,13 +15,13 @@ class SQLAlchemyConfigProvider(ConfigPersistenceProvider):
 
     def find_first(self) -> Optional[Dict[str, Any]]:
         logger.debug("Fetching first machine configuration from database.")
-        # Usamos select() para mejor inferencia de tipos en SQLAlchemy 2.0
         stmt = select(MachineConfigModel)
         model = self.session.execute(stmt).scalar_one_or_none()
         
         if not model:
             return None
             
+        # Convertimos el modelo a dict de forma explícita
         return {
             "name": model.name,
             "width": model.width,
@@ -41,10 +41,11 @@ class SQLAlchemyConfigProvider(ConfigPersistenceProvider):
         
         if model:
             logger.debug(f"Updating existing record for {name}.")
-            for key, value in data.items():
-                setattr(model, key, value)
+            # Usar update directo es más eficiente y seguro
+            update_stmt = update(MachineConfigModel).where(MachineConfigModel.name == name).values(**data)
+            self.session.execute(update_stmt)
         else:
             logger.debug(f"Creating new record for {name}.")
-            model = MachineConfigModel(name=name, **data)
-            self.session.add(model)
+            new_model = MachineConfigModel(name=name, **data)
+            self.session.add(new_model)
         self.session.commit()
