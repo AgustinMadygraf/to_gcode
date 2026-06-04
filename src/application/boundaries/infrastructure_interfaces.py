@@ -22,3 +22,12 @@ class GCodeLibraryWrapper(ABC):
     @abstractmethod
     def get_comment(self, text: str) -> str:
         pass
+
+class ConfigPersistenceProvider(ABC):
+    @abstractmethod
+    def find_first(self) -> Optional[Dict[str, Any]]:
+        pass
+
+    @abstractmethod
+    def upsert(self, name: str, data: Dict[str, Any]) -> None:
+        pass
