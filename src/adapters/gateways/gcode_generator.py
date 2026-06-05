@@ -1,11 +1,15 @@
 from typing import List, Optional, Dict
 from src.application.boundaries.gateways import GCodeGenerator
 from src.application.boundaries.infrastructure_interfaces import GCodeLibraryWrapper
-from src.domain.entities.geometry import Path, Point, Arc
+from src.domain.entities.geometry import Path
 from src.domain.entities.machine_config import MachineConfig
 from src.domain.services.geometry_service import GeometryService
 
 class PyGCodeGenerator(GCodeGenerator):
+    """
+    Adaptador purificado para generación de G-Code. 
+    Su única responsabilidad es traducir objetos del dominio a sintaxis técnica.
+    """
     def __init__(
         self, 
         wrapper: GCodeLibraryWrapper, 
@@ -20,6 +24,7 @@ class PyGCodeGenerator(GCodeGenerator):
         self.last_modal_command: Optional[str] = None
 
     def _format_modal(self, command: str, params: Optional[Dict[str, float]] = None) -> str:
+        """Maneja comandos modales de G-Code (G0, G1, etc.) para evitar repeticiones."""
         if command == self.last_modal_command:
             if params:
                 return " ".join([f"{k}{v:.3f}" for k, v in params.items()])
@@ -27,18 +32,6 @@ class PyGCodeGenerator(GCodeGenerator):
 
         self.last_modal_command = command
         return self.wrapper.format_line(command, params)
-
-    def _simplify_path(self, points: List[Point]) -> List[Point]:
-        if len(points) < 3:
-            return points
-        
-        simplified = [points[0]]
-        for i in range(1, len(points) - 1):
-            p1, p2, p3 = points[i-1], points[i], points[i+1]
-            if abs((p2.y - p1.y) * (p3.x - p2.x) - (p2.x - p1.x) * (p3.y - p2.y)) > 1e-9:
-                simplified.append(p2)
-        simplified.append(points[-1])
-        return simplified
 
     def generate(self, paths: List[Path], config: MachineConfig) -> str:
         self.last_modal_command = None
@@ -53,20 +46,22 @@ class PyGCodeGenerator(GCodeGenerator):
         self.last_modal_command = "G1" 
 
         for path in paths:
-            if not path.points:
+            if path.is_empty:
                 continue
 
-            simplified_points = self._simplify_path(path.points)
+            # La simplificación ahora es responsabilidad del dominio
+            domain_path = path.simplified()
+            points = domain_path.points
             
+            # Orquestación de traducción a G-Code
             gcode_lines.append(config.pen_up_command)
-            gcode_lines.append(self._format_modal("G0", {"X": simplified_points[0].x, "Y": simplified_points[0].y}))
+            gcode_lines.append(self._format_modal("G0", {"X": points[0].x, "Y": points[0].y}))
             gcode_lines.append(config.pen_down_command)
 
-            # Usar el servicio para detectar si el segmento es un arco
-            arc = self.geometry_service.fit_arc(simplified_points, self.arc_tolerance)
+            # Intento de ajuste de arco (Lógica de dominio vía servicio)
+            arc = self.geometry_service.fit_arc(points, self.arc_tolerance)
             
             if arc:
-                # Generar G2 (sentido horario por defecto en nuestra lógica simple)
                 gcode_lines.append(self._format_modal("G2", {
                     "X": arc.end_point.x, 
                     "Y": arc.end_point.y, 
@@ -74,7 +69,7 @@ class PyGCodeGenerator(GCodeGenerator):
                     "J": arc.center.y - arc.start_point.y
                 }))
             else:
-                for p in simplified_points[1:]:
+                for p in points[1:]:
                     gcode_lines.append(self._format_modal("G1", {"X": p.x, "Y": p.y}))
             
             gcode_lines.append(config.pen_up_command)

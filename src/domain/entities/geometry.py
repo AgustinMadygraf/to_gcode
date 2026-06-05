@@ -59,7 +59,6 @@ class ArcSegment(Segment):
 class Path:
     """
     Representa una trayectoria compuesta por puntos y/o segmentos.
-    Mantiene compatibilidad con la lista de puntos mientras evoluciona.
     """
     points: List[Point]
     segments: Optional[List[Segment]] = None
@@ -89,6 +88,24 @@ class Path:
         for i in range(len(self.points) - 1):
             dist += self.points[i].distance_to(self.points[i+1])
         return dist
+
+    def simplified(self, tolerance: float = 1e-9) -> 'Path':
+        """
+        Retorna una versión simplificada de la trayectoria eliminando puntos colineales.
+        Lógica de dominio movida desde el adaptador.
+        """
+        if len(self.points) < 3:
+            return self
+        
+        simplified_points = [self.points[0]]
+        for i in range(1, len(self.points) - 1):
+            p1, p2, p3 = self.points[i-1], self.points[i], self.points[i+1]
+            # Cálculo de área de triángulo (colinealidad)
+            area = abs((p2.y - p1.y) * (p3.x - p2.x) - (p2.x - p1.x) * (p3.y - p2.y))
+            if area > tolerance:
+                simplified_points.append(p2)
+        simplified_points.append(self.points[-1])
+        return Path(points=simplified_points, segments=self.segments, arc_info=self.arc_info)
 
     def reversed(self) -> 'Path':
         return Path(points=self.points[::-1], arc_info=self.arc_info)

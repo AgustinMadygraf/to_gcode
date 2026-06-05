@@ -1,15 +1,12 @@
-"""
-Path: src/adapters/gateways/svg_parser.py
-"""
-
 from typing import List
 from src.application.boundaries.gateways import VectorParser
 from src.application.boundaries.infrastructure_interfaces import SvgLibraryWrapper
-from src.domain.entities.geometry import Path as DomainPath, Point
+from src.domain.entities.geometry import Path as DomainPath
 
 class SvgPathToolsParser(VectorParser):
-    def __init__(self, wrapper: SvgLibraryWrapper):
+    def __init__(self, wrapper: SvgLibraryWrapper, sampling_resolution: int = 50):
         self.wrapper = wrapper
+        self.sampling_resolution = sampling_resolution
 
     def parse_svg(self, svg_content: str) -> List[DomainPath]:
         try:
@@ -19,10 +16,7 @@ class SvgPathToolsParser(VectorParser):
         
         domain_paths: List[DomainPath] = []
         for path in paths:
-            points: List[Point] = []
-            NUM_SAMPLES = 50 
-            samples = self.wrapper.sample_path(path, NUM_SAMPLES)
-            for pos in samples:
-                points.append(Point(x=float(pos.real), y=float(pos.imag)))
+            # El adaptador ya no sabe que existen números complejos
+            points = self.wrapper.sample_path_to_domain(path, self.sampling_resolution)
             domain_paths.append(DomainPath(points=points))
         return domain_paths

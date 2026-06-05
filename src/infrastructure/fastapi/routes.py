@@ -1,49 +1,61 @@
-"""
-Path: src/infrastructure/fastapi/routes.py
-"""
-
-from typing import Annotated
-from fastapi import APIRouter, UploadFile, File, Depends
+from fastapi import APIRouter, UploadFile, File, Depends, HTTPException
 from src.adapters.controllers.gcode_controller import GCodeController
 from src.infrastructure.fastapi.dependencies import get_gcode_controller
-from src.infrastructure.pydantic.schemas import ConfigSchema, UrlSchema
+from src.infrastructure.pydantic.schemas import ConfigSchema
+from src.infrastructure.settings.logger import logger
 
 router = APIRouter()
 
 @router.post("/config", status_code=201)
 def set_config(
-    config: ConfigSchema, 
-    controller: Annotated[GCodeController, Depends(get_gcode_controller)]
+    config: ConfigSchema,
+    controller: GCodeController = Depends(get_gcode_controller)
 ):
-    return controller.set_config(config.model_dump())
+    try:
+        data = config.model_dump()
+        # Normalización técnica pre-entrada al núcleo
+        if data.get('max_x') is None or data.get('max_x') == 0:
+            data['max_x'] = data.get('width')
+        if data.get('max_y') is None or data.get('max_y') == 0:
+            data['max_y'] = data.get('height')
+            
+        return controller.set_config(data)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        logger.error(f"Unexpected Error: {str(e)}")
+        raise HTTPException(status_code=500, detail="Internal Server Error")
 
 @router.get("/config")
-def get_config(controller: Annotated[GCodeController, Depends(get_gcode_controller)]):
-    config = controller.get_config()
-    return config
+def get_config(controller: GCodeController = Depends(get_gcode_controller)):
+    config_output = controller.get_config()
+    if not config_output:
+        raise HTTPException(status_code=404, detail="Config not found")
+    
+    # El router recibe el formato ya procesado por el Presenter
+    return config_output
 
 @router.post("/convert")
 async def convert_svg(
-    file: Annotated[UploadFile, File()],
-    controller: Annotated[GCodeController, Depends(get_gcode_controller)]
+    file: UploadFile = File(...),
+    controller: GCodeController = Depends(get_gcode_controller)
 ):
+    if not file.filename or not file.filename.endswith('.svg'):
+        raise HTTPException(status_code=400, detail="Only SVG files allowed")
+    
     content = await file.read()
-    return controller.convert_svg(content.decode("utf-8"))
+    try:
+        return controller.convert_svg(content.decode("utf-8"))
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
-@router.post("/convert/image")
+@router.post("/convert-image")
 async def convert_image(
-    file: Annotated[UploadFile, File()],
-    controller: Annotated[GCodeController, Depends(get_gcode_controller)]
+    file: UploadFile = File(...),
+    controller: GCodeController = Depends(get_gcode_controller)
 ):
     content = await file.read()
-    return controller.convert_image(content)
-
-@router.post("/convert/url")
-def convert_svg_url(
-    data: UrlSchema,
-    controller: Annotated[GCodeController, Depends(get_gcode_controller)]
-):
-    from urllib.request import urlopen
-    with urlopen(data.url) as response:
-        content = response.read().decode("utf-8")
-    return controller.convert_svg(content)
+    try:
+        return controller.convert_image(content)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))

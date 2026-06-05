@@ -1,9 +1,26 @@
-"""
-Path: src/application/boundaries/infrastructure_interfaces.py
-"""
-
 from abc import ABC, abstractmethod
-from typing import List, Any, Dict, Optional, Generator
+from typing import List, Any, Dict, Optional, Generator, Protocol, runtime_checkable
+from src.domain.entities.geometry import Point
+
+# --- Protocols para desacoplamiento técnico ---
+
+@runtime_checkable
+class ImageLike(Protocol):
+    @property
+    def shape(self) -> tuple[int, ...]: ...
+    def __getitem__(self, key: Any) -> Any: ...
+
+class SkeletonAbstraction(ABC):
+    @property
+    @abstractmethod
+    def width(self) -> int: ...
+    @property
+    @abstractmethod
+    def height(self) -> int: ...
+    @abstractmethod
+    def is_pixel_on(self, x: int, y: int) -> bool: ...
+
+# --- Interfaces de Wrappers ---
 
 class SvgLibraryWrapper(ABC):
     @abstractmethod
@@ -11,7 +28,13 @@ class SvgLibraryWrapper(ABC):
         pass
 
     @abstractmethod
-    def sample_path(self, path: Any, num_samples: int) -> List[complex]:
+    def sample_path_to_domain(self, path: Any, num_samples: int) -> List[Point]:
+        """Contrato mejorado: devuelve tipos de dominio, no tipos de librería."""
+        pass
+
+class RasterImageProcessor(ABC):
+    @abstractmethod
+    def process_image_to_skeleton(self, image_bytes: bytes) -> SkeletonAbstraction:
         pass
 
 class GCodeLibraryWrapper(ABC):
@@ -32,36 +55,7 @@ class ConfigPersistenceProvider(ABC):
     def upsert(self, name: str, data: Dict[str, Any]) -> None:
         pass
 
-class SkeletonAbstraction(ABC):
-    @abstractmethod
-    def is_set(self, r: int, c: int) -> bool:
-        pass
-
-    @property
-    @abstractmethod
-    def rows(self) -> int:
-        pass
-
-    @property
-    @abstractmethod
-    def cols(self) -> int:
-        pass
-
 class DatabaseSessionProvider(ABC):
     @abstractmethod
     def get_session(self) -> Generator[Any, None, None]:
-        pass
-
-from typing import Protocol, Tuple, Any
-
-class ImageLike(Protocol):
-    @property
-    def shape(self) -> Tuple[int, ...]:
-        ...
-    def __getitem__(self, key: Any) -> Any:
-        ...
-
-class RasterImageProcessor(ABC):
-    @abstractmethod
-    def process_image_to_skeleton(self, image_bytes: bytes) -> SkeletonAbstraction:
         pass

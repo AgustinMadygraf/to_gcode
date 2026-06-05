@@ -3,8 +3,13 @@ from src.application.use_cases.convert_svg import ConvertSVGToGCode
 from src.application.use_cases.convert_image import ConvertImageToGCode
 from src.application.boundaries.machine_config_repository import MachineConfigRepository
 from src.domain.entities.machine_config import MachineConfig
+from src.adapters.presenters.config_presenter import ConfigPresenter
 
 class GCodeController:
+    """
+    Controlador de Excelencia Técnica. 
+    Agnóstico a librerías, formatos de salida complejos y normalización técnica.
+    """
     def __init__(
         self, 
         svg_converter: ConvertSVGToGCode, 
@@ -16,12 +21,6 @@ class GCodeController:
         self.repo = repo
 
     def set_config(self, config_data: Dict[str, Any]) -> Dict[str, str]:
-        # Asegurar valores por defecto para max_x y max_y si no vienen en el payload
-        if 'max_x' not in config_data:
-            config_data['max_x'] = config_data.get('width', 0.0)
-        if 'max_y' not in config_data:
-            config_data['max_y'] = config_data.get('height', 0.0)
-            
         entity = MachineConfig(**config_data)
         self.repo.save_config(entity)
         return {"message": "Config saved"}
@@ -30,19 +29,9 @@ class GCodeController:
         config = self.repo.get_config()
         if not config:
             return None
-        return {
-            "name": config.name,
-            "width": config.width,
-            "height": config.height,
-            "max_x": config.max_x,
-            "max_y": config.max_y,
-            "pen_up_command": config.pen_up_command,
-            "pen_down_command": config.pen_down_command,
-            "feedrate_draw": config.feedrate_draw,
-            "feedrate_move": config.feedrate_move,
-            "invert_y": config.invert_y,
-            "scale_to_fit": config.scale_to_fit
-        }
+        
+        # Delegamos el formateo al Presenter
+        return ConfigPresenter.to_http(config)
 
     def convert_svg(self, svg_content: str) -> Dict[str, str]:
         gcode = self.svg_converter.execute(svg_content)
