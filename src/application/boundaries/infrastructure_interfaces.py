@@ -17,6 +17,15 @@ class SkeletonAbstraction(ABC):
     @property
     @abstractmethod
     def height(self) -> int: ...
+    
+    # Compatibilidad con implementación original
+    @property
+    @abstractmethod
+    def rows(self) -> int: ...
+    @property
+    @abstractmethod
+    def cols(self) -> int: ...
+    
     @abstractmethod
     def is_pixel_on(self, x: int, y: int) -> bool: ...
 
