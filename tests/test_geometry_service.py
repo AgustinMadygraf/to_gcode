@@ -2,7 +2,7 @@ import pytest
 import math
 from src.domain.services.geometry_service import GeometryService
 from src.infrastructure.math.geometry_wrapper import GeometryWrapper
-from src.domain.entities.geometry import Point
+from src.domain.entities.geometry import Point, Arc
 
 def test_get_circle_from_three_points():
     p1 = Point(x=0.0, y=1.0)
@@ -34,8 +34,6 @@ def test_fit_arc_simple_circle():
     arc = service.fit_arc(points, 0.01)
     
     assert arc is not None
-    # Adjust check for new structure
-    def get_radius(a):
-        return a["radius"]
-        
-    assert math.isclose(get_radius(arc), 1.0, abs_tol=0.05)
+    assert isinstance(arc, Arc)
+    assert math.isclose(arc.radius, 1.0, abs_tol=0.05)
+    assert isinstance(arc.center, Point)

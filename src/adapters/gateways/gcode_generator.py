@@ -1,7 +1,7 @@
 from typing import List, Optional, Dict
 from src.application.boundaries.gateways import GCodeGenerator
 from src.application.boundaries.infrastructure_interfaces import GCodeLibraryWrapper
-from src.domain.entities.geometry import Path, Point
+from src.domain.entities.geometry import Path, Point, Arc
 from src.domain.entities.machine_config import MachineConfig
 from src.domain.services.geometry_service import GeometryService
 
@@ -62,12 +62,17 @@ class PyGCodeGenerator(GCodeGenerator):
             gcode_lines.append(self._format_modal("G0", {"X": simplified_points[0].x, "Y": simplified_points[0].y}))
             gcode_lines.append(config.pen_down_command)
 
-            arc_fit = self.geometry_service.fit_arc(simplified_points, self.arc_tolerance)
+            # Usar el servicio para detectar si el segmento es un arco
+            arc = self.geometry_service.fit_arc(simplified_points, self.arc_tolerance)
             
-            if arc_fit and "center" in arc_fit:
-
-                end_point = arc_fit["points"][-1]
-                gcode_lines.append(self._format_modal("G2", {"X": end_point.x, "Y": end_point.y, "I": arc_fit["center"].x - simplified_points[0].x, "J": arc_fit["center"].y - simplified_points[0].y}))
+            if arc:
+                # Generar G2 (sentido horario por defecto en nuestra lógica simple)
+                gcode_lines.append(self._format_modal("G2", {
+                    "X": arc.end_point.x, 
+                    "Y": arc.end_point.y, 
+                    "I": arc.center.x - arc.start_point.x, 
+                    "J": arc.center.y - arc.start_point.y
+                }))
             else:
                 for p in simplified_points[1:]:
                     gcode_lines.append(self._format_modal("G1", {"X": p.x, "Y": p.y}))
