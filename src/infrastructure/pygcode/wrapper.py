@@ -18,9 +18,9 @@ class PyGCodeWrapper(GCodeLibraryWrapper):
         elif command == "G1":
             line = pg.gcodes.GCodeLinearMove(**(params or {}))
         elif command == "G2":
-            line = pg.gcodes.GCodeArcMove(arc_direction="CW", **(params or {}))
+            line = pg.gcodes.GCodeArcMoveCW(**(params or {}))
         elif command == "G3":
-            line = pg.gcodes.GCodeArcMove(arc_direction="CCW", **(params or {}))
+            line = pg.gcodes.GCodeArcMoveCCW(**(params or {}))
         elif command == "G21":
             line = pg.gcodes.GCodeUseMillimeters()
         elif command == "G90":

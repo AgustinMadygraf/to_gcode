@@ -19,7 +19,7 @@ class ConvertImageToGCode:
         self.repo = repo
         self.geometry_service = geometry_service
 
-    def execute(self, image_bytes: bytes, test_mode: bool = False) -> str:
+    def execute(self, image_bytes: bytes) -> str:
         config = self.repo.get_config()
         if not config:
             raise ValueError("Machine configuration not found")
@@ -27,9 +27,4 @@ class ConvertImageToGCode:
         raw_paths = self.parser.parse_image(image_bytes)
 
         transformed_paths = self.geometry_service.transform_paths(raw_paths, config)
-        gcode = self.generator.generate(transformed_paths, config)
-
-        if test_mode:
-            gcode = "\n".join(gcode.splitlines()[:100])
-
-        return gcode
+        return self.generator.generate(transformed_paths, config)

@@ -8,9 +8,11 @@
 
 ### 2. Conversión
 - POST /convert: Convierte un archivo SVG local a GCode.
-    - Multipart form: file (SVG), test_mode (boolean, optional).
+    - Multipart form: file (SVG).
+- POST /convert/image: Convierte un archivo de imagen local a GCode.
+    - Multipart form: file (Image).
 - POST /convert/url: Convierte un SVG desde una URL remota a GCode.
-    - JSON: {"url": "...", "test_mode": boolean}.
+    - JSON: {"url": "..."}.
 
 ## Notas
-- El parámetro test_mode=true trunca la salida a las primeras 100 líneas.
+- El comportamiento de truncamiento de G-code está ahora configurado exclusivamente a través de variables de entorno del servidor (GCODE_TRUNCATE_LIMIT) y no es controlado por la API.

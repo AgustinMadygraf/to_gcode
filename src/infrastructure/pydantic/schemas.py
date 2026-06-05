@@ -17,4 +17,3 @@ class ConfigSchema(BaseModel):
 
 class UrlSchema(BaseModel):
     url: str
-    test_mode: bool = False

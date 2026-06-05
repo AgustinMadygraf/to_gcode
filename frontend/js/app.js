@@ -44,14 +44,13 @@ document.getElementById("configForm").addEventListener("submit", async (e) => {
 
 document.getElementById("convertBtn").addEventListener("click", async () => {
     const file = document.getElementById("svgFile").files[0];
-    const testMode = document.getElementById("testMode").checked;
     if (!file) {
         console.warn("Intento de conversión sin archivo seleccionado.");
         return alert("Selecciona un SVG primero");
     }
     
     try {
-        const data = await api.convertSvg(file, testMode);
+        const data = await api.convertSvg(file);
         const blob = new Blob([data.gcode], { type: "text/plain" });
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement("a");
@@ -67,14 +66,13 @@ document.getElementById("convertBtn").addEventListener("click", async () => {
 
 document.getElementById("convertUrlBtn").addEventListener("click", async () => {
     const url = document.getElementById("svgUrl").value;
-    const testMode = document.getElementById("testMode").checked;
     if (!url) {
         console.warn("Intento de conversión sin URL.");
         return alert("Ingresa una URL");
     }
     
     try {
-        const data = await api.convertSvgFromUrl(url, testMode);
+        const data = await api.convertSvgFromUrl(url);
         const blob = new Blob([data.gcode], { type: "text/plain" });
         const downloadUrl = window.URL.createObjectURL(blob);
         const a = document.createElement("a");
@@ -90,14 +88,13 @@ document.getElementById("convertUrlBtn").addEventListener("click", async () => {
 
 document.getElementById("convertImageBtn").addEventListener("click", async () => {
     const file = document.getElementById("imageFile").files[0];
-    const testMode = document.getElementById("testMode").checked;
     if (!file) {
         console.warn("Intento de conversión de imagen sin archivo seleccionado.");
         return alert("Selecciona una imagen primero");
     }
     
     try {
-        const data = await api.convertImage(file, testMode);
+        const data = await api.convertImage(file);
         const blob = new Blob([data.gcode], { type: "text/plain" });
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement("a");
@@ -110,5 +107,3 @@ document.getElementById("convertImageBtn").addEventListener("click", async () =>
         alert("Error al convertir imagen: " + e.message);
     }
 });
-
-loadConfig();

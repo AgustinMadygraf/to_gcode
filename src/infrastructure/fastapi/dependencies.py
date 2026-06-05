@@ -5,6 +5,7 @@ Path: src/infrastructure/fastapi/dependencies.py
 from typing import Generator, Any
 from fastapi import Depends
 
+from src.infrastructure.settings.config import settings
 from src.infrastructure.database.persistence_impl import SQLAlchemyConfigProvider
 from src.infrastructure.database.session_provider import SqlAlchemySessionProvider
 from src.adapters.gateways.machine_config_repository import SQLAlchemyMachineConfigRepository
@@ -36,7 +37,7 @@ def get_gcode_controller(db: Any = Depends(get_db)) -> GCodeController:
     geom_service = GeometryService(geometry_processor=geom_processor)
 
     gcode_wrapper = PyGCodeWrapper()
-    generator = PyGCodeGenerator(wrapper=gcode_wrapper, geometry_service=geom_service)
+    generator = PyGCodeGenerator(wrapper=gcode_wrapper, geometry_service=geom_service, truncate_limit=settings.GCODE_TRUNCATE_LIMIT)
     
     repo = SQLAlchemyMachineConfigRepository(provider=persistence_provider)
 

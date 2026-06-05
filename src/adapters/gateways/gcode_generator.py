@@ -2,16 +2,22 @@
 Path: src/adapters/gateways/gcode_generator.py
 """
 
-from typing import List
+from typing import List, Optional
 from src.application.boundaries.gateways import GCodeGenerator
 from src.application.boundaries.infrastructure_interfaces import GCodeLibraryWrapper
 from src.domain.entities.machine_config import Path, MachineConfig
 from src.domain.services.geometry_service import GeometryService
 
 class PyGCodeGenerator(GCodeGenerator):
-    def __init__(self, wrapper: GCodeLibraryWrapper, geometry_service: GeometryService):
+    def __init__(
+        self, 
+        wrapper: GCodeLibraryWrapper, 
+        geometry_service: GeometryService,
+        truncate_limit: Optional[int] = None
+    ):
         self.wrapper = wrapper
         self.geometry_service = geometry_service
+        self.truncate_limit = truncate_limit
 
     def generate(self, paths: List[Path], config: MachineConfig) -> str:
         gcode_lines: List[str] = [
@@ -46,4 +52,9 @@ class PyGCodeGenerator(GCodeGenerator):
             gcode_lines.append(config.pen_up_command)
 
         gcode_lines.append(self.wrapper.format_line("G0", {"X": 0, "Y": 0}) + " " + self.wrapper.get_comment("Return home"))
+        
+        # Truncate if configured
+        if self.truncate_limit and self.truncate_limit > 0:
+            return '\n'.join(gcode_lines[:self.truncate_limit])
+            
         return '\n'.join(gcode_lines)

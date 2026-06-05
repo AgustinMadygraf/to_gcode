@@ -3,7 +3,7 @@ Path: src/infrastructure/fastapi/routes.py
 """
 
 from typing import Annotated
-from fastapi import APIRouter, UploadFile, File, Depends, Body
+from fastapi import APIRouter, UploadFile, File, Depends
 from src.adapters.controllers.gcode_controller import GCodeController
 from src.infrastructure.fastapi.dependencies import get_gcode_controller
 from src.infrastructure.pydantic.schemas import ConfigSchema, UrlSchema
@@ -25,20 +25,18 @@ def get_config(controller: Annotated[GCodeController, Depends(get_gcode_controll
 @router.post("/convert")
 async def convert_svg(
     file: Annotated[UploadFile, File()],
-    controller: Annotated[GCodeController, Depends(get_gcode_controller)],
-    test_mode: Annotated[bool, Body(embed=True)] = False
+    controller: Annotated[GCodeController, Depends(get_gcode_controller)]
 ):
     content = await file.read()
-    return controller.convert_svg(content.decode("utf-8"), test_mode=test_mode)
+    return controller.convert_svg(content.decode("utf-8"))
 
 @router.post("/convert/image")
 async def convert_image(
     file: Annotated[UploadFile, File()],
-    controller: Annotated[GCodeController, Depends(get_gcode_controller)],
-    test_mode: Annotated[bool, Body(embed=True)] = False
+    controller: Annotated[GCodeController, Depends(get_gcode_controller)]
 ):
     content = await file.read()
-    return controller.convert_image(content, test_mode=test_mode)
+    return controller.convert_image(content)
 
 @router.post("/convert/url")
 def convert_svg_url(
@@ -48,4 +46,4 @@ def convert_svg_url(
     from urllib.request import urlopen
     with urlopen(data.url) as response:
         content = response.read().decode("utf-8")
-    return controller.convert_svg(content, test_mode=data.test_mode)
+    return controller.convert_svg(content)

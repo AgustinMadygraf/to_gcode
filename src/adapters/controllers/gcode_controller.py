@@ -40,10 +40,10 @@ class GCodeController:
             "scale_to_fit": config.scale_to_fit
         }
 
-    def convert_svg(self, svg_content: str, test_mode: bool = False) -> Dict[str, str]:
-        gcode = self.svg_converter.execute(svg_content, test_mode=test_mode)
+    def convert_svg(self, svg_content: str) -> Dict[str, str]:
+        gcode = self.svg_converter.execute(svg_content)
         return {"gcode": gcode}
 
-    def convert_image(self, image_bytes: bytes, test_mode: bool = False) -> Dict[str, str]:
-        gcode = self.image_converter.execute(image_bytes, test_mode=test_mode)
+    def convert_image(self, image_bytes: bytes) -> Dict[str, str]:
+        gcode = self.image_converter.execute(image_bytes)
         return {"gcode": gcode}

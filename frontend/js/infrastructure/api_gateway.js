@@ -21,29 +21,27 @@ export class ApiGateway {
         return response.json();
     }
 
-    async convertSvgFromUrl(url, testMode) {
+    async convertSvgFromUrl(url) {
         const response = await fetch(`${this.baseUrl}/convert/url`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ url, test_mode: testMode })
+            body: JSON.stringify({ url })
         });
         if (!response.ok) throw new Error("Error en conversión desde URL");
         return response.json();
     }
 
-    async convertSvg(file, testMode) {
+    async convertSvg(file) {
         const formData = new FormData();
         formData.append("file", file);
-        formData.append("test_mode", testMode);
         const response = await fetch(`${this.baseUrl}/convert`, { method: "POST", body: formData });
         if (!response.ok) throw new Error("Error en conversión");
         return response.json();
     }
 
-    async convertImage(file, testMode) {
+    async convertImage(file) {
         const formData = new FormData();
         formData.append("file", file);
-        formData.append("test_mode", testMode);
         const response = await fetch(`${this.baseUrl}/convert/image`, { method: "POST", body: formData });
         if (!response.ok) throw new Error("Error en conversión de imagen");
         return response.json();
