@@ -1,11 +1,12 @@
+"""
+Path: src/adapters/gateways/machine_config_repository.py
+"""
 from typing import Optional, Dict, Any
 from src.application.boundaries.machine_config_repository import MachineConfigRepository
 from src.application.boundaries.infrastructure_interfaces import ConfigPersistenceProvider
 from src.domain.entities.machine_config import MachineConfig
 
 class SQLAlchemyMachineConfigRepository(MachineConfigRepository):
-    """Implementación del repositorio que delega en un proveedor de persistencia."""
-    
     def __init__(self, provider: ConfigPersistenceProvider):
         self.provider = provider
 
@@ -13,13 +14,20 @@ class SQLAlchemyMachineConfigRepository(MachineConfigRepository):
         data = self.provider.find_first()
         if not data:
             return None
+
+        if 'max_x' not in data:
+            data['max_x'] = data.get('width', 0.0)
+        if 'max_y' not in data:
+            data['max_y'] = data.get('height', 0.0)
+            
         return MachineConfig(**data)
 
     def save_config(self, config: MachineConfig) -> None:
-        # Tipamos explícitamente el diccionario para satisfacer a Pylance
         data: Dict[str, Any] = {
             "width": config.width,
             "height": config.height,
+            "max_x": config.max_x,
+            "max_y": config.max_y,
             "pen_up_command": config.pen_up_command,
             "pen_down_command": config.pen_down_command,
             "feedrate_draw": config.feedrate_draw,

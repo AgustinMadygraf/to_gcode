@@ -1,7 +1,3 @@
-"""
-Path: src/infrastructure/database/models.py
-"""
-
 from sqlalchemy import create_engine, String, Float, Boolean
 from sqlalchemy.orm import sessionmaker, DeclarativeBase, Mapped, mapped_column
 from src.infrastructure.settings.config import settings
@@ -18,10 +14,11 @@ class MachineConfigModel(Base):
     __tablename__ = "machine_configs"
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    # Definir longitud máxima para Strings (best practice)
     name: Mapped[str] = mapped_column(String(50), unique=True, index=True)
     width: Mapped[float] = mapped_column(Float)
     height: Mapped[float] = mapped_column(Float)
+    max_x: Mapped[float] = mapped_column(Float, default=0.0)
+    max_y: Mapped[float] = mapped_column(Float, default=0.0)
     pen_up_command: Mapped[str] = mapped_column(String(20))
     pen_down_command: Mapped[str] = mapped_column(String(20))
     feedrate_draw: Mapped[float] = mapped_column(Float)
@@ -31,3 +28,22 @@ class MachineConfigModel(Base):
 
 def init_db():
     Base.metadata.create_all(bind=engine)
+    # Seed default config if empty
+    session = SessionLocal()
+    if session.query(MachineConfigModel).count() == 0:
+        default_config = MachineConfigModel(
+            name="default",
+            width=210.0,
+            height=297.0,
+            max_x=210.0,
+            max_y=297.0,
+            pen_up_command="M5",
+            pen_down_command="M3",
+            feedrate_draw=100.0,
+            feedrate_move=500.0,
+            invert_y=True,
+            scale_to_fit=True
+        )
+        session.add(default_config)
+        session.commit()
+    session.close()
