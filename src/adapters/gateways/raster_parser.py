@@ -40,5 +40,5 @@ class RasterParser(RasterParserBoundary):
                                         stack.append((nr, nc))
                                         
                     if len(path_points) > 1:
-                        paths.append(DomainPath(points=[Point(x=float(c), y=float(r)) for r, c in path_points]))
+                        paths.append(DomainPath(points=[Point(x=float(c), y=float(rows - r)) for r, c in path_points]))
         return paths

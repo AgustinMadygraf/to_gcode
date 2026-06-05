@@ -17,13 +17,17 @@ class PyGCodeWrapper(GCodeLibraryWrapper):
             line = pg.gcodes.GCodeRapidMove(**(params or {}))
         elif command == "G1":
             line = pg.gcodes.GCodeLinearMove(**(params or {}))
+        elif command == "G2":
+            line = pg.gcodes.GCodeArcMove(arc_direction="CW", **(params or {}))
+        elif command == "G3":
+            line = pg.gcodes.GCodeArcMove(arc_direction="CCW", **(params or {}))
         elif command == "G21":
             line = pg.gcodes.GCodeUseMillimeters()
         elif command == "G90":
             line = pg.gcodes.GCodeAbsoluteDistanceMode()
         else:
             return f"{command} " + " ".join([f"{k}{v:.3f}" for k, v in (params or {}).items()])
-            
+
         result = str(line)
         
         # Si había velocidad, añadimos un comando G1 adicional o concatenamos si la librería lo permite

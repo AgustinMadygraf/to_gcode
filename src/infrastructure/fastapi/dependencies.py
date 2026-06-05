@@ -31,12 +31,12 @@ def get_db(provider: DatabaseSessionProvider = Depends(get_session_provider)) ->
 def get_gcode_controller(db: Any = Depends(get_db)) -> GCodeController:
     persistence_provider = SQLAlchemyConfigProvider(db)
 
-    gcode_wrapper = PyGCodeWrapper()
-    generator = PyGCodeGenerator(wrapper=gcode_wrapper)
-    
     # Inject GeometryWrapper into GeometryService
     geom_processor = GeometryWrapper()
     geom_service = GeometryService(geometry_processor=geom_processor)
+
+    gcode_wrapper = PyGCodeWrapper()
+    generator = PyGCodeGenerator(wrapper=gcode_wrapper, geometry_service=geom_service)
     
     repo = SQLAlchemyMachineConfigRepository(provider=persistence_provider)
 
