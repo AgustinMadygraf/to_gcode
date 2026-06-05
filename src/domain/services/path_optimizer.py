@@ -1,5 +1,5 @@
 from typing import List
-from src.domain.entities.machine_config import Path, Point
+from src.domain.entities.geometry import Path, Point
 import math
 
 class PathOptimizerService:

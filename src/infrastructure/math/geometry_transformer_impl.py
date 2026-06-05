@@ -4,7 +4,7 @@ Path: src/infrastructure/math/geometry_transformer_impl.py
 
 from typing import List, Tuple
 import math
-from src.domain.entities.machine_config import Path, Point as DomainPoint
+from src.domain.entities.geometry import Path, Point as DomainPoint
 from src.domain.entities.geometry import Rect
 from src.domain.interfaces.geometry_transformer import GeometryTransformerInterface
 

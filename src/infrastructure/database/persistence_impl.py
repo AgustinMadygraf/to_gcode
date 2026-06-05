@@ -1,7 +1,3 @@
-"""
-Path: src/infrastructure/database/persistence_impl.py
-"""
-
 from typing import Optional, Dict, Any
 from sqlalchemy import select, update
 from sqlalchemy.orm import Session
@@ -16,16 +12,18 @@ class SQLAlchemyConfigProvider(ConfigPersistenceProvider):
     def find_first(self) -> Optional[Dict[str, Any]]:
         logger.debug("Fetching first machine configuration from database.")
         stmt = select(MachineConfigModel)
-        model = self.session.execute(stmt).scalar_one_or_none()
+        # Usamos .first() para evitar excepciones si hay múltiples configuraciones por error
+        model = self.session.execute(stmt).scalars().first()
         
         if not model:
             return None
             
-        # Convertimos el modelo a dict de forma explícita
         return {
             "name": model.name,
             "width": model.width,
             "height": model.height,
+            "max_x": model.max_x,
+            "max_y": model.max_y,
             "pen_up_command": model.pen_up_command,
             "pen_down_command": model.pen_down_command,
             "feedrate_draw": model.feedrate_draw,
@@ -37,11 +35,10 @@ class SQLAlchemyConfigProvider(ConfigPersistenceProvider):
     def upsert(self, name: str, data: Dict[str, Any]) -> None:
         logger.info(f"Upserting configuration for: {name}")
         stmt = select(MachineConfigModel).filter_by(name=name)
-        model = self.session.execute(stmt).scalar_one_or_none()
+        model = self.session.execute(stmt).scalars().first()
         
         if model:
             logger.debug(f"Updating existing record for {name}.")
-            # Usar update directo es más eficiente y seguro
             update_stmt = update(MachineConfigModel).where(MachineConfigModel.name == name).values(**data)
             self.session.execute(update_stmt)
         else:

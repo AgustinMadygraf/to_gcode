@@ -4,7 +4,7 @@ Path: src/domain/services/geometry_service.py
 
 from typing import Any, Dict, List, Optional
 from src.domain.interfaces.geometry_processor import GeometryProcessor
-from src.domain.entities.machine_config import Point
+from src.domain.entities.geometry import Point
 
 class GeometryService:
     def __init__(self, geometry_processor: GeometryProcessor):

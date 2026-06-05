@@ -1,13 +1,11 @@
-"""
-Path: src/infrastructure/pydantic/schemas.py
-"""
-
 from pydantic import BaseModel
 
 class ConfigSchema(BaseModel):
     name: str
     width: float
     height: float
+    max_x: float
+    max_y: float
     pen_up_command: str
     pen_down_command: str
     feedrate_draw: float

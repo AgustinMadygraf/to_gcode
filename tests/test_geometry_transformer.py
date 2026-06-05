@@ -1,5 +1,5 @@
 import pytest
-from src.domain.entities.machine_config import Path, Point as DomainPoint
+from src.domain.entities.geometry import Path, Point as DomainPoint
 from src.domain.entities.geometry import Rect
 from src.infrastructure.math.geometry_transformer_impl import GeometryTransformerImpl
 

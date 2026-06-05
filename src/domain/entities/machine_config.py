@@ -1,12 +1,8 @@
-"""
-Path: src/domain/entities/machine_config.py
-"""
-
 from dataclasses import dataclass
 
 @dataclass(frozen=True)
 class MachineConfig:
-    "Configuración de la máquina plotter."
+    """Configuración de la máquina plotter."""
     name: str
     width: float
     height: float
@@ -18,12 +14,3 @@ class MachineConfig:
     feedrate_move: float  # Velocidad de movimiento en vacío (G0)
     invert_y: bool = True  # Y_gcode = height - Y_svg
     scale_to_fit: bool = True  # Escalado proporcional automático
-
-@dataclass(frozen=True)
-class Point:
-    x: float
-    y: float
-
-@dataclass(frozen=True)
-class Path:
-    points: list[Point]

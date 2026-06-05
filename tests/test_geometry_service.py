@@ -2,7 +2,7 @@ import pytest
 import math
 from src.domain.services.geometry_service import GeometryService
 from src.infrastructure.math.geometry_wrapper import GeometryWrapper
-from src.domain.entities.machine_config import Point
+from src.domain.entities.geometry import Point
 
 def test_get_circle_from_three_points():
     p1 = Point(x=0.0, y=1.0)

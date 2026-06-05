@@ -3,7 +3,7 @@ Path: src/domain/interfaces/geometry_transformer.py
 """
 
 from typing import List, Tuple
-from src.domain.entities.machine_config import Path
+from src.domain.entities.geometry import Path
 from src.domain.entities.geometry import Rect
 
 class GeometryTransformerInterface:

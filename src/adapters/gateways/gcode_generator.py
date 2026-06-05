@@ -1,11 +1,8 @@
-"""
-Path: src/adapters/gateways/gcode_generator.py
-"""
-
 from typing import List, Optional, Dict
 from src.application.boundaries.gateways import GCodeGenerator
 from src.application.boundaries.infrastructure_interfaces import GCodeLibraryWrapper
-from src.domain.entities.machine_config import Path, MachineConfig, Point
+from src.domain.entities.geometry import Path, Point
+from src.domain.entities.machine_config import MachineConfig
 from src.domain.services.geometry_service import GeometryService
 
 class PyGCodeGenerator(GCodeGenerator):

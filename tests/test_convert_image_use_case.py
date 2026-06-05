@@ -1,6 +1,7 @@
 import pytest
 from unittest.mock import MagicMock
-from src.domain.entities.machine_config import Path, MachineConfig, Point
+from src.domain.entities.geometry import Path, Point
+from src.domain.entities.machine_config import MachineConfig
 from src.application.use_cases.convert_image import ConvertImageToGCode
 
 def test_convert_image_success():

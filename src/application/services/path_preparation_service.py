@@ -3,7 +3,8 @@ Path: src/application/services/path_preparation_service.py
 """
 
 from typing import List
-from src.domain.entities.machine_config import Path, MachineConfig
+from src.domain.entities.geometry import Path
+from src.domain.entities.machine_config import MachineConfig
 from src.domain.entities.geometry import Rect
 from src.domain.interfaces.geometry_transformer import GeometryTransformerInterface
 from src.domain.interfaces.pattern_generator import TestPatternGeneratorInterface

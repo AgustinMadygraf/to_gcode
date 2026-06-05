@@ -1,7 +1,3 @@
-"""
-Path: src/adapters/controllers/gcode_controller.py
-"""
-
 from typing import Dict, Any, Optional
 from src.application.use_cases.convert_svg import ConvertSVGToGCode
 from src.application.use_cases.convert_image import ConvertImageToGCode
@@ -20,6 +16,12 @@ class GCodeController:
         self.repo = repo
 
     def set_config(self, config_data: Dict[str, Any]) -> Dict[str, str]:
+        # Asegurar valores por defecto para max_x y max_y si no vienen en el payload
+        if 'max_x' not in config_data:
+            config_data['max_x'] = config_data.get('width', 0.0)
+        if 'max_y' not in config_data:
+            config_data['max_y'] = config_data.get('height', 0.0)
+            
         entity = MachineConfig(**config_data)
         self.repo.save_config(entity)
         return {"message": "Config saved"}
@@ -32,6 +34,8 @@ class GCodeController:
             "name": config.name,
             "width": config.width,
             "height": config.height,
+            "max_x": config.max_x,
+            "max_y": config.max_y,
             "pen_up_command": config.pen_up_command,
             "pen_down_command": config.pen_down_command,
             "feedrate_draw": config.feedrate_draw,

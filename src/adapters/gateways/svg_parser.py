@@ -5,7 +5,7 @@ Path: src/adapters/gateways/svg_parser.py
 from typing import List
 from src.application.boundaries.gateways import VectorParser
 from src.application.boundaries.infrastructure_interfaces import SvgLibraryWrapper
-from src.domain.entities.machine_config import Path as DomainPath, Point
+from src.domain.entities.geometry import Path as DomainPath, Point
 
 class SvgPathToolsParser(VectorParser):
     def __init__(self, wrapper: SvgLibraryWrapper):

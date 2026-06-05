@@ -1,5 +1,5 @@
 from typing import List, Set, Tuple
-from src.domain.entities.machine_config import Path as DomainPath, Point
+from src.domain.entities.geometry import Path as DomainPath, Point
 from src.application.boundaries.infrastructure_interfaces import SkeletonAbstraction, RasterImageProcessor
 from src.application.boundaries.gateways import RasterParser as RasterParserBoundary
 

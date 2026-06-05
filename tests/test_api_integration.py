@@ -2,7 +2,7 @@ import pytest
 import os
 from fastapi.testclient import TestClient
 from src.infrastructure.fastapi.app import app
-from src.infrastructure.database.models import init_db, Base, engine
+from src.infrastructure.database.models import init_db, Base, engine, SessionLocal, MachineConfigModel
 
 # Usar DB en memoria para tests aislados
 os.environ["DATABASE_URL"] = "sqlite:///:memory:"
@@ -11,9 +11,10 @@ client = TestClient(app)
 
 @pytest.fixture(autouse=True)
 def setup_db():
-    # Limpiar tablas antes de cada test
+    # Asegurar que las tablas se recreen limpias en cada test
     Base.metadata.drop_all(bind=engine)
-    init_db()
+    Base.metadata.create_all(bind=engine)
+    # No llamamos a init_db() para evitar el seed por defecto y tener control total
 
 def test_convert_endpoint_success():
     # Pre-configurar máquina necesaria para el use case
@@ -21,6 +22,8 @@ def test_convert_endpoint_success():
         "name": "test_plotter",
         "width": 100.0,
         "height": 100.0,
+        "max_x": 100.0,
+        "max_y": 100.0,
         "pen_up_command": "M5",
         "pen_down_command": "M3",
         "feedrate_draw": 1000.0,
@@ -38,7 +41,7 @@ def test_convert_endpoint_success():
     assert "gcode" in response.json()
 
 def test_convert_without_config():
-    # Sin configurar la máquina, debería fallar
+    # Sin configurar la máquina, debería fallar ya que setup_db deja la tabla vacía
     svg_content = "<svg>...</svg>"
     files = {"file": ("test.svg", svg_content, "image/svg+xml")}
     
@@ -52,6 +55,8 @@ def test_convert_invalid_svg():
         "name": "test_plotter",
         "width": 100.0,
         "height": 100.0,
+        "max_x": 100.0,
+        "max_y": 100.0,
         "pen_up_command": "M5",
         "pen_down_command": "M3",
         "feedrate_draw": 1000.0,
@@ -63,7 +68,6 @@ def test_convert_invalid_svg():
     svg_content = "NOT_AN_SVG"
     files = {"file": ("test.svg", svg_content, "image/svg+xml")}
     
-    # Debería fallar con 400 ya que el parser fallará
     response = client.post("/convert", files=files)
     assert response.status_code == 400
 
@@ -73,6 +77,8 @@ def test_config_lifecycle():
         "name": "production_plotter",
         "width": 200.0,
         "height": 200.0,
+        "max_x": 200.0,
+        "max_y": 200.0,
         "pen_up_command": "M5",
         "pen_down_command": "M3",
         "feedrate_draw": 500.0,

@@ -4,7 +4,7 @@ Path: src/infrastructure/math/geometry_wrapper.py
 
 import math
 from typing import Tuple, Optional, List
-from src.domain.entities.machine_config import Point
+from src.domain.entities.geometry import Point
 from src.domain.interfaces.geometry_processor import GeometryProcessor
 
 class GeometryWrapper(GeometryProcessor):

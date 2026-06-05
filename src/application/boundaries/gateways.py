@@ -4,7 +4,8 @@ Path: src/application/boundaries/gateways.py
 
 from abc import ABC, abstractmethod
 from typing import List
-from src.domain.entities.machine_config import Path, MachineConfig
+from src.domain.entities.geometry import Path
+from src.domain.entities.machine_config import MachineConfig
 
 class VectorParser(ABC):
     @abstractmethod

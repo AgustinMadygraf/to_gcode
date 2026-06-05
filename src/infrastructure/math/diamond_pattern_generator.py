@@ -3,7 +3,7 @@ Path: src/infrastructure/math/diamond_pattern_generator.py
 """
 
 from typing import List
-from src.domain.entities.machine_config import Path, Point
+from src.domain.entities.geometry import Path, Point
 from src.domain.interfaces.pattern_generator import TestPatternGeneratorInterface
 
 __all__ = ["DiamondPatternGenerator"]
