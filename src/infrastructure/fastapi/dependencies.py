@@ -37,7 +37,7 @@ def get_gcode_controller(db: Any = Depends(get_db)) -> GCodeController:
     geom_service = GeometryService(geometry_processor=geom_processor)
 
     gcode_wrapper = PyGCodeWrapper()
-    generator = PyGCodeGenerator(wrapper=gcode_wrapper, geometry_service=geom_service, truncate_limit=settings.GCODE_TRUNCATE_LIMIT)
+    generator = PyGCodeGenerator(wrapper=gcode_wrapper, geometry_service=geom_service, truncate_limit=settings.GCODE_TRUNCATE_LIMIT, arc_tolerance=settings.ARC_TOLERANCE)
     
     repo = SQLAlchemyMachineConfigRepository(provider=persistence_provider)
 

@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     APP_VERSION: str = "1.0.0"
     DEBUG: bool = False
     GCODE_TRUNCATE_LIMIT: int = 0
+    ARC_TOLERANCE: float = 2.0
 
     DATABASE_URL: str = "sqlite:///./to_gcode.db"
 
