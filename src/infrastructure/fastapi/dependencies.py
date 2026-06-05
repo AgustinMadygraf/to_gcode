@@ -1,7 +1,3 @@
-"""
-Path: src/infrastructure/fastapi/dependencies.py
-"""
-
 from typing import Generator, Any
 from fastapi import Depends
 
@@ -16,6 +12,7 @@ from src.adapters.gateways.svg_parser import SvgPathToolsParser
 from src.adapters.gateways.raster_parser import RasterParser
 from src.adapters.gateways.gcode_generator import PyGCodeGenerator
 from src.domain.services.geometry_service import GeometryService
+from src.domain.services.path_optimizer import GreedyPathOptimizer
 from src.application.use_cases.convert_svg import ConvertSVGToGCode
 from src.application.use_cases.convert_image import ConvertImageToGCode
 from src.adapters.controllers.gcode_controller import GCodeController
@@ -41,6 +38,9 @@ def get_gcode_controller(db: Any = Depends(get_db)) -> GCodeController:
     # New Transformer implementation
     geometry_transformer = GeometryTransformerImpl()
     pattern_generator = DiamondPatternGenerator()
+    
+    # Path Optimization Strategy
+    path_optimizer = GreedyPathOptimizer()
 
     gcode_wrapper = PyGCodeWrapper()
     generator = PyGCodeGenerator(wrapper=gcode_wrapper, geometry_service=geom_service, truncate_limit=settings.GCODE_TRUNCATE_LIMIT, arc_tolerance=settings.ARC_TOLERANCE)
@@ -49,12 +49,28 @@ def get_gcode_controller(db: Any = Depends(get_db)) -> GCodeController:
 
     svg_wrapper = SvgPathToolsWrapper()
     svg_parser = SvgPathToolsParser(wrapper=svg_wrapper)
-    # We need to update use cases to take the generator now too
-    svg_converter = ConvertSVGToGCode(svg_parser, generator, repo, geom_service, geometry_transformer, pattern_generator)
+    
+    svg_converter = ConvertSVGToGCode(
+        parser=svg_parser, 
+        generator=generator, 
+        repo=repo, 
+        geometry_service=geom_service, 
+        transformer=geometry_transformer, 
+        pattern_generator=pattern_generator,
+        optimizer=path_optimizer
+    )
 
     # Dependency Injection: Inject factory into ScikitImageWrapper
     raster_processor = ScikitImageWrapper(skeleton_wrapper_factory=NumpySkeletonWrapper)
     raster_parser = RasterParser(processor=raster_processor)
-    image_converter = ConvertImageToGCode(raster_parser, generator, repo, geom_service, geometry_transformer, pattern_generator)
+    image_converter = ConvertImageToGCode(
+        parser=raster_parser, 
+        generator=generator, 
+        repo=repo, 
+        geometry_service=geom_service, 
+        transformer=geometry_transformer, 
+        pattern_generator=pattern_generator,
+        optimizer=path_optimizer
+    )
     
     return GCodeController(svg_converter=svg_converter, image_converter=image_converter, repo=repo)

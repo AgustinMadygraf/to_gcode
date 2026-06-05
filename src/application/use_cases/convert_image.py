@@ -1,11 +1,7 @@
-"""
-Path: src/application/use_cases/convert_image.py
-"""
-
 from src.application.boundaries.gateways import GCodeGenerator, RasterParser
 from src.application.boundaries.machine_config_repository import MachineConfigRepository
 from src.domain.services.geometry_service import GeometryService
-from src.domain.services.path_optimizer import PathOptimizerService
+from src.domain.interfaces.path_optimizer import PathOptimizer
 from src.application.services.path_preparation_service import PathPreparationService
 from src.domain.interfaces.geometry_transformer import GeometryTransformerInterface
 from src.domain.interfaces.pattern_generator import TestPatternGeneratorInterface
@@ -18,13 +14,14 @@ class ConvertImageToGCode:
         repo: MachineConfigRepository,
         geometry_service: GeometryService,
         transformer: GeometryTransformerInterface,
-        pattern_generator: TestPatternGeneratorInterface
+        pattern_generator: TestPatternGeneratorInterface,
+        optimizer: PathOptimizer
     ):
         self.parser = parser
         self.generator = generator
         self.repo = repo
         self.geometry_service = geometry_service
-        self.optimizer = PathOptimizerService()
+        self.optimizer = optimizer
         self.preparation_service = PathPreparationService(transformer, pattern_generator)
 
     def execute(self, image_bytes: bytes) -> str:

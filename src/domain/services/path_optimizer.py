@@ -1,44 +1,37 @@
 from typing import List
-from src.domain.entities.geometry import Path, Point
-import math
+from src.domain.entities.geometry import Path
+from src.domain.interfaces.path_optimizer import PathOptimizer
 
-class PathOptimizerService:
-    @staticmethod
-    def _distance(p1: Point, p2: Point) -> float:
-        return math.sqrt((p1.x - p2.x)**2 + (p1.y - p2.y)**2)
-
-    @staticmethod
-    def _path_length(path: Path) -> float:
-        length = 0.0
-        for i in range(len(path.points) - 1):
-            length += math.sqrt(
-                (path.points[i+1].x - path.points[i].x)**2 + 
-                (path.points[i+1].y - path.points[i].y)**2
-            )
-        return length
+class GreedyPathOptimizer(PathOptimizer):
+    """
+    Implementación voraz (Greedy) del problema del viajante para trayectorias.
+    Busca siempre la trayectoria más cercana al punto actual del cabezal.
+    """
 
     def optimize(self, paths: List[Path]) -> List[Path]:
-        # Filter out empty paths before processing
-        valid_paths = [p for p in paths if p.points]
+        # Filtrar trayectorias inválidas usando lógica de la entidad
+        valid_paths = [p for p in paths if not p.is_empty]
         if not valid_paths:
             return []
         
-        # Sort paths by length in descending order first
-        sorted_paths = sorted(valid_paths, key=self._path_length, reverse=True)
+        # Ordenar inicialmente por distancia total (opcional, heurística simple)
+        unvisited = sorted(valid_paths, key=lambda p: p.total_distance, reverse=True)
         
-        # Start from the longest path
-        current_path = sorted_paths[0]
-        unvisited = sorted_paths[1:]
-        
+        current_path = unvisited.pop(0)
         optimized = [current_path]
         
         while unvisited:
-            # Find the path whose start point is closest to current_path end point
-            last_point = current_path.points[-1]
-            next_path = min(unvisited, key=lambda p: self._distance(last_point, p.points[0]))
+            # Buscar la trayectoria cuyo punto de inicio esté más cerca del final de la actual
+            last_point = current_path.end_point
+            
+            # Usamos el comportamiento de Point para calcular distancias
+            next_path = min(unvisited, key=lambda p: last_point.distance_to(p.start_point))
             
             unvisited.remove(next_path)
             optimized.append(next_path)
             current_path = next_path
             
         return optimized
+
+# Mantener compatibilidad temporal con el nombre antiguo si es necesario
+PathOptimizerService = GreedyPathOptimizer
