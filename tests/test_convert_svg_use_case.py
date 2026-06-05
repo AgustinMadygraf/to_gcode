@@ -9,9 +9,7 @@ def test_convert_svg_success():
     mock_parser = MagicMock()
     mock_generator = MagicMock()
     mock_repo = MagicMock()
-    mock_geometry_service = MagicMock()
-    mock_transformer = MagicMock()
-    mock_pattern_generator = MagicMock()
+    mock_prep_service = MagicMock()
     mock_optimizer = MagicMock()
 
     # Setup
@@ -27,7 +25,7 @@ def test_convert_svg_success():
     raw_paths = [Path(points=[Point(x=0, y=0), Point(x=10, y=10)])]
 
     mock_parser.parse_svg.return_value = raw_paths
-    mock_transformer.fit_and_orient.return_value = (raw_paths, "landscape")
+    mock_prep_service.prepare.return_value = raw_paths
     mock_optimizer.optimize.return_value = raw_paths
     mock_generator.generate.return_value = "G0 X0 Y0"
 
@@ -36,34 +34,27 @@ def test_convert_svg_success():
         mock_parser, 
         mock_generator, 
         mock_repo, 
-        mock_geometry_service, 
-        mock_transformer, 
-        mock_pattern_generator,
+        mock_prep_service,
         mock_optimizer
     )
     result = use_case.execute(svg_content)
 
     # Assertions
     assert result == "G0 X0 Y0"
+    mock_prep_service.prepare.assert_called_once()
     mock_optimizer.optimize.assert_called_once()
 
 def test_convert_svg_no_config():
     # Setup
     mock_repo = MagicMock()
     mock_repo.get_config.return_value = None
-    mock_geometry_service = MagicMock()
-    mock_transformer = MagicMock()
-    mock_pattern_generator = MagicMock()
-    mock_optimizer = MagicMock()
 
     use_case = ConvertSVGToGCode(
         MagicMock(), 
         MagicMock(), 
         mock_repo, 
-        mock_geometry_service, 
-        mock_transformer, 
-        mock_pattern_generator,
-        mock_optimizer
+        MagicMock(),
+        MagicMock()
     )
     
     with pytest.raises(ValueError, match="Machine configuration not found"):

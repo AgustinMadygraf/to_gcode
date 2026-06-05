@@ -1,37 +1,22 @@
-from src.application.boundaries.gateways import GCodeGenerator, RasterParser
+from typing import List
+from src.application.use_cases.base_converter import BaseGCodeConverter
+from src.application.boundaries.gateways import RasterParser, GCodeGenerator
 from src.application.boundaries.machine_config_repository import MachineConfigRepository
-from src.domain.services.geometry_service import GeometryService
 from src.domain.interfaces.path_optimizer import PathOptimizer
 from src.application.services.path_preparation_service import PathPreparationService
-from src.domain.interfaces.geometry_transformer import GeometryTransformerInterface
-from src.domain.interfaces.pattern_generator import TestPatternGeneratorInterface
+from src.domain.entities.geometry import Path
 
-class ConvertImageToGCode:
+class ConvertImageToGCode(BaseGCodeConverter):
     def __init__(
         self, 
         parser: RasterParser, 
         generator: GCodeGenerator, 
         repo: MachineConfigRepository,
-        geometry_service: GeometryService,
-        transformer: GeometryTransformerInterface,
-        pattern_generator: TestPatternGeneratorInterface,
+        preparation_service: PathPreparationService,
         optimizer: PathOptimizer
     ):
+        super().__init__(generator, repo, preparation_service, optimizer)
         self.parser = parser
-        self.generator = generator
-        self.repo = repo
-        self.geometry_service = geometry_service
-        self.optimizer = optimizer
-        self.preparation_service = PathPreparationService(transformer, pattern_generator)
 
-    def execute(self, image_bytes: bytes) -> str:
-        config = self.repo.get_config()
-        if not config:
-            raise ValueError("Machine configuration not found")
-
-        raw_paths = self.parser.parse_image(image_bytes)
-
-        transformed_paths = self.preparation_service.prepare(raw_paths, config)
-
-        transformed_paths = self.optimizer.optimize(transformed_paths)
-        return self.generator.generate(transformed_paths, config)
+    def _parse_input(self, image_bytes: bytes) -> List[Path]:
+        return self.parser.parse_image(image_bytes)

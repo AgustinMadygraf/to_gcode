@@ -13,6 +13,7 @@ from src.adapters.gateways.raster_parser import RasterParser
 from src.adapters.gateways.gcode_generator import PyGCodeGenerator
 from src.domain.services.geometry_service import GeometryService
 from src.domain.services.path_optimizer import GreedyPathOptimizer
+from src.application.services.path_preparation_service import PathPreparationService
 from src.application.use_cases.convert_svg import ConvertSVGToGCode
 from src.application.use_cases.convert_image import ConvertImageToGCode
 from src.adapters.controllers.gcode_controller import GCodeController
@@ -31,45 +32,50 @@ def get_db(provider: DatabaseSessionProvider = Depends(get_session_provider)) ->
 def get_gcode_controller(db: Any = Depends(get_db)) -> GCodeController:
     persistence_provider = SQLAlchemyConfigProvider(db)
 
-    # Inject GeometryWrapper into GeometryService
+    # Dominio y Servicios base
     geom_processor = GeometryWrapper()
     geom_service = GeometryService(geometry_processor=geom_processor)
     
-    # New Transformer implementation
     geometry_transformer = GeometryTransformerImpl()
     pattern_generator = DiamondPatternGenerator()
-    
-    # Path Optimization Strategy
     path_optimizer = GreedyPathOptimizer()
 
+    # Servicios de Aplicación
+    prep_service = PathPreparationService(
+        transformer=geometry_transformer, 
+        pattern_generator=pattern_generator
+    )
+
+    # Infraestructura / Gateways
     gcode_wrapper = PyGCodeWrapper()
-    generator = PyGCodeGenerator(wrapper=gcode_wrapper, geometry_service=geom_service, truncate_limit=settings.GCODE_TRUNCATE_LIMIT, arc_tolerance=settings.ARC_TOLERANCE)
+    generator = PyGCodeGenerator(
+        wrapper=gcode_wrapper, 
+        geometry_service=geom_service, 
+        truncate_limit=settings.GCODE_TRUNCATE_LIMIT, 
+        arc_tolerance=settings.ARC_TOLERANCE
+    )
     
     repo = SQLAlchemyMachineConfigRepository(provider=persistence_provider)
 
+    # Caso de Uso SVG
     svg_wrapper = SvgPathToolsWrapper()
     svg_parser = SvgPathToolsParser(wrapper=svg_wrapper)
-    
     svg_converter = ConvertSVGToGCode(
         parser=svg_parser, 
         generator=generator, 
         repo=repo, 
-        geometry_service=geom_service, 
-        transformer=geometry_transformer, 
-        pattern_generator=pattern_generator,
+        preparation_service=prep_service,
         optimizer=path_optimizer
     )
 
-    # Dependency Injection: Inject factory into ScikitImageWrapper
+    # Caso de Uso Imagen
     raster_processor = ScikitImageWrapper(skeleton_wrapper_factory=NumpySkeletonWrapper)
     raster_parser = RasterParser(processor=raster_processor)
     image_converter = ConvertImageToGCode(
         parser=raster_parser, 
         generator=generator, 
         repo=repo, 
-        geometry_service=geom_service, 
-        transformer=geometry_transformer, 
-        pattern_generator=pattern_generator,
+        preparation_service=prep_service,
         optimizer=path_optimizer
     )
     
