@@ -4,12 +4,19 @@ Path: src/adapters/controllers/gcode_controller.py
 
 from typing import Dict, Any, Optional
 from src.application.use_cases.convert_svg import ConvertSVGToGCode
+from src.application.use_cases.convert_image import ConvertImageToGCode
 from src.application.boundaries.machine_config_repository import MachineConfigRepository
 from src.domain.entities.machine_config import MachineConfig
 
 class GCodeController:
-    def __init__(self, converter: ConvertSVGToGCode, repo: MachineConfigRepository):
-        self.converter = converter
+    def __init__(
+        self, 
+        svg_converter: ConvertSVGToGCode, 
+        image_converter: ConvertImageToGCode,
+        repo: MachineConfigRepository
+    ):
+        self.svg_converter = svg_converter
+        self.image_converter = image_converter
         self.repo = repo
 
     def set_config(self, config_data: Dict[str, Any]) -> Dict[str, str]:
@@ -34,5 +41,9 @@ class GCodeController:
         }
 
     def convert_svg(self, svg_content: str, test_mode: bool = False) -> Dict[str, str]:
-        gcode = self.converter.execute(svg_content, test_mode=test_mode)
+        gcode = self.svg_converter.execute(svg_content, test_mode=test_mode)
+        return {"gcode": gcode}
+
+    def convert_image(self, image_bytes: bytes, test_mode: bool = False) -> Dict[str, str]:
+        gcode = self.image_converter.execute(image_bytes, test_mode=test_mode)
         return {"gcode": gcode}

@@ -13,8 +13,8 @@ export class ApiGateway {
 
     async saveConfig(configDTO) {
         const response = await fetch(`${this.baseUrl}/config`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(configDTO)
         });
         if (!response.ok) throw new Error("Error al guardar configuración");
@@ -33,10 +33,19 @@ export class ApiGateway {
 
     async convertSvg(file, testMode) {
         const formData = new FormData();
-        formData.append('file', file);
-        formData.append('test_mode', testMode);
-        const response = await fetch(`${this.baseUrl}/convert`, { method: 'POST', body: formData });
+        formData.append("file", file);
+        formData.append("test_mode", testMode);
+        const response = await fetch(`${this.baseUrl}/convert`, { method: "POST", body: formData });
         if (!response.ok) throw new Error("Error en conversión");
+        return response.json();
+    }
+
+    async convertImage(file, testMode) {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("test_mode", testMode);
+        const response = await fetch(`${this.baseUrl}/convert/image`, { method: "POST", body: formData });
+        if (!response.ok) throw new Error("Error en conversión de imagen");
         return response.json();
     }
 }

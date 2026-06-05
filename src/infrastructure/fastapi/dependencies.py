@@ -2,38 +2,45 @@
 Path: src/infrastructure/fastapi/dependencies.py
 """
 
-from typing import Generator
-from sqlalchemy.orm import Session
+from typing import Generator, Any
 from fastapi import Depends
 
-from src.infrastructure.database.models import SessionLocal
 from src.infrastructure.database.persistence_impl import SQLAlchemyConfigProvider
+from src.infrastructure.database.session_provider import SqlAlchemySessionProvider
 from src.adapters.gateways.machine_config_repository import SQLAlchemyMachineConfigRepository
 from src.infrastructure.svgpathtools.wrapper import SvgPathToolsWrapper
+from src.infrastructure.image_processing.raster_wrapper import ScikitImageWrapper
 from src.infrastructure.pygcode.wrapper import PyGCodeWrapper
 from src.adapters.gateways.svg_parser import SvgPathToolsParser
+from src.adapters.gateways.raster_parser import RasterParser
 from src.adapters.gateways.gcode_generator import PyGCodeGenerator
 from src.domain.services.geometry_service import GeometryService
 from src.application.use_cases.convert_svg import ConvertSVGToGCode
+from src.application.use_cases.convert_image import ConvertImageToGCode
 from src.adapters.controllers.gcode_controller import GCodeController
+from src.application.boundaries.infrastructure_interfaces import DatabaseSessionProvider
+from src.infrastructure.numpy.skeleton_wrapper import NumpySkeletonWrapper
 
-def get_db() -> Generator[Session, None, None]:
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+def get_session_provider() -> DatabaseSessionProvider:
+    return SqlAlchemySessionProvider()
 
-def get_gcode_controller(db: Session = Depends(get_db)) -> GCodeController:
+def get_db(provider: DatabaseSessionProvider = Depends(get_session_provider)) -> Generator[Any, None, None]:
+    yield from provider.get_session()
+
+def get_gcode_controller(db: Any = Depends(get_db)) -> GCodeController:
     persistence_provider = SQLAlchemyConfigProvider(db)
-    svg_wrapper = SvgPathToolsWrapper()
+
     gcode_wrapper = PyGCodeWrapper()
-    
-    repo = SQLAlchemyMachineConfigRepository(provider=persistence_provider)
-    parser = SvgPathToolsParser(wrapper=svg_wrapper)
     generator = PyGCodeGenerator(wrapper=gcode_wrapper)
-    
     geom_service = GeometryService()
-    converter = ConvertSVGToGCode(parser, generator, repo, geom_service)
+    repo = SQLAlchemyMachineConfigRepository(provider=persistence_provider)
+
+    svg_wrapper = SvgPathToolsWrapper()
+    svg_parser = SvgPathToolsParser(wrapper=svg_wrapper)
+    svg_converter = ConvertSVGToGCode(svg_parser, generator, repo, geom_service)
+
+    raster_processor = ScikitImageWrapper(skeleton_wrapper_factory=NumpySkeletonWrapper)
+    raster_parser = RasterParser(processor=raster_processor)
+    image_converter = ConvertImageToGCode(raster_parser, generator, repo, geom_service)
     
-    return GCodeController(converter=converter, repo=repo)
+    return GCodeController(svg_converter=svg_converter, image_converter=image_converter, repo=repo)

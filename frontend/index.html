@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>to_gcode - Plotter SVG Converter</title>
+    <title>to_gcode - Plotter SVG/Image Converter</title>
     <!-- Silenciar error de favicon -->
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
     <div class="container py-5">
-        <h1 class="mb-4">to_gcode - Plotter SVG</h1>
+        <h1 class="mb-4">to_gcode - Plotter SVG / Imagen</h1>
         
         <div class="row">
             <!-- Configuración -->
@@ -35,7 +35,7 @@
             <!-- Conversión -->
             <div class="col-md-6">
                 <div class="card p-3 shadow-sm">
-                    <h3>Convertir SVG</h3>
+                    <h3>Convertir SVG / Imagen</h3>
                 <div class="mb-3 form-check">
                     <input type="checkbox" id="testMode" class="form-check-input">
                     <label for="testMode" class="form-check-label">Modo Test (primeras 100 líneas)</label>
@@ -45,7 +45,9 @@
                         <button id="convertUrlBtn" class="btn btn-outline-success btn-sm">Convertir desde URL</button>
                     </div>
                     <input type="file" id="svgFile" class="form-control mb-3" accept=".svg">
-                    <button id="convertBtn" class="btn btn-success">Convertir y Descargar</button>
+                    <input type="file" id="imageFile" class="form-control mb-3" accept="image/png, image/jpeg">
+                    <button id="convertBtn" class="btn btn-success">Convertir SVG</button>
+                    <button id="convertImageBtn" class="btn btn-secondary mt-2">Convertir Imagen</button>
                 </div>
             </div>
         </div>

@@ -15,3 +15,8 @@ class GCodeGenerator(ABC):
     @abstractmethod
     def generate(self, paths: List[Path], config: MachineConfig) -> str:
         pass
+
+class RasterParser(ABC):
+    @abstractmethod
+    def parse_image(self, image_bytes: bytes) -> List[Path]:
+        pass

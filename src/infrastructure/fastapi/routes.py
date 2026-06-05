@@ -4,26 +4,11 @@ Path: src/infrastructure/fastapi/routes.py
 
 from typing import Annotated
 from fastapi import APIRouter, UploadFile, File, Depends, Body
-from pydantic import BaseModel
 from src.adapters.controllers.gcode_controller import GCodeController
 from src.infrastructure.fastapi.dependencies import get_gcode_controller
+from src.infrastructure.pydantic.schemas import ConfigSchema, UrlSchema
 
 router = APIRouter()
-
-class ConfigSchema(BaseModel):
-    name: str
-    width: float
-    height: float
-    pen_up_command: str
-    pen_down_command: str
-    feedrate_draw: float
-    feedrate_move: float
-    invert_y: bool = True
-    scale_to_fit: bool = True
-
-class UrlSchema(BaseModel):
-    url: str
-    test_mode: bool = False
 
 @router.post("/config", status_code=201)
 def set_config(
@@ -45,6 +30,15 @@ async def convert_svg(
 ):
     content = await file.read()
     return controller.convert_svg(content.decode("utf-8"), test_mode=test_mode)
+
+@router.post("/convert/image")
+async def convert_image(
+    file: Annotated[UploadFile, File()],
+    controller: Annotated[GCodeController, Depends(get_gcode_controller)],
+    test_mode: Annotated[bool, Body(embed=True)] = False
+):
+    content = await file.read()
+    return controller.convert_image(content, test_mode=test_mode)
 
 @router.post("/convert/url")
 def convert_svg_url(

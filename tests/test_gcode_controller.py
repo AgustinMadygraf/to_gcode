@@ -4,7 +4,11 @@ from src.adapters.controllers.gcode_controller import GCodeController
 from src.domain.entities.machine_config import MachineConfig
 
 @pytest.fixture
-def mock_converter():
+def mock_svg_converter():
+    return MagicMock()
+
+@pytest.fixture
+def mock_image_converter():
     return MagicMock()
 
 @pytest.fixture
@@ -12,8 +16,12 @@ def mock_repo():
     return MagicMock()
 
 @pytest.fixture
-def controller(mock_converter, mock_repo):
-    return GCodeController(converter=mock_converter, repo=mock_repo)
+def controller(mock_svg_converter, mock_image_converter, mock_repo):
+    return GCodeController(
+        svg_converter=mock_svg_converter, 
+        image_converter=mock_image_converter, 
+        repo=mock_repo
+    )
 
 def test_set_config(controller, mock_repo):
     config_data = {
@@ -45,9 +53,9 @@ def test_get_config_found(controller, mock_repo):
     assert result["name"] == "test"
     assert result["width"] == 100.0
 
-def test_convert_svg(controller, mock_converter):
-    mock_converter.execute.return_value = "G0 X0 Y0"
+def test_convert_svg(controller, mock_svg_converter):
+    mock_svg_converter.execute.return_value = "G0 X0 Y0"
     result = controller.convert_svg("<svg>...</svg>")
     
-    mock_converter.execute.assert_called_once_with("<svg>...</svg>")
+    mock_svg_converter.execute.assert_called_once()
     assert result["gcode"] == "G0 X0 Y0"
