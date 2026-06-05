@@ -20,6 +20,7 @@ from src.application.use_cases.convert_image import ConvertImageToGCode
 from src.adapters.controllers.gcode_controller import GCodeController
 from src.application.boundaries.infrastructure_interfaces import DatabaseSessionProvider
 from src.infrastructure.numpy.skeleton_wrapper import NumpySkeletonWrapper
+from src.infrastructure.math.geometry_wrapper import GeometryWrapper
 
 def get_session_provider() -> DatabaseSessionProvider:
     return SqlAlchemySessionProvider()
@@ -32,13 +33,18 @@ def get_gcode_controller(db: Any = Depends(get_db)) -> GCodeController:
 
     gcode_wrapper = PyGCodeWrapper()
     generator = PyGCodeGenerator(wrapper=gcode_wrapper)
-    geom_service = GeometryService()
+    
+    # Inject GeometryWrapper into GeometryService
+    geom_processor = GeometryWrapper()
+    geom_service = GeometryService(geometry_processor=geom_processor)
+    
     repo = SQLAlchemyMachineConfigRepository(provider=persistence_provider)
 
     svg_wrapper = SvgPathToolsWrapper()
     svg_parser = SvgPathToolsParser(wrapper=svg_wrapper)
     svg_converter = ConvertSVGToGCode(svg_parser, generator, repo, geom_service)
 
+    # Dependency Injection: Inject factory into ScikitImageWrapper
     raster_processor = ScikitImageWrapper(skeleton_wrapper_factory=NumpySkeletonWrapper)
     raster_parser = RasterParser(processor=raster_processor)
     image_converter = ConvertImageToGCode(raster_parser, generator, repo, geom_service)

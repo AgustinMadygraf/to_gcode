@@ -41,8 +41,9 @@ def test_convert_svg_no_config():
     # Setup
     mock_repo = MagicMock()
     mock_repo.get_config.return_value = None
+    mock_geometry_service = MagicMock()
     
-    use_case = ConvertSVGToGCode(MagicMock(), MagicMock(), mock_repo)
+    use_case = ConvertSVGToGCode(MagicMock(), MagicMock(), mock_repo, mock_geometry_service)
     
     # Execution & Assertion
     with pytest.raises(ValueError, match="Machine configuration not found"):

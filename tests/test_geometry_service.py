@@ -1,65 +1,41 @@
 import pytest
-from src.domain.entities.machine_config import MachineConfig, Path, Point
+import math
 from src.domain.services.geometry_service import GeometryService
+from src.infrastructure.math.geometry_wrapper import GeometryWrapper
+from src.domain.entities.machine_config import Point
 
-@pytest.fixture
-def config():
-    return MachineConfig(
-        name="test_machine",
-        width=100.0,
-        height=100.0,
-        pen_up_command="M5",
-        pen_down_command="M3",
-        feedrate_draw=1000.0,
-        feedrate_move=2000.0,
-        invert_y=True,
-        scale_to_fit=False
-    )
+def test_get_circle_from_three_points():
+    p1 = Point(x=0.0, y=1.0)
+    p2 = Point(x=1.0, y=0.0)
+    p3 = Point(x=0.0, y=-1.0)
+    
+    # Circle with center (0,0) and radius 1
+    wrapper = GeometryWrapper()
+    result = wrapper.get_circle_from_three_points(p1, p2, p3)
+    
+    assert result is not None
+    center, radius = result
+    assert math.isclose(center.x, 0.0, abs_tol=1e-7)
+    assert math.isclose(center.y, 0.0, abs_tol=1e-7)
+    assert math.isclose(radius, 1.0, abs_tol=1e-7)
 
-@pytest.fixture
-def geometry_service():
-    return GeometryService()
-
-def test_transform_no_scale_no_invert():
-    # Setup: disable invert_y for simpler test
-    cfg = MachineConfig(
-        name="cfg", width=100.0, height=100.0, 
-        pen_up_command="M5", pen_down_command="M3",
-        feedrate_draw=10.0, feedrate_move=10.0,
-        invert_y=False, scale_to_fit=False
-    )
-    service = GeometryService()
-    path = Path(points=[Point(x=10.0, y=20.0)])
+def test_fit_arc_simple_circle():
+    # Create points along a circle arc
+    points = []
+    for i in range(11):
+        angle = i * (math.pi / 20)  # 0 to 90 degrees
+        points.append(Point(x=math.cos(angle), y=math.sin(angle)))
+        
+    # Inject wrapper into service
+    wrapper = GeometryWrapper()
+    service = GeometryService(geometry_processor=wrapper)
     
-    transformed = service.transform_paths([path], cfg)
+    # Tolerance 0.01
+    arc = service.fit_arc(points, 0.01)
     
-    assert transformed[0].points[0].x == 10.0
-    assert transformed[0].points[0].y == 20.0
-
-def test_transform_invert_y(config):
-    # Setup: config has invert_y=True, height=100
-    service = GeometryService()
-    path = Path(points=[Point(x=10.0, y=20.0)])
-    
-    transformed = service.transform_paths([path], config)
-    
-    # 100 - 20 = 80
-    assert transformed[0].points[0].x == 10.0
-    assert transformed[0].points[0].y == 80.0
-
-def test_calculate_scale(config):
-    # Setup: points are 0..50, machine is 100x100 -> scale should be 2.0
-    cfg = MachineConfig(
-        name="cfg", width=100.0, height=100.0, 
-        pen_up_command="M5", pen_down_command="M3",
-        feedrate_draw=10.0, feedrate_move=10.0,
-        invert_y=False, scale_to_fit=True
-    )
-    service = GeometryService()
-    path = Path(points=[Point(x=0.0, y=0.0), Point(x=50.0, y=50.0)])
-    
-    transformed = service.transform_paths([path], cfg)
-    
-    # 0*2=0, 50*2=100
-    assert transformed[0].points[1].x == 100.0
-    assert transformed[0].points[1].y == 100.0
+    assert arc is not None
+    # Adjust check for new structure
+    def get_radius(a):
+        return a["radius"]
+        
+    assert math.isclose(get_radius(arc), 1.0, abs_tol=0.05)

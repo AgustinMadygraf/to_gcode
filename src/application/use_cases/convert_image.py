@@ -12,7 +12,7 @@ class ConvertImageToGCode:
         parser: RasterParser, 
         generator: GCodeGenerator, 
         repo: MachineConfigRepository,
-        geometry_service: GeometryService = GeometryService()
+        geometry_service: GeometryService
     ):
         self.parser = parser
         self.generator = generator

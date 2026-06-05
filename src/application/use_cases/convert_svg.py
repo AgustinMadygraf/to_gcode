@@ -1,3 +1,7 @@
+"""
+Path: src/application/use_cases/convert_svg.py
+"""
+
 from src.application.boundaries.gateways import VectorParser, GCodeGenerator
 from src.application.boundaries.machine_config_repository import MachineConfigRepository
 from src.domain.services.geometry_service import GeometryService
@@ -8,7 +12,7 @@ class ConvertSVGToGCode:
         parser: VectorParser, 
         generator: GCodeGenerator, 
         repo: MachineConfigRepository,
-        geometry_service: GeometryService = GeometryService()
+        geometry_service: GeometryService
     ):
         self.parser = parser
         self.generator = generator
