@@ -10,3 +10,4 @@
 ## Pendiente
 - [ ] Implementar previsualización de SVG en el navegador (Análisis en docs/TMP.md).
 - [ ] Mejorar la validación de la configuración de máquina con Zod (opcional).
+- [ ] Implementar optimización de secuenciación de trazados (Nearest Neighbor) para reducir recorridos en vacío.

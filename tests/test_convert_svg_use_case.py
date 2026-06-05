@@ -1,5 +1,6 @@
 import pytest
 from unittest.mock import MagicMock
+from src.domain.entities.machine_config import Path, MachineConfig, Point
 from src.application.use_cases.convert_svg import ConvertSVGToGCode
 from src.domain.entities.machine_config import MachineConfig, Path
 
@@ -19,8 +20,8 @@ def test_convert_svg_success():
     mock_repo.get_config.return_value = config
     
     svg_content = "<svg>...</svg>"
-    raw_paths = [Path(points=[])]
-    transformed_paths = [Path(points=[])]
+    raw_paths = [Path(points=[Point(x=0, y=0), Point(x=10, y=10)])]
+    transformed_paths = [Path(points=[Point(x=0, y=0), Point(x=10, y=10)])]
     
     mock_parser.parse_svg.return_value = raw_paths
     mock_geometry_service.transform_paths.return_value = transformed_paths
