@@ -23,6 +23,7 @@ from src.application.boundaries.infrastructure_interfaces import DatabaseSession
 from src.infrastructure.numpy.skeleton_wrapper import NumpySkeletonWrapper
 from src.infrastructure.math.geometry_wrapper import GeometryWrapper
 from src.infrastructure.math.geometry_transformer_impl import GeometryTransformerImpl
+from src.infrastructure.math.diamond_pattern_generator import DiamondPatternGenerator
 
 def get_session_provider() -> DatabaseSessionProvider:
     return SqlAlchemySessionProvider()
@@ -39,6 +40,7 @@ def get_gcode_controller(db: Any = Depends(get_db)) -> GCodeController:
     
     # New Transformer implementation
     geometry_transformer = GeometryTransformerImpl()
+    pattern_generator = DiamondPatternGenerator()
 
     gcode_wrapper = PyGCodeWrapper()
     generator = PyGCodeGenerator(wrapper=gcode_wrapper, geometry_service=geom_service, truncate_limit=settings.GCODE_TRUNCATE_LIMIT, arc_tolerance=settings.ARC_TOLERANCE)
@@ -47,11 +49,12 @@ def get_gcode_controller(db: Any = Depends(get_db)) -> GCodeController:
 
     svg_wrapper = SvgPathToolsWrapper()
     svg_parser = SvgPathToolsParser(wrapper=svg_wrapper)
-    svg_converter = ConvertSVGToGCode(svg_parser, generator, repo, geom_service, geometry_transformer)
+    # We need to update use cases to take the generator now too
+    svg_converter = ConvertSVGToGCode(svg_parser, generator, repo, geom_service, geometry_transformer, pattern_generator)
 
     # Dependency Injection: Inject factory into ScikitImageWrapper
     raster_processor = ScikitImageWrapper(skeleton_wrapper_factory=NumpySkeletonWrapper)
     raster_parser = RasterParser(processor=raster_processor)
-    image_converter = ConvertImageToGCode(raster_parser, generator, repo, geom_service, geometry_transformer)
+    image_converter = ConvertImageToGCode(raster_parser, generator, repo, geom_service, geometry_transformer, pattern_generator)
     
     return GCodeController(svg_converter=svg_converter, image_converter=image_converter, repo=repo)

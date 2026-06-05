@@ -8,6 +8,7 @@ from src.domain.services.geometry_service import GeometryService
 from src.domain.services.path_optimizer import PathOptimizerService
 from src.application.services.path_preparation_service import PathPreparationService
 from src.domain.interfaces.geometry_transformer import GeometryTransformerInterface
+from src.domain.interfaces.pattern_generator import TestPatternGeneratorInterface
 
 class ConvertImageToGCode:
     def __init__(
@@ -16,14 +17,15 @@ class ConvertImageToGCode:
         generator: GCodeGenerator, 
         repo: MachineConfigRepository,
         geometry_service: GeometryService,
-        transformer: GeometryTransformerInterface
+        transformer: GeometryTransformerInterface,
+        pattern_generator: TestPatternGeneratorInterface
     ):
         self.parser = parser
         self.generator = generator
         self.repo = repo
         self.geometry_service = geometry_service
         self.optimizer = PathOptimizerService()
-        self.preparation_service = PathPreparationService(transformer)
+        self.preparation_service = PathPreparationService(transformer, pattern_generator)
 
     def execute(self, image_bytes: bytes) -> str:
         config = self.repo.get_config()

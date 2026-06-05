@@ -10,6 +10,7 @@ def test_convert_svg_success():
     mock_repo = MagicMock()
     mock_geometry_service = MagicMock()
     mock_transformer = MagicMock()
+    mock_pattern_generator = MagicMock()
     
     # Setup
     config = MachineConfig(
@@ -28,7 +29,7 @@ def test_convert_svg_success():
     mock_generator.generate.return_value = "G0 X0 Y0"
     
     # Execution
-    use_case = ConvertSVGToGCode(mock_parser, mock_generator, mock_repo, mock_geometry_service, mock_transformer)
+    use_case = ConvertSVGToGCode(mock_parser, mock_generator, mock_repo, mock_geometry_service, mock_transformer, mock_pattern_generator)
     result = use_case.execute(svg_content)
     
     # Assertions
@@ -43,8 +44,9 @@ def test_convert_svg_no_config():
     mock_repo.get_config.return_value = None
     mock_geometry_service = MagicMock()
     mock_transformer = MagicMock()
+    mock_pattern_generator = MagicMock()
     
-    use_case = ConvertSVGToGCode(MagicMock(), MagicMock(), mock_repo, mock_geometry_service, mock_transformer)
+    use_case = ConvertSVGToGCode(MagicMock(), MagicMock(), mock_repo, mock_geometry_service, mock_transformer, mock_pattern_generator)
     
     # Execution & Assertion
     with pytest.raises(ValueError, match="Machine configuration not found"):
