@@ -6,12 +6,10 @@ from typing import Dict, Any
 from src.dominio.entidades.configuracion_maquina import ConfiguracionMaquina
 
 class PresentadorConfiguracion:
-    """Encargado de formatear la salida de configuración para el cliente (API/UI)."""
-    
     @staticmethod
     def a_http(config: ConfiguracionMaquina) -> Dict[str, Any]:
         return {
-            "nombre": config.name,
+            "nombre": config.nombre,
             "dimensiones": {
                 "ancho": config.width,
                 "alto": config.height
@@ -21,8 +19,8 @@ class PresentadorConfiguracion:
                 "max_y": config.max_y
             },
             "comandos": {
-                "arriba": config.pen_up_command,
-                "abajo": config.pen_down_command
+                "arriba": config.pen_up_comando,
+                "abajo": config.pen_down_comando
             },
             "velocidades": {
                 "dibujo": config.feedrate_draw,

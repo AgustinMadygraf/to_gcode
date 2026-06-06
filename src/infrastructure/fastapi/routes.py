@@ -13,14 +13,14 @@ def set_config(
     controller: ControladorCodigoG = Depends(get_controlador_codigo_g)
 ):
     try:
-        data = config.model_dump()
+        datos = config.model_dump()
         # Normalización técnica pre-entrada al núcleo
-        if data.get('max_x') is None or data.get('max_x') == 0:
-            data['max_x'] = data.get('width')
-        if data.get('max_y') is None or data.get('max_y') == 0:
-            data['max_y'] = data.get('height')
+        if datos.get('max_x') is None or datos.get('max_x') == 0:
+            datos['max_x'] = datos.get('width')
+        if datos.get('max_y') is None or datos.get('max_y') == 0:
+            datos['max_y'] = datos.get('height')
             
-        return controller.establecer_configuracion(data)
+        return controller.establecer_configuracion(datos)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
@@ -68,7 +68,7 @@ async def convert_url(
         try:
             response = await client.get(payload.url)
             response.raise_for_status()
-            content = response.text
+            content = response.texto
             return controller.convertir_svg(content)
         except Exception as e:
             logger.error(f"Error fetching SVG from URL: {str(e)}")

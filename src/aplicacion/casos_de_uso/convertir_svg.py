@@ -26,8 +26,8 @@ class ConvertirSVGAGCode(ConvertidorBaseGCode, PuertoConversionSVG):
         super().__init__(generador=generador, repositorio=repositorio, servicio_preparacion=servicio_preparacion, optimizador=optimizador)
         self.analizador = analizador
 
-    def _parsear_entrada(self, input_data: str) -> List[Trayectoria]:
-        trayectorias = self.analizador.parsear_svg(input_data)
+    def _parsear_entrada(self, input_datos: str) -> List[Trayectoria]:
+        trayectorias = self.analizador.parsear_svg(input_datos)
         
         # Validar usando especificaciones
         validador = TrayectoriaNoVacia()

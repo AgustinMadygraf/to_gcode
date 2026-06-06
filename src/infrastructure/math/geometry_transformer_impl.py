@@ -12,13 +12,13 @@ class ImplementacionTransformadorGeometria(TransformadorGeometria):
     def _get_bounding_box(self, trayectorias: List[Trayectoria]) -> Rectangulo:
         all_points = [p for path in trayectorias for p in path.puntos]
         if not all_points:
-            return Rectangulo(0.0, 0.0, 0.0, 0.0)
+            return Rectangulo(min_x=0.0, min_y=0.0, max_x=0.0, max_y=0.0)
         
         min_x = min(p.x for p in all_points)
         max_x = max(p.x for p in all_points)
         min_y = min(p.y for p in all_points)
         max_y = max(p.y for p in all_points)
-        return Rectangulo(min_x, min_y, max_x, max_y)
+        return Rectangulo(min_x=min_x, min_y=min_y, max_x=max_x, max_y=max_y)
 
     def _rotate_path(self, path: Trayectoria, angle_deg: float) -> Trayectoria:
         angle_rad = math.radians(angle_deg)

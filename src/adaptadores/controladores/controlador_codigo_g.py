@@ -17,8 +17,8 @@ class ControladorCodigoG:
         self.conversor_imagen = conversor_imagen
         self.gestor_configuracion = gestor_configuracion
 
-    def establecer_configuracion(self, config_data: Dict[str, Any]) -> Dict[str, str]:
-        self.gestor_configuracion.guardar(config_data)
+    def establecer_configuracion(self, config_datos: Dict[str, Any]) -> Dict[str, str]:
+        self.gestor_configuracion.guardar(config_datos)
         return {"mensaje": "Configuración guardada"}
 
     def obtener_configuracion(self) -> Optional[Dict[str, Any]]:
@@ -27,10 +27,10 @@ class ControladorCodigoG:
             return None
         return PresentadorConfiguracion.a_http(config)
 
-    def convertir_svg(self, svg_content: str) -> Dict[str, str]:
-        gcode = self.conversor_svg.ejecutar(svg_content)
+    def convertir_svg(self, contenido_svg: str) -> Dict[str, str]:
+        gcode = self.conversor_svg.ejecutar(contenido_svg)
         return {"gcode": gcode}
 
-    def convertir_imagen(self, image_bytes: bytes) -> Dict[str, str]:
-        gcode = self.conversor_imagen.ejecutar(image_bytes)
+    def convertir_imagen(self, bytes_imagen: bytes) -> Dict[str, str]:
+        gcode = self.conversor_imagen.ejecutar(bytes_imagen)
         return {"gcode": gcode}

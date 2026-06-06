@@ -7,26 +7,26 @@ from typing import Dict, Optional, Any
 from src.adaptadores.pasarelas.envoltorios_tecnicos import EnvoltorioLibreriaGCode
 
 class PyGCodeWrapper(EnvoltorioLibreriaGCode):
-    def formatear_linea(self, command: str, params: Optional[Dict[str, float]] = None) -> str:
+    def formatear_linea(self, comando: str, parametros: Optional[Dict[str, float]] = None) -> str:
         pg: Any = pygcode
         
         # Separamos la velocidad de las coordenadas si existe
-        feedrate = params.pop('F', None) if params else None
+        feedrate = parametros.pop('F', None) if parametros else None
         
-        if command == "G0":
-            line = pg.gcodes.GCodeRapidMove(**(params or {}))
-        elif command == "G1":
-            line = pg.gcodes.GCodeLinearMove(**(params or {}))
-        elif command == "G2":
-            line = pg.gcodes.GCodeArcMoveCW(**(params or {}))
-        elif command == "G3":
-            line = pg.gcodes.GCodeArcMoveCCW(**(params or {}))
-        elif command == "G21":
+        if comando == "G0":
+            line = pg.gcodes.GCodeRapidMove(**(parametros or {}))
+        elif comando == "G1":
+            line = pg.gcodes.GCodeLinearMove(**(parametros or {}))
+        elif comando == "G2":
+            line = pg.gcodes.GCodeArcMoveCW(**(parametros or {}))
+        elif comando == "G3":
+            line = pg.gcodes.GCodeArcMoveCCW(**(parametros or {}))
+        elif comando == "G21":
             line = pg.gcodes.GCodeUseMillimeters()
-        elif command == "G90":
+        elif comando == "G90":
             line = pg.gcodes.GCodeAbsoluteDistanceMode()
         else:
-            return f"{command} " + " ".join([f"{k}{v:.3f}" for k, v in (params or {}).items()])
+            return f"{comando} " + " ".join([f"{k}{v:.3f}" for k, v in (parametros or {}).items()])
 
         result = str(line)
         
@@ -36,5 +36,5 @@ class PyGCodeWrapper(EnvoltorioLibreriaGCode):
             
         return result
 
-    def obtener_comentario(self, text: str) -> str:
-        return f"; {text}"
+    def obtener_comentario(self, texto: str) -> str:
+        return f"; {texto}"

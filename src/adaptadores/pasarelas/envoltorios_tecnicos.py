@@ -3,52 +3,52 @@ from typing import List, Any, Dict, Optional, Generator, Protocol, runtime_check
 from src.dominio.entidades.geometria import Punto
 
 @runtime_checkable
-class ImageLike(Protocol):
+class ImagenParecida(Protocol):
     @property
     def shape(self) -> tuple[int, ...]: ...
     def __getitem__(self, key: Any) -> Any: ...
 
-class SkeletonAbstraction(ABC):
+class AbstraccionEsqueleto(ABC):
     @property
     @abstractmethod
-    def width(self) -> int: ...
+    def ancho(self) -> int: ...
 
     @property
     @abstractmethod
-    def height(self) -> int: ...
+    def alto(self) -> int: ...
 
     @property
     @abstractmethod
-    def rows(self) -> int: ...
+    def filas(self) -> int: ...
 
     @property
     @abstractmethod
-    def cols(self) -> int: ...
+    def columnas(self) -> int: ...
     
     @abstractmethod
-    def is_pixel_on(self, x: int, y: int) -> bool: ...
+    def esta_pixel_encendido(self, x: int, y: int) -> bool: ...
 
 class EnvoltorioLibreriaSvg(ABC):
     @abstractmethod
-    def obtener_trayectorias_desde_str(self, svg_content: str) -> List[Any]:
+    def obtener_trayectorias_desde_str(self, contenido_svg: str) -> List[Any]:
         pass
 
     @abstractmethod
-    def muestrear_trayectoria_a_dominio(self, path: Any, num_samples: int) -> List[Punto]:
+    def muestrear_trayectoria_a_dominio(self, trayectoria: Any, num_muestras: int) -> List[Punto]:
         pass
 
 class ProcesadorImagenRaster(ABC):
     @abstractmethod
-    def procesar_imagen_a_esqueleto(self, image_bytes: bytes) -> SkeletonAbstraction:
+    def procesar_imagen_a_esqueleto(self, bytes_imagen: bytes) -> AbstraccionEsqueleto:
         pass
 
 class EnvoltorioLibreriaGCode(ABC):
     @abstractmethod
-    def formatear_linea(self, command: str, params: Optional[Dict[str, float]] = None) -> str:
+    def formatear_linea(self, comando: str, parametros: Optional[Dict[str, float]] = None) -> str:
         pass
 
     @abstractmethod
-    def obtener_comentario(self, text: str) -> str:
+    def obtener_comentario(self, texto: str) -> str:
         pass
 
 class ProveedorPersistenciaConfiguracion(ABC):
@@ -57,7 +57,7 @@ class ProveedorPersistenciaConfiguracion(ABC):
         pass
 
     @abstractmethod
-    def actualizar_o_insertar(self, name: str, data: Dict[str, Any]) -> None:
+    def actualizar_o_insertar(self, nombre: str, datos: Dict[str, Any]) -> None:
         pass
 
 class ProveedorSesionBaseDatos(ABC):

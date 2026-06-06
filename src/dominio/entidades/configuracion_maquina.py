@@ -22,13 +22,13 @@ VelocidadAvance = NewType('VelocidadAvance', float)
 @dataclass(frozen=True)
 class ConfiguracionMaquina:
     """Configuración de la máquina plotter con validación de consistencia física."""
-    name: str
+    nombre: str
     width: float   # Área de trabajo lógica
     height: float  # Área de trabajo lógica
     max_x: float   # Límite físico hardware
     max_y: float   # Límite físico hardware
-    pen_up_command: str   # Se mantiene para infraestructura pero el dominio usará EstadoHerramienta
-    pen_down_command: str
+    pen_up_comando: str   # Se mantiene para infraestructura pero el dominio usará EstadoHerramienta
+    pen_down_comando: str
     feedrate_draw: VelocidadAvance
     feedrate_move: VelocidadAvance
     invert_y: bool = True

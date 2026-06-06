@@ -26,7 +26,7 @@ class ConvertidorBaseGCode(ABC):
         self.optimizador = optimizador
 
     @abstractmethod
-    def _parsear_entrada(self, input_data: Any) -> List[Trayectoria]:
+    def _parsear_entrada(self, input_datos: Any) -> List[Trayectoria]:
         pass
 
     def ejecutar(self, datos_entrada: Any) -> str:

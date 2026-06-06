@@ -5,10 +5,10 @@ from src.infrastructure.math.geometry_transformer_impl import GeometryTransforme
 
 def test_geometry_transformer_auto_rotates():
     path = Trayectoria(puntos=[
-        DomainPunto(0.0, 0.0),
-        DomainPunto(20.0, 0.0),
-        DomainPunto(20.0, 10.0),
-        DomainPunto(0.0, 10.0)
+        DomainPunto(x=0.0, y=0.0),
+        DomainPunto(x=20.0, y=0.0),
+        DomainPunto(x=20.0, y=10.0),
+        DomainPunto(x=0.0, y=10.0)
     ])
     
     transformer = GeometryTransformerImpl()
@@ -26,10 +26,10 @@ def test_geometry_transformer_auto_rotates():
 
 def test_geometry_transformer_chooses_portrait():
     path = Trayectoria(puntos=[
-        DomainPunto(0.0, 0.0),
-        DomainPunto(10.0, 0.0),
-        DomainPunto(10.0, 20.0),
-        DomainPunto(0.0, 20.0)
+        DomainPunto(x=0.0, y=0.0),
+        DomainPunto(x=10.0, y=0.0),
+        DomainPunto(x=10.0, y=20.0),
+        DomainPunto(x=0.0, y=20.0)
     ])
     
     transformer = GeometryTransformerImpl()

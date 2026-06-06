@@ -3,17 +3,17 @@ from typing import Dict, Any, Optional
 
 class PuertoConversionSVG(ABC):
     @abstractmethod
-    def ejecutar(self, svg_content: str) -> str:
+    def ejecutar(self, contenido_svg: str) -> str:
         pass
 
 class PuertoConversionImagen(ABC):
     @abstractmethod
-    def ejecutar(self, image_bytes: bytes) -> str:
+    def ejecutar(self, bytes_imagen: bytes) -> str:
         pass
 
 class PuertoGestionConfiguracion(ABC):
     @abstractmethod
-    def guardar(self, config_data: Dict[str, Any]) -> None:
+    def guardar(self, config_datos: Dict[str, Any]) -> None:
         pass
 
     @abstractmethod

@@ -1,22 +1,22 @@
 from typing import List
 from src.aplicacion.limites.puertos import AnalizadorVectorial
 from src.adaptadores.pasarelas.envoltorios_tecnicos import EnvoltorioLibreriaSvg
-from src.dominio.entidades.geometria import Trayectoria as DomainTrayectoria
+from src.dominio.entidades.geometria import Trayectoria as TrayectoriaDominio
 
-class SvgTrayectoriaToolsParser(AnalizadorVectorial):
-    def __init__(self, wrapper: EnvoltorioLibreriaSvg, sampling_resolution: int = 50):
-        self.wrapper = wrapper
-        self.sampling_resolution = sampling_resolution
+class AnalizadorSvgToolsTrayectoria(AnalizadorVectorial):
+    def __init__(self, envoltorio: EnvoltorioLibreriaSvg, resolucion_muestreo: int = 50):
+        self.envoltorio = envoltorio
+        self.resolucion_muestreo = resolucion_muestreo
 
-    def parsear_svg(self, svg_content: str) -> List[DomainTrayectoria]:
+    def parsear_svg(self, contenido_svg: str) -> List[TrayectoriaDominio]:
         try:
-            paths = self.wrapper.obtener_trayectorias_desde_str(svg_content)
+            trayectorias = self.envoltorio.obtener_trayectorias_desde_str(contenido_svg)
         except Exception as e:
-            raise ValueError(f"Failed to parse SVG: {str(e)}")
+            raise ValueError(f"Error al analizar SVG: {str(e)}")
         
-        domain_paths: List[DomainTrayectoria] = []
-        for path in paths:
+        trayectorias_dominio: List[TrayectoriaDominio] = []
+        for trayectoria in trayectorias:
             # El adaptador ya no sabe que existen números complejos
-            points = self.wrapper.muestrear_trayectoria_a_dominio(path, self.sampling_resolution)
-            domain_paths.append(DomainTrayectoria(puntos=points))
-        return domain_paths
+            puntos = self.envoltorio.muestrear_trayectoria_a_dominio(trayectoria, self.resolucion_muestreo)
+            trayectorias_dominio.append(TrayectoriaDominio(puntos=puntos))
+        return trayectorias_dominio

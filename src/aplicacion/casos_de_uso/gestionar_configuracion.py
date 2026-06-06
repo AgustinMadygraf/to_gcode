@@ -8,8 +8,8 @@ class GestionarConfiguracion(PuertoGestionConfiguracion):
     def __init__(self, repositorio: RepositorioConfiguracionMaquina):
         self.repositorio = repositorio
 
-    def guardar(self, config_data: Dict[str, Any]) -> None:
-        entity = ConfiguracionMaquina(**config_data)
+    def guardar(self, config_datos: Dict[str, Any]) -> None:
+        entity = ConfiguracionMaquina(**config_datos)
         self.repositorio.guardar_configuracion(entity)
 
     def obtener(self) -> Optional[ConfiguracionMaquina]:

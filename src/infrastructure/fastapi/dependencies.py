@@ -4,13 +4,13 @@ from fastapi import Depends
 from src.infrastructure.settings.config import settings
 from src.infrastructure.database.persistence_impl import SQLAlchemyConfigProvider
 from src.infrastructure.database.session_provider import SqlAlchemySessionProvider
-from src.adaptadores.pasarelas.repositorio_configuracion_maquina_impl import SQLAlchemyRepositorioConfiguracionMaquina
+from src.adaptadores.pasarelas.repositorio_configuracion_maquina_impl import RepositorioConfiguracionMaquinaSqlAlchemy
 from src.infrastructure.svgpathtools.envoltorio_svg import SvgTrayectoriaToolsWrapper
 from src.infrastructure.image_processing.raster_wrapper import ScikitImageWrapper
 from src.infrastructure.pygcode.envoltorio_gcode import PyGCodeWrapper
-from src.adaptadores.pasarelas.analizador_svg import SvgTrayectoriaToolsParser
+from src.adaptadores.pasarelas.analizador_svg import AnalizadorSvgToolsTrayectoria
 from src.adaptadores.pasarelas.analizador_raster import AnalizadorRaster
-from src.adaptadores.pasarelas.generador_gcode import PyGeneradorGCode
+from src.adaptadores.pasarelas.generador_gcode import GeneradorGCodePy
 from src.dominio.servicios.servicio_geometria import ServicioGeometria
 from src.dominio.servicios.servicio_optimizador_trayectoria import OptimizadorTrayectoriaVoraz
 from src.aplicacion.servicios.servicio_preparacion_trayectoria import ServicioPreparacionTrayectoria
@@ -47,17 +47,17 @@ def get_controlador_codigo_g(db: Any = Depends(get_db)) -> ControladorCodigoG:
     )
 
     gcode_wrapper = PyGCodeWrapper()
-    generator = PyGeneradorGCode(
-        wrapper=gcode_wrapper, 
-        geometry_service=geom_service, 
-        truncate_limit=settings.GCODE_TRUNCATE_LIMIT, 
-        arc_tolerance=settings.ARC_TOLERANCE
+    generator = GeneradorGCodePy(
+        envoltorio=gcode_wrapper, 
+        servicio_geometria=geom_service, 
+        limite_truncado=settings.GCODE_TRUNCATE_LIMIT, 
+        tolerancia_arco=settings.ARC_TOLERANCE
     )
 
-    repo = SQLAlchemyRepositorioConfiguracionMaquina(provider=persistence_provider)
+    repo = RepositorioConfiguracionMaquinaSqlAlchemy(proveedor=persistence_provider)
 
     svg_wrapper = SvgTrayectoriaToolsWrapper()
-    svg_parser = SvgTrayectoriaToolsParser(wrapper=svg_wrapper)
+    svg_parser = AnalizadorSvgToolsTrayectoria(envoltorio=svg_wrapper)
     svg_converter = ConvertirSVGAGCode(
         analizador=svg_parser, 
         generador=generator, 
@@ -67,7 +67,7 @@ def get_controlador_codigo_g(db: Any = Depends(get_db)) -> ControladorCodigoG:
     )
 
     raster_processor = ScikitImageWrapper(skeleton_wrapper_factory=NumpySkeletonWrapper)
-    raster_parser = AnalizadorRaster(processor=raster_processor)
+    raster_parser = AnalizadorRaster(procesador=raster_processor)
     image_converter = ConvertirImagenAGCode(
         analizador=raster_parser, 
         generador=generator, 

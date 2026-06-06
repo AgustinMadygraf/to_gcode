@@ -4,20 +4,20 @@ from skimage.morphology import skeletonize  # type: ignore[reportUnknownVariable
 from skimage.color import rgb2gray  # type: ignore[reportUnknownVariableType]
 from skimage.filters import threshold_otsu  # type: ignore[reportUnknownVariableType]
 import io as pyio
-from src.adaptadores.pasarelas.envoltorios_tecnicos import SkeletonAbstraction, ImageLike, ProcesadorImagenRaster
+from src.adaptadores.pasarelas.envoltorios_tecnicos import AbstraccionEsqueleto, ImagenParecida, ProcesadorImagenRaster
 
 class ScikitImageWrapper(ProcesadorImagenRaster):
-    def __init__(self, skeleton_wrapper_factory: Callable[[Any], SkeletonAbstraction]):
+    def __init__(self, skeleton_wrapper_factory: Callable[[Any], AbstraccionEsqueleto]):
         self._factory = skeleton_wrapper_factory
 
-    def procesar_imagen_a_esqueleto(self, image_bytes: bytes) -> SkeletonAbstraction:
+    def procesar_imagen_a_esqueleto(self, bytes_imagen: bytes) -> AbstraccionEsqueleto:
         """
         Processes image bytes into a skeletonized binary representation.
         Assumes dark lines on light background.
         """
         # Load image from bytes
-        # Using ImageLike protocol to satisfy Pylance
-        raw_image: ImageLike = cast(ImageLike, io.imread(pyio.BytesIO(image_bytes)))  # type: ignore[reportUnknownMemberType]
+        # Using ImagenParecida protocol to satisfy Pylance
+        raw_image: ImagenParecida = cast(ImagenParecida, io.imread(pyio.BytesIO(bytes_imagen)))  # type: ignore[reportUnknownMemberType]
         
         # Convert to grayscale if it's RGB/RGBA
         if len(raw_image.shape) == 3:

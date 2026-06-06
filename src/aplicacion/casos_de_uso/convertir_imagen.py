@@ -24,5 +24,5 @@ class ConvertirImagenAGCode(ConvertidorBaseGCode, PuertoConversionImagen):
         super().__init__(generador=generador, repositorio=repositorio, servicio_preparacion=servicio_preparacion, optimizador=optimizador)
         self.analizador = analizador
 
-    def _parsear_entrada(self, input_data: bytes) -> List[Trayectoria]:
-        return self.analizador.parsear_imagen(input_data)
+    def _parsear_entrada(self, input_datos: bytes) -> List[Trayectoria]:
+        return self.analizador.parsear_imagen(input_datos)

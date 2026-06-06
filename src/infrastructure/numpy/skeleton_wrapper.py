@@ -1,27 +1,26 @@
 import numpy as np
-from src.adaptadores.pasarelas.envoltorios_tecnicos import SkeletonAbstraction
+from src.adaptadores.pasarelas.envoltorios_tecnicos import AbstraccionEsqueleto
 
-class NumpySkeletonWrapper(SkeletonAbstraction):
+class NumpySkeletonWrapper(AbstraccionEsqueleto):
     def __init__(self, skeleton: np.ndarray):
         self._skeleton = skeleton
 
     @property
-    def width(self) -> int:
+    def ancho(self) -> int:
         return self._skeleton.shape[1]
 
     @property
-    def height(self) -> int:
+    def alto(self) -> int:
         return self._skeleton.shape[0]
 
-    # Compatibilidad con implementación original
     @property
-    def rows(self) -> int:
-        return self.height
+    def filas(self) -> int:
+        return self.alto
 
     @property
-    def cols(self) -> int:
-        return self.width
+    def columnas(self) -> int:
+        return self.ancho
 
-    def is_pixel_on(self, x: int, y: int) -> bool:
+    def esta_pixel_encendido(self, x: int, y: int) -> bool:
         # Nota: La interfaz abstracta usaba (x, y), pero la implementación numpy usa (fila, col) -> (y, x)
         return bool(self._skeleton[y, x])

@@ -15,7 +15,7 @@ from src.infrastructure.settings.logger import logger
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    logger.info("Initializing database...")
+    logger.info("Initializing datosbase...")
     init_db()
     logger.info("Application startup complete.")
     yield

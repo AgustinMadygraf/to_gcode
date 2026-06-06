@@ -34,11 +34,11 @@ class DiamondPatternGenerator(GeneradorPatrones):
         for cx, cy in corners:
             # Puntos around (cx, cy)
             points = [
-                Punto(cx, cy - size/2),
-                Punto(cx + size/2, cy),
-                Punto(cx, cy + size/2),
-                Punto(cx - size/2, cy),
-                Punto(cx, cy - size/2)
+                Punto(x=cx, y=cy - size/2),
+                Punto(x=cx + size/2, y=cy),
+                Punto(x=cx, y=cy + size/2),
+                Punto(x=cx - size/2, y=cy),
+                Punto(x=cx, y=cy - size/2)
             ]
             trayectorias.append(Trayectoria(puntos=points))
         return trayectorias

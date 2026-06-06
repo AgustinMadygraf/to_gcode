@@ -1,48 +1,49 @@
 """
-Path: src/adapters/pasarelas/raster_parser.py
+Path: src/adaptadores/pasarelas/analizador_raster.py
 """
 
 from typing import List, Set, Tuple
-from src.dominio.entidades.geometria import Trayectoria as DomainTrayectoria, Punto
-from src.adaptadores.pasarelas.envoltorios_tecnicos import SkeletonAbstraction, ProcesadorImagenRaster
+from src.dominio.entidades.geometria import Trayectoria as TrayectoriaDominio, Punto
+from src.adaptadores.pasarelas.envoltorios_tecnicos import AbstraccionEsqueleto, ProcesadorImagenRaster
 from src.aplicacion.limites.puertos import AnalizadorRaster as AnalizadorRasterBoundary
 
 class AnalizadorRaster(AnalizadorRasterBoundary):
-    def __init__(self, processor: ProcesadorImagenRaster):
-        self.processor = processor
+    def __init__(self, procesador: ProcesadorImagenRaster):
+        self.procesador = procesador
 
-    def parsear_imagen(self, bytes_imagen: bytes) -> List[DomainTrayectoria]:
-        skeleton = self.processor.procesar_imagen_a_esqueleto(bytes_imagen)
-        return self._trace_skeleton(skeleton)
+    def parsear_imagen(self, bytes_imagen: bytes) -> List[TrayectoriaDominio]:
+        esqueleto: AbstraccionEsqueleto = self.procesador.procesar_imagen_a_esqueleto(bytes_imagen)
+        return self._trazar_esqueleto(esqueleto)
 
-    def _trace_skeleton(self, skeleton: SkeletonAbstraction) -> List[DomainTrayectoria]:
-        paths: List[DomainTrayectoria] = []
-        visited: Set[Tuple[int, int]] = set()
-        rows, cols = skeleton.rows, skeleton.cols
+    def _trazar_esqueleto(self, esqueleto: AbstraccionEsqueleto) -> List[TrayectoriaDominio]:
+        trayectorias: List[TrayectoriaDominio] = []
+        visitados: Set[Tuple[int, int]] = set()
+        filas: int = esqueleto.filas
+        columnas: int = esqueleto.columnas
 
-        for r in range(rows):
-            for c in range(cols):
-                if skeleton.is_pixel_on(c, r) and (r, c) not in visited:
-                    path_points: List[Tuple[int, int]] = []
-                    # Use iterative approach to avoid RecursionError
-                    stack = [(r, c)]
-                    while stack:
-                        curr_r, curr_c = stack.pop()
-                        if (curr_r, curr_c) in visited:
+        for f in range(filas):
+            for c in range(columnas):
+                if esqueleto.esta_pixel_encendido(c, f) and (f, c) not in visitados:
+                    puntos_trayectoria: List[Tuple[int, int]] = []
+                    # Usar enfoque iterativo para evitar RecursionError
+                    pila: List[Tuple[int, int]] = [(f, c)]
+                    while pila:
+                        f_actual, c_actual = pila.pop()
+                        if (f_actual, c_actual) in visitados:
                             continue
                             
-                        visited.add((curr_r, curr_c))
-                        path_points.append((curr_r, curr_c))
+                        visitados.add((f_actual, c_actual))
+                        puntos_trayectoria.append((f_actual, c_actual))
                         
-                        for dr in [-1, 0, 1]:
+                        for df in [-1, 0, 1]:
                             for dc in [-1, 0, 1]:
-                                if dr == 0 and dc == 0:
+                                if df == 0 and dc == 0:
                                     continue
-                                nr, nc = curr_r + dr, curr_c + dc
-                                if 0 <= nr < rows and 0 <= nc < cols:
-                                    if skeleton.is_pixel_on(nc, nr) and (nr, nc) not in visited:
-                                        stack.append((nr, nc))
+                                nf, nc = f_actual + df, c_actual + dc
+                                if 0 <= nf < filas and 0 <= nc < columnas:
+                                    if esqueleto.esta_pixel_encendido(nc, nf) and (nf, nc) not in visitados:
+                                        pila.append((nf, nc))
                                         
-                    if len(path_points) > 1:
-                        paths.append(DomainTrayectoria(puntos=[Punto(x=float(c), y=float(rows - r)) for r, c in path_points]))
-        return paths
+                    if len(puntos_trayectoria) > 1:
+                        trayectorias.append(TrayectoriaDominio(puntos=[Punto(x=float(c), y=float(filas - f)) for f, c in puntos_trayectoria]))
+        return trayectorias
