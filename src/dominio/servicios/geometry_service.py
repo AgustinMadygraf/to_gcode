@@ -14,7 +14,7 @@ class GeometryService:
 
     def fit_arc(self, points: List[Punto], tolerance: float) -> Optional[Arco]:
         """
-        Intenta ajustar un arco circular a una secuencia de puntos.
+        Intenta ajustar un arco circular a una secuencia de punsrc.dominio.servicestos.
         Retorna un objeto Arco si el ajuste está dentro de la tolerancia.
         """
         if len(points) < 3:
@@ -30,10 +30,10 @@ class GeometryService:
         
         if max_dev <= tolerance:
             return Arco(
-                center=center,
-                radius=radius,
-                start_point=points[0],
-                end_point=points[-1]
+                centro=center,
+                radio=radius,
+                punto_inicio=points[0],
+                punto_fin=points[-1]
             )
         
         return None
@@ -43,8 +43,8 @@ class GeometryService:
         Divide una trayectoria en segmentos de líneas o arcos.
         (Lógica simplificada para ilustración del uso del nuevo VO Arco)
         """
-        arc = self.fit_arc(path.points, tolerance)
+        arc = self.fit_arc(path.puntos, tolerance)
         if arc:
             # Retornamos el mismo path pero enriquecido con info de arco
-            return [Trayectoria(points=path.points, arc_info=arc)]
+            return [Trayectoria(puntos=path.puntos, arc_info=arc)]
         return [path]

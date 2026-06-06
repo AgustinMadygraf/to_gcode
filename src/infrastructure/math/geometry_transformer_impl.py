@@ -10,7 +10,7 @@ from src.dominio.interfaces.geometry_transformer import GeometryTransformerInter
 
 class GeometryTransformerImpl(GeometryTransformerInterface):
     def _get_bounding_box(self, paths: List[Trayectoria]) -> Rectangulo:
-        all_points = [p for path in paths for p in path.points]
+        all_points = [p for path in paths for p in path.puntos]
         if not all_points:
             return Rectangulo(0.0, 0.0, 0.0, 0.0)
         
@@ -23,7 +23,7 @@ class GeometryTransformerImpl(GeometryTransformerInterface):
     def _rotate_path(self, path: Trayectoria, angle_deg: float) -> Trayectoria:
         angle_rad = math.radians(angle_deg)
         new_points: List[DomainPunto] = []
-        for p in path.points:
+        for p in path.puntos:
             new_x = p.x * math.cos(angle_rad) - p.y * math.sin(angle_rad)
             new_y = p.x * math.sin(angle_rad) + p.y * math.cos(angle_rad)
             new_points.append(DomainPunto(x=new_x, y=new_y))
@@ -32,23 +32,23 @@ class GeometryTransformerImpl(GeometryTransformerInterface):
         min_y = min(p.y for p in new_points)
         normalized_points = [DomainPunto(x=p.x - min_x, y=p.y - min_y) for p in new_points]
         
-        return Trayectoria(points=normalized_points)
+        return Trayectoria(puntos=normalized_points)
 
     def _scale_and_translate(self, paths: List[Trayectoria], scale: float, offset: DomainPunto) -> List[Trayectoria]:
         transformed_paths: List[Trayectoria] = []
         for path in paths:
             new_points = [
                 DomainPunto(x=p.x * scale + offset.x, y=p.y * scale + offset.y)
-                for p in path.points
+                for p in path.puntos
             ]
-            transformed_paths.append(Trayectoria(points=new_points))
+            transformed_paths.append(Trayectoria(puntos=new_points))
         return transformed_paths
 
     def fit_and_orient(self, paths: List[Trayectoria], landscape_limits: Rectangulo, portrait_limits: Rectangulo) -> Tuple[List[Trayectoria], str]:
         drawing_box = self._get_bounding_box(paths)
         
-        scale_l = min(landscape_limits.width / drawing_box.width, landscape_limits.height / drawing_box.height)
-        scale_p = min(portrait_limits.width / drawing_box.width, portrait_limits.height / drawing_box.height)
+        scale_l = min(landscape_limits.ancho / drawing_box.ancho, landscape_limits.altura / drawing_box.altura)
+        scale_p = min(portrait_limits.ancho / drawing_box.ancho, portrait_limits.altura / drawing_box.altura)
         
         if scale_p > scale_l:
             best_scale = scale_p

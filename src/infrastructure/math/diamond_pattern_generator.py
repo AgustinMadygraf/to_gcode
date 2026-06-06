@@ -40,5 +40,5 @@ class DiamondPatternGenerator(TestPatternGeneratorInterface):
                 Punto(cx - size/2, cy),
                 Punto(cx, cy - size/2)
             ]
-            paths.append(Trayectoria(points=points))
+            paths.append(Trayectoria(puntos=points))
         return paths

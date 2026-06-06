@@ -3,7 +3,7 @@ from src.application.boundaries.gateways import GCodeGenerator
 from src.application.boundaries.infrastructure_interfaces import GCodeLibraryWrapper
 from src.dominio.entidades.geometria import Trayectoria
 from src.dominio.entidades.configuracion_maquina import ConfiguracionMaquina
-from src.dominio.services.geometry_service import GeometryService
+from src.dominio.servicios.geometry_service import GeometryService
 
 class PyGCodeGenerator(GCodeGenerator):
     """
@@ -46,12 +46,12 @@ class PyGCodeGenerator(GCodeGenerator):
         self.last_modal_command = "G1" 
 
         for path in paths:
-            if path.is_empty:
+            if path.es_vacia:
                 continue
 
             # La simplificación ahora es responsabilidad del dominio
-            domain_path = path.simplified()
-            points = domain_path.points
+            domain_path = path.simplificada()
+            points = domain_path.puntos
             
             # Orquestación de traducción a G-Code
             gcode_lines.append(config.pen_up_command)
@@ -63,10 +63,10 @@ class PyGCodeGenerator(GCodeGenerator):
             
             if arc:
                 gcode_lines.append(self._format_modal("G2", {
-                    "X": arc.end_point.x, 
-                    "Y": arc.end_point.y, 
-                    "I": arc.center.x - arc.start_point.x, 
-                    "J": arc.center.y - arc.start_point.y
+                    "X": arc.punto_fin.x, 
+                    "Y": arc.punto_fin.y, 
+                    "I": arc.centro.x - arc.punto_inicio.x, 
+                    "J": arc.centro.y - arc.punto_inicio.y
                 }))
             else:
                 for p in points[1:]:

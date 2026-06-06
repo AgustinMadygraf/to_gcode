@@ -1,6 +1,6 @@
 import pytest
 import math
-from src.dominio.services.geometry_service import GeometryService
+from src.dominio.servicios.geometry_service import GeometryService
 from src.infrastructure.math.geometry_wrapper import GeometryWrapper
 from src.dominio.entidades.geometria import Punto, Arco
 

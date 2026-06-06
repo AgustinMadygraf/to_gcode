@@ -14,22 +14,22 @@ class GreedyTrayectoriaOptimizer(TrayectoriaOptimizer):
 
     def optimize(self, paths: List[Trayectoria]) -> List[Trayectoria]:
         # Filtrar trayectorias inválidas usando lógica de la entidad
-        valid_paths = [p for p in paths if not p.is_empty]
+        valid_paths = [p for p in paths if not p.es_vacia]
         if not valid_paths:
             return []
         
         # Ordenar inicialmente por distancia total (opcional, heurística simple)
-        unvisited = sorted(valid_paths, key=lambda p: p.total_distance, reverse=True)
+        unvisited = sorted(valid_paths, key=lambda p: p.distancia_total, reverse=True)
         
         current_path = unvisited.pop(0)
         optimized = [current_path]
         
         while unvisited:
             # Buscar la trayectoria cuyo punto de inicio esté más cerca del final de la actual
-            last_point = current_path.end_point
+            last_point = current_path.punto_fin
             
             # Usamos el comportamiento de Point para calcular distancias
-            next_path = min(unvisited, key=lambda p: last_point.distance_to(p.start_point))
+            next_path = min(unvisited, key=lambda p: last_point.distancia_a(p.punto_inicio))
             
             unvisited.remove(next_path)
             optimized.append(next_path)

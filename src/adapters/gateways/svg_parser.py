@@ -18,5 +18,5 @@ class SvgTrayectoriaToolsParser(VectorParser):
         for path in paths:
             # El adaptador ya no sabe que existen números complejos
             points = self.wrapper.sample_path_to_domain(path, self.sampling_resolution)
-            domain_paths.append(DomainTrayectoria(points=points))
+            domain_paths.append(DomainTrayectoria(puntos=points))
         return domain_paths

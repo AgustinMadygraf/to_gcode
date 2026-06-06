@@ -21,7 +21,7 @@ def test_convert_image_success():
     )
     mock_repo.get_config.return_value = config
 
-    raw_paths = [Trayectoria(points=[Punto(x=0, y=0), Punto(x=10, y=10)])]
+    raw_paths = [Trayectoria(puntos=[Punto(x=0, y=0), Punto(x=10, y=10)])]
     mock_parser.parse_image.return_value = raw_paths
     mock_prep_service.prepare.return_value = raw_paths
     mock_optimizer.optimize.return_value = raw_paths

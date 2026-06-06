@@ -22,7 +22,7 @@ def test_convert_svg_success():
     mock_repo.get_config.return_value = config
 
     svg_content = "<svg>...</svg>"
-    raw_paths = [Trayectoria(points=[Punto(x=0, y=0), Punto(x=10, y=10)])]
+    raw_paths = [Trayectoria(puntos=[Punto(x=0, y=0), Punto(x=10, y=10)])]
 
     mock_parser.parse_svg.return_value = raw_paths
     mock_prep_service.prepare.return_value = raw_paths

@@ -4,7 +4,7 @@ from src.dominio.entidades.geometria import Rectangulo
 from src.infrastructure.math.geometry_transformer_impl import GeometryTransformerImpl
 
 def test_geometry_transformer_auto_rotates():
-    path = Trayectoria(points=[
+    path = Trayectoria(puntos=[
         DomainPunto(0.0, 0.0),
         DomainPunto(20.0, 0.0),
         DomainPunto(20.0, 10.0),
@@ -21,11 +21,11 @@ def test_geometry_transformer_auto_rotates():
     
     assert orientation == "landscape"
     final_box = transformer._get_bounding_box(transformed_paths)
-    assert final_box.width == pytest.approx(100.0)
-    assert final_box.height == pytest.approx(50.0)
+    assert final_box.ancho == pytest.approx(100.0)
+    assert final_box.altura == pytest.approx(50.0)
 
 def test_geometry_transformer_chooses_portrait():
-    path = Trayectoria(points=[
+    path = Trayectoria(puntos=[
         DomainPunto(0.0, 0.0),
         DomainPunto(10.0, 0.0),
         DomainPunto(10.0, 20.0),
@@ -43,5 +43,5 @@ def test_geometry_transformer_chooses_portrait():
     assert orientation == "portrait"
     
     final_box = transformer._get_bounding_box(transformed_paths)
-    assert final_box.width == pytest.approx(100.0)
-    assert final_box.height == pytest.approx(50.0)
+    assert final_box.ancho == pytest.approx(100.0)
+    assert final_box.altura == pytest.approx(50.0)

@@ -18,7 +18,7 @@ class RasterParser(RasterParserBoundary):
 
         for r in range(rows):
             for c in range(cols):
-                if skeleton.is_set(r, c) and (r, c) not in visited:
+                if skeleton.is_pixel_on(c, r) and (r, c) not in visited:
                     path_points: List[Tuple[int, int]] = []
                     # Use iterative approach to avoid RecursionError
                     stack = [(r, c)]
@@ -36,9 +36,10 @@ class RasterParser(RasterParserBoundary):
                                     continue
                                 nr, nc = curr_r + dr, curr_c + dc
                                 if 0 <= nr < rows and 0 <= nc < cols:
-                                    if skeleton.is_set(nr, nc) and (nr, nc) not in visited:
+                                    if skeleton.is_pixel_on(nc, nr) and (nr, nc) not in visited:
                                         stack.append((nr, nc))
                                         
                     if len(path_points) > 1:
-                        paths.append(DomainTrayectoria(points=[Punto(x=float(c), y=float(rows - r)) for r, c in path_points]))
+                        import logging; logging.error(f"DEBUG: Calling Trayectoria with puntos={len([Punto(x=float(c), y=float(rows - r)) for r, c in path_points])}")
+                        paths.append(DomainTrayectoria(puntos=[Punto(x=float(c), y=float(rows - r)) for r, c in path_points]))
         return paths
