@@ -12,21 +12,21 @@ from src.dominio.interfaces.generador_patrones import GeneradorPatrones
 class ServicioPreparacionTrayectoria:
     def __init__(
         self, 
-        transformer: TransformadorGeometria,
-        pattern_generator: GeneradorPatrones
+        transformador: TransformadorGeometria,
+        generador_patrones: GeneradorPatrones
     ):
-        self.transformador = transformer
-        self.generador_patrones = pattern_generator
+        self.transformador = transformador
+        self.generador_patrones = generador_patrones
 
-    def preparar(self, paths: List[Trayectoria], config: ConfiguracionMaquina) -> List[Trayectoria]:
-        patterns = self.generador_patrones.generar(config.max_x, config.max_y, margen=5.0)
+    def preparar(self, trayectorias: List[Trayectoria], config: ConfiguracionMaquina) -> List[Trayectoria]:
+        patrones = self.generador_patrones.generar(config.max_x, config.max_y, margen=5.0)
         
-        all_paths = patterns + paths
+        todas_las_trayectorias = patrones + trayectorias
         
-        landscape_limits = Rectangulo(0.0, 0.0, config.max_x, config.max_y)
-        portrait_limits = Rectangulo(0.0, 0.0, config.max_y, config.max_x)
+        limites_paisaje = Rectangulo(0.0, 0.0, config.max_x, config.max_y)
+        limites_retrato = Rectangulo(0.0, 0.0, config.max_y, config.max_x)
         
-        transformed_paths, _ = self.transformador.fit_and_orient(
-            all_paths, landscape_limits, portrait_limits
+        trayectorias_transformadas, _ = self.transformador.ajustar_y_orientar(
+            todas_las_trayectorias, limites_paisaje, limites_retrato
         )
-        return transformed_paths
+        return trayectorias_transformadas

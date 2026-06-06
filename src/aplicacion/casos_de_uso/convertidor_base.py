@@ -3,7 +3,8 @@ Path: src/aplicacion/casos_de_uso/convertidor_base.py
 """
 
 from abc import ABC, abstractmethod
-from typing import Any, List
+from typing import Any, List, Optional
+from src.dominio.entidades.configuracion_maquina import ConfiguracionMaquina
 from src.aplicacion.limites.puertos import GeneradorGCode
 from src.aplicacion.limites.interfaz_repositorio_configuracion_maquina import RepositorioConfiguracionMaquina
 from src.dominio.interfaces.optimizador_trayectoria import OptimizadorTrayectoria
@@ -17,38 +18,38 @@ class ConvertidorBaseGCode(ABC):
     """
     def __init__(
         self,
-        generator: GeneradorGCode,
-        repo: RepositorioConfiguracionMaquina,
-        preparation_service: ServicioPreparacionTrayectoria,
-        optimizer: OptimizadorTrayectoria
+        generador: GeneradorGCode,
+        repositorio: RepositorioConfiguracionMaquina,
+        servicio_preparacion: ServicioPreparacionTrayectoria,
+        optimizador: OptimizadorTrayectoria
     ):
-        self.generator = generator
-        self.repo = repo
-        self.preparation_service = preparation_service
-        self.optimizer = optimizer
+        self.generador = generador
+        self.repositorio = repositorio
+        self.servicio_preparacion = servicio_preparacion
+        self.optimizador = optimizador
 
     @abstractmethod
     def _parsear_entrada(self, input_data: Any) -> List[Trayectoria]:
         """Método abstracto para que cada formato implemente su propio parseo."""
         pass
 
-    def ejecutar(self, input_data: Any) -> str:
+    def ejecutar(self, datos_entrada: Any) -> str:
         """
         Orquestación estándar de la capa de aplicación.
         Sigue el flujo: Config -> Parse -> Prepare -> Optimize -> Generate.
         """
-        config = self.repo.obtener_configuracion()
+        config: Optional[ConfiguracionMaquina] = self.repositorio.obtener_configuracion()
         if not config:
             raise ValueError("Configuración de la máquina no encontrada")
 
         # 1. Parsear el input específico
-        raw_paths = self._parsear_entrada(input_data)
+        trayectorias_brutas = self._parsear_entrada(datos_entrada)
 
         # 2. Preparar (Escalado, Orientación, Marcas)
-        transformed_paths = self.preparation_service.preparar(raw_paths, config)
+        trayectorias_transformadas = self.servicio_preparacion.preparar(trayectorias_brutas, config)
         
         # 3. Optimizar (Minimizar movimientos en vacío)
-        optimized_paths = self.optimizer.optimizar(transformed_paths)
+        trayectorias_optimizadas = self.optimizador.optimizar(trayectorias_transformadas)
         
         # 4. Generar G-Code final
-        return self.generator.generar(optimized_paths, config)
+        return self.generador.generar(trayectorias_optimizadas, config)

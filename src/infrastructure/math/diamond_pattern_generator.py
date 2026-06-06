@@ -30,7 +30,7 @@ class DiamondPatternGenerator(GeneradorPatrones):
             (safe_x_max, safe_y_max)
         ]
         
-        paths: List[Trayectoria] = []
+        trayectorias: List[Trayectoria] = []
         for cx, cy in corners:
             # Puntos around (cx, cy)
             points = [
@@ -40,5 +40,5 @@ class DiamondPatternGenerator(GeneradorPatrones):
                 Punto(cx - size/2, cy),
                 Punto(cx, cy - size/2)
             ]
-            paths.append(Trayectoria(puntos=points))
-        return paths
+            trayectorias.append(Trayectoria(puntos=points))
+        return trayectorias

@@ -9,8 +9,8 @@ from src.dominio.entidades.geometria import Rectangulo
 from src.dominio.interfaces.transformador_geometria import TransformadorGeometria
 
 class ImplementacionTransformadorGeometria(TransformadorGeometria):
-    def _get_bounding_box(self, paths: List[Trayectoria]) -> Rectangulo:
-        all_points = [p for path in paths for p in path.puntos]
+    def _get_bounding_box(self, trayectorias: List[Trayectoria]) -> Rectangulo:
+        all_points = [p for path in trayectorias for p in path.puntos]
         if not all_points:
             return Rectangulo(0.0, 0.0, 0.0, 0.0)
         
@@ -34,37 +34,37 @@ class ImplementacionTransformadorGeometria(TransformadorGeometria):
         
         return Trayectoria(puntos=normalized_points)
 
-    def _scale_and_translate(self, paths: List[Trayectoria], scale: float, offset: DomainPunto) -> List[Trayectoria]:
-        transformed_paths: List[Trayectoria] = []
-        for path in paths:
+    def _scale_and_translate(self, trayectorias: List[Trayectoria], scale: float, offset: DomainPunto) -> List[Trayectoria]:
+        trayectorias_transformadas: List[Trayectoria] = []
+        for path in trayectorias:
             new_points = [
                 DomainPunto(x=p.x * scale + offset.x, y=p.y * scale + offset.y)
                 for p in path.puntos
             ]
-            transformed_paths.append(Trayectoria(puntos=new_points))
-        return transformed_paths
+            trayectorias_transformadas.append(Trayectoria(puntos=new_points))
+        return trayectorias_transformadas
 
-    def fit_and_orient(self, paths: List[Trayectoria], landscape_limits: Rectangulo, portrait_limits: Rectangulo) -> Tuple[List[Trayectoria], str]:
-        drawing_box = self._get_bounding_box(paths)
+    def ajustar_y_orientar(self, trayectorias: List[Trayectoria], limites_paisaje: Rectangulo, limites_retrato: Rectangulo) -> Tuple[List[Trayectoria], str]:
+        drawing_box = self._get_bounding_box(trayectorias)
         
-        scale_l = min(landscape_limits.ancho / drawing_box.ancho, landscape_limits.altura / drawing_box.altura)
-        scale_p = min(portrait_limits.ancho / drawing_box.ancho, portrait_limits.altura / drawing_box.altura)
+        scale_l = min(limites_paisaje.ancho / drawing_box.ancho, limites_paisaje.altura / drawing_box.altura)
+        scale_p = min(limites_retrato.ancho / drawing_box.ancho, limites_retrato.altura / drawing_box.altura)
         
         if scale_p > scale_l:
             best_scale = scale_p
             orientation = "portrait"
-            paths = [self._rotate_path(p, 90) for p in paths]
-            final_drawing_box = self._get_bounding_box(paths)
-            target_box = portrait_limits
+            trayectorias = [self._rotate_path(p, 90) for p in trayectorias]
+            final_drawing_box = self._get_bounding_box(trayectorias)
+            target_box = limites_retrato
         else:
             best_scale = scale_l
             orientation = "landscape"
             final_drawing_box = drawing_box
-            target_box = landscape_limits
+            target_box = limites_paisaje
             
         offset = DomainPunto(x=target_box.min_x - final_drawing_box.min_x * best_scale, 
                              y=target_box.min_y - final_drawing_box.min_y * best_scale)
         
-        transformed_paths = self._scale_and_translate(paths, best_scale, offset)
+        trayectorias_transformadas = self._scale_and_translate(trayectorias, best_scale, offset)
         
-        return transformed_paths, orientation
+        return trayectorias_transformadas, orientation

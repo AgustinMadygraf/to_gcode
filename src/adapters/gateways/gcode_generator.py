@@ -37,7 +37,7 @@ class PyGeneradorGCode(GeneradorGCode):
         self.last_modal_command = command
         return self.wrapper.formatear_linea(command, params)
 
-    def generar(self, paths: List[Trayectoria], config: ConfiguracionMaquina) -> str:
+    def generar(self, trayectorias: List[Trayectoria], config: ConfiguracionMaquina) -> str:
         self.last_modal_command = None
         
         gcode_lines: List[str] = [
@@ -49,12 +49,12 @@ class PyGeneradorGCode(GeneradorGCode):
 
         self.last_modal_command = "G1" 
 
-        for path in paths:
-            if path.es_vacia:
+        for trayectoria in trayectorias:
+            if trayectoria.es_vacia:
                 continue
 
             # La simplificación ahora es responsabilidad del dominio
-            domain_path = path.simplificada()
+            domain_path = trayectoria.simplificada()
             points = domain_path.puntos
             
             # Orquestación de traducción a G-Code

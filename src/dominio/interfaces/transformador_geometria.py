@@ -9,5 +9,5 @@ from src.dominio.entidades.geometria import Rectangulo
 
 class TransformadorGeometria(ABC):
     @abstractmethod
-    def fit_and_orient(self, paths: List[Trayectoria], landscape_limits: Rectangulo, portrait_limits: Rectangulo) -> Tuple[List[Trayectoria], str]:
+    def ajustar_y_orientar(self, trayectorias: List[Trayectoria], limites_paisaje: Rectangulo, limites_retrato: Rectangulo) -> Tuple[List[Trayectoria], str]:
         pass
