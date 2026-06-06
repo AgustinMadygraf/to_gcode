@@ -4,24 +4,24 @@ Trayectoria: src/infrastructure/math/diamond_pattern_generator.py
 
 from typing import List
 from src.dominio.entidades.geometria import Trayectoria, Punto
-from src.dominio.interfaces.pattern_generator import TestPatternGeneratorInterface
+from src.dominio.interfaces.generador_patrones import GeneradorPatrones
 
 __all__ = ["DiamondPatternGenerator"]
 
-class DiamondPatternGenerator(TestPatternGeneratorInterface):
-    def generate(self, width: float, height: float, inset: float) -> List[Trayectoria]:
+class DiamondPatternGenerator(GeneradorPatrones):
+    def generar(self, ancho: float, altura: float, margen: float) -> List[Trayectoria]:
         size = 10.0
         # Buffer to ensure diamond is fully within boundaries
         buffer = size / 2
         
         # Calculate safe corners
-        # If corner is (inset, inset), points range from (inset-5, inset-5) to (inset+5, inset+5)
-        # We need min coords to be >= 0 and max coords to be <= (width, height)
+        # If corner is (margen, margen), points range from (margen-5, margen-5) to (margen+5, margen+5)
+        # We need min coords to be >= 0 and max coords to be <= (ancho, altura)
         
-        safe_x_min = inset + buffer
-        safe_x_max = width - inset - buffer
-        safe_y_min = inset + buffer
-        safe_y_max = height - inset - buffer
+        safe_x_min = margen + buffer
+        safe_x_max = ancho - margen - buffer
+        safe_y_min = margen + buffer
+        safe_y_max = altura - margen - buffer
         
         corners = [
             (safe_x_min, safe_y_min),

@@ -3,48 +3,48 @@ Trayectoria: src/domain/services/geometry_service.py
 """
 
 from typing import List, Optional
-from src.dominio.interfaces.geometry_processor import GeometryProcessor
+from src.dominio.interfaces.procesador_geometria import ProcesadorGeometria
 from src.dominio.entidades.geometria import Punto, Arco, Trayectoria
 
-class GeometryService:
+class ServicioGeometria:
     """Servicio de dominio para operaciones geométricas complejas."""
     
-    def __init__(self, geometry_processor: GeometryProcessor):
-        self.processor = geometry_processor
+    def __init__(self, procesador_geometria: ProcesadorGeometria):
+        self.procesador = procesador_geometria
 
-    def fit_arc(self, points: List[Punto], tolerance: float) -> Optional[Arco]:
+    def ajustar_arco(self, puntos: List[Punto], tolerancia: float) -> Optional[Arco]:
         """
         Intenta ajustar un arco circular a una secuencia de punsrc.dominio.servicestos.
         Retorna un objeto Arco si el ajuste está dentro de la tolerancia.
         """
-        if len(points) < 3:
+        if len(puntos) < 3:
             return None
             
-        p1, p2, p3 = points[0], points[len(points)//2], points[-1]
-        circle = self.processor.get_circle_from_three_points(p1, p2, p3)
+        p1, p2, p3 = puntos[0], puntos[len(puntos)//2], puntos[-1]
+        circle = self.procesador.obtener_circulo_desde_tres_puntos(p1, p2, p3)
         if not circle:
             return None
             
-        center, radius = circle
-        max_dev, _ = self.processor.calculate_max_deviation(points, center, radius)
+        centro, radio = circle
+        max_dev, _ = self.procesador.calcular_maxima_desviacion(puntos, centro, radio)
         
-        if max_dev <= tolerance:
+        if max_dev <= tolerancia:
             return Arco(
-                centro=center,
-                radio=radius,
-                punto_inicio=points[0],
-                punto_fin=points[-1]
+                centro=centro,
+                radio=radio,
+                punto_inicio=puntos[0],
+                punto_fin=puntos[-1]
             )
         
         return None
 
-    def simplify_path_to_arcs(self, path: Trayectoria, tolerance: float) -> List[Trayectoria]:
+    def simplificar_trayectoria_a_arcos(self, trayectoria: Trayectoria, tolerancia: float) -> List[Trayectoria]:
         """
         Divide una trayectoria en segmentos de líneas o arcos.
         (Lógica simplificada para ilustración del uso del nuevo VO Arco)
         """
-        arc = self.fit_arc(path.puntos, tolerance)
-        if arc:
-            # Retornamos el mismo path pero enriquecido con info de arco
-            return [Trayectoria(puntos=path.puntos, arc_info=arc)]
-        return [path]
+        arco = self.ajustar_arco(trayectoria.puntos, tolerancia)
+        if arco:
+            # Retornamos el mismo trayectoria pero enriquecido con info de arco
+            return [Trayectoria(puntos=trayectoria.puntos, info_arco=arco)]
+        return [trayectoria]

@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import Any, List
 from src.application.boundaries.gateways import GCodeGenerator
-from src.application.boundaries.machine_config_repository import ConfiguracionMaquinaRepository
-from src.dominio.interfaces.path_optimizer import TrayectoriaOptimizer
+from src.application.boundaries.interfaz_repositorio_configuracion_maquina import ConfiguracionMaquinaRepository
+from src.dominio.interfaces.optimizador_trayectoria import OptimizadorTrayectoria
 from src.application.services.servicio_preparacion_trayectoria import ServicioPreparacionTrayectoria
 from src.dominio.entidades.geometria import Trayectoria
 
@@ -16,7 +16,7 @@ class BaseGCodeConverter(ABC):
         generator: GCodeGenerator,
         repo: ConfiguracionMaquinaRepository,
         preparation_service: ServicioPreparacionTrayectoria,
-        optimizer: TrayectoriaOptimizer
+        optimizer: OptimizadorTrayectoria
     ):
         self.generator = generator
         self.repo = repo
@@ -44,7 +44,7 @@ class BaseGCodeConverter(ABC):
         transformed_paths = self.preparation_service.prepare(raw_paths, config)
         
         # 3. Optimizar (Minimizar movimientos en vacío)
-        optimized_paths = self.optimizer.optimize(transformed_paths)
+        optimized_paths = self.optimizer.optimizar(transformed_paths)
         
         # 4. Generar G-Code final
         return self.generator.generate(optimized_paths, config)

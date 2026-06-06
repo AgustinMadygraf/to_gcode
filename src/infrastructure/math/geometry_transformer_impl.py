@@ -6,9 +6,9 @@ from typing import List, Tuple
 import math
 from src.dominio.entidades.geometria import Trayectoria, Punto as DomainPunto
 from src.dominio.entidades.geometria import Rectangulo
-from src.dominio.interfaces.geometry_transformer import GeometryTransformerInterface
+from src.dominio.interfaces.transformador_geometria import TransformadorGeometria
 
-class GeometryTransformerImpl(GeometryTransformerInterface):
+class ImplementacionTransformadorGeometria(TransformadorGeometria):
     def _get_bounding_box(self, paths: List[Trayectoria]) -> Rectangulo:
         all_points = [p for path in paths for p in path.puntos]
         if not all_points:

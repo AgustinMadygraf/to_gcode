@@ -2,7 +2,7 @@
 Trayectoria: src/adapters/gateways/machine_config_repository.py
 """
 from typing import Optional, Dict, Any
-from src.application.boundaries.machine_config_repository import ConfiguracionMaquinaRepository
+from src.application.boundaries.interfaz_repositorio_configuracion_maquina import ConfiguracionMaquinaRepository
 from src.application.boundaries.infrastructure_interfaces import ConfigPersistenceProvider
 from src.dominio.entidades.configuracion_maquina import ConfiguracionMaquina
 

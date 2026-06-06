@@ -6,20 +6,20 @@ from typing import List
 from src.dominio.entidades.geometria import Trayectoria
 from src.dominio.entidades.configuracion_maquina import ConfiguracionMaquina
 from src.dominio.entidades.geometria import Rectangulo
-from src.dominio.interfaces.geometry_transformer import GeometryTransformerInterface
-from src.dominio.interfaces.pattern_generator import TestPatternGeneratorInterface
+from src.dominio.interfaces.transformador_geometria import TransformadorGeometria
+from src.dominio.interfaces.generador_patrones import GeneradorPatrones
 
 class ServicioPreparacionTrayectoria:
     def __init__(
         self, 
-        transformer: GeometryTransformerInterface,
-        pattern_generator: TestPatternGeneratorInterface
+        transformer: TransformadorGeometria,
+        pattern_generator: GeneradorPatrones
     ):
         self.transformer = transformer
         self.pattern_generator = pattern_generator
 
     def prepare(self, paths: List[Trayectoria], config: ConfiguracionMaquina) -> List[Trayectoria]:
-        patterns = self.pattern_generator.generate(config.max_x, config.max_y, inset=5.0)
+        patterns = self.pattern_generator.generar(config.max_x, config.max_y, margen=5.0)
         
         all_paths = patterns + paths
         

@@ -1,9 +1,9 @@
-from typing import List, Optional, Dict
+from typing import Dict, List, Optional
 from src.application.boundaries.gateways import GCodeGenerator
 from src.application.boundaries.infrastructure_interfaces import GCodeLibraryWrapper
 from src.dominio.entidades.geometria import Trayectoria
 from src.dominio.entidades.configuracion_maquina import ConfiguracionMaquina
-from src.dominio.servicios.geometry_service import GeometryService
+from src.dominio.servicios.geometry_service import ServicioGeometria
 
 class PyGCodeGenerator(GCodeGenerator):
     """
@@ -13,7 +13,7 @@ class PyGCodeGenerator(GCodeGenerator):
     def __init__(
         self, 
         wrapper: GCodeLibraryWrapper, 
-        geometry_service: GeometryService,
+        geometry_service: ServicioGeometria,
         truncate_limit: Optional[int] = None,
         arc_tolerance: float = 2.0
     ):
@@ -59,7 +59,7 @@ class PyGCodeGenerator(GCodeGenerator):
             gcode_lines.append(config.pen_down_command)
 
             # Intento de ajuste de arco (Lógica de dominio vía servicio)
-            arc = self.geometry_service.fit_arc(points, self.arc_tolerance)
+            arc = self.geometry_service.ajustar_arco(points, self.arc_tolerance)
             
             if arc:
                 gcode_lines.append(self._format_modal("G2", {

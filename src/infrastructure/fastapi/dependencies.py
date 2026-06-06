@@ -4,24 +4,25 @@ from fastapi import Depends
 from src.infrastructure.settings.config import settings
 from src.infrastructure.database.persistence_impl import SQLAlchemyConfigProvider
 from src.infrastructure.database.session_provider import SqlAlchemySessionProvider
-from src.adapters.gateways.machine_config_repository import SQLAlchemyConfiguracionMaquinaRepository
-from src.infrastructure.svgpathtools.wrapper import SvgTrayectoriaToolsWrapper
+from src.adapters.gateways.implementacion_repositorio_configuracion_maquina import SQLAlchemyConfiguracionMaquinaRepository
+from src.infrastructure.svgpathtools.envoltorio_svg import SvgTrayectoriaToolsWrapper
 from src.infrastructure.image_processing.raster_wrapper import ScikitImageWrapper
-from src.infrastructure.pygcode.wrapper import PyGCodeWrapper
+from src.infrastructure.pygcode.envoltorio_gcode import PyGCodeWrapper
 from src.adapters.gateways.svg_parser import SvgTrayectoriaToolsParser
 from src.adapters.gateways.raster_parser import RasterParser
 from src.adapters.gateways.gcode_generator import PyGCodeGenerator
-from src.dominio.servicios.geometry_service import GeometryService
-from src.dominio.servicios.path_optimizer import GreedyTrayectoriaOptimizer
+from src.dominio.servicios.geometry_service import ServicioGeometria
+from src.dominio.servicios.path_optimizer import OptimizadorTrayectoriaVoraz
 from src.application.services.servicio_preparacion_trayectoria import ServicioPreparacionTrayectoria
 from src.application.use_cases.convert_svg import ConvertSVGToGCode
 from src.application.use_cases.convert_image import ConvertImageToGCode
 from src.adapters.controllers.gcode_controller import GCodeController
 from src.application.boundaries.infrastructure_interfaces import DatabaseSessionProvider
 from src.infrastructure.numpy.skeleton_wrapper import NumpySkeletonWrapper
-from src.infrastructure.math.geometry_wrapper import GeometryWrapper
-from src.infrastructure.math.geometry_transformer_impl import GeometryTransformerImpl
-from src.infrastructure.math.diamond_pattern_generator import DiamondPatternGenerator
+from src.infrastructure.math.geometry_wrapper import EnvoltorioGeometria
+from src.infrastructure.math.geometry_transformer_impl import ImplementacionTransformadorGeometria
+from src.infrastructure.math.diamond_pattern_generator import DiamondPatternGenerator as GeneradorPatronesDiamante
+
 
 def get_session_provider() -> DatabaseSessionProvider:
     return SqlAlchemySessionProvider()
@@ -33,12 +34,12 @@ def get_gcode_controller(db: Any = Depends(get_db)) -> GCodeController:
     persistence_provider = SQLAlchemyConfigProvider(db)
 
     # Dominio y Servicios base
-    geom_processor = GeometryWrapper()
-    geom_service = GeometryService(geometry_processor=geom_processor)
+    geom_processor = EnvoltorioGeometria()
+    geom_service = ServicioGeometria(procesador_geometria=geom_processor)
     
-    geometry_transformer = GeometryTransformerImpl()
-    pattern_generator = DiamondPatternGenerator()
-    path_optimizer = GreedyTrayectoriaOptimizer()
+    geometry_transformer = ImplementacionTransformadorGeometria()
+    pattern_generator = GeneradorPatronesDiamante()
+    path_optimizer = OptimizadorTrayectoriaVoraz()
 
     # Servicios de Aplicación
     prep_service = ServicioPreparacionTrayectoria(
