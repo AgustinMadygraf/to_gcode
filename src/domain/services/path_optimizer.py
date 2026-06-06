@@ -1,3 +1,7 @@
+"""
+Path: src/domain/services/path_optimizer.py
+"""
+
 from typing import List
 from src.domain.entities.geometry import Path
 from src.domain.interfaces.path_optimizer import PathOptimizer

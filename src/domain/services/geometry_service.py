@@ -1,3 +1,7 @@
+"""
+Path: src/domain/services/geometry_service.py
+"""
+
 from typing import List, Optional
 from src.domain.interfaces.geometry_processor import GeometryProcessor
 from src.domain.entities.geometry import Point, Arc, Path

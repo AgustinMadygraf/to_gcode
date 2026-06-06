@@ -1,5 +1,9 @@
+"""
+Path: src/domain/entities/geometry.py
+"""
+
 from dataclasses import dataclass
-from typing import List, Optional, Union
+from typing import List, Optional
 from abc import ABC, abstractmethod
 import math
 

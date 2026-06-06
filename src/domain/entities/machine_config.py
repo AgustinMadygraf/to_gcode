@@ -1,3 +1,7 @@
+"""
+Path: src/domain/entities/machine_config.py
+"""
+
 from dataclasses import dataclass
 from enum import Enum
 from typing import NewType, Optional

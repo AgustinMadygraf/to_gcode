@@ -1,3 +1,7 @@
+"""
+Path: src/domain/interfaces/geometry_processor.py
+"""
+
 from abc import ABC, abstractmethod
 from typing import List, Optional, Tuple
 from src.domain.entities.geometry import Point

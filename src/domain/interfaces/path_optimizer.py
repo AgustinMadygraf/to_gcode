@@ -1,3 +1,7 @@
+"""
+Path: src/domain/interfaces/path_optimizer.py
+"""
+
 from abc import ABC, abstractmethod
 from typing import List
 from src.domain.entities.geometry import Path
