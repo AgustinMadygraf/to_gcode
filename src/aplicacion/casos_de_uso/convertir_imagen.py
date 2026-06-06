@@ -13,14 +13,14 @@ from src.dominio.entidades.geometria import Trayectoria
 class ConvertirImagenAGCode(ConvertidorBaseGCode):
     def __init__(
         self, 
-        parser: AnalizadorRaster, 
-        generator: GeneradorGCode, 
-        repo: RepositorioConfiguracionMaquina,
-        preparation_service: ServicioPreparacionTrayectoria,
-        optimizer: OptimizadorTrayectoria
+        analizador: AnalizadorRaster, 
+        generador: GeneradorGCode, 
+        repositorio: RepositorioConfiguracionMaquina,
+        servicio_preparacion: ServicioPreparacionTrayectoria,
+        optimizador: OptimizadorTrayectoria
     ):
-        super().__init__(generator, repo, preparation_service, optimizer)
-        self.parser = parser
+        super().__init__(generador=generador, repositorio=repositorio, servicio_preparacion=servicio_preparacion, optimizador=optimizador)
+        self.analizador = analizador
 
     def _parsear_entrada(self, input_data: bytes) -> List[Trayectoria]:
-        return self.parser.parsear_imagen(input_data)
+        return self.analizador.parsear_imagen(input_data)

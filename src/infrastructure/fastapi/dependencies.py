@@ -1,3 +1,7 @@
+"""
+Path: src/infrastructure/fastapi/dependencies.py
+"""
+
 from typing import Generator, Any
 from fastapi import Depends
 
@@ -33,7 +37,6 @@ def get_db(provider: ProveedorSesionBaseDatos = Depends(obtener_sesion_provider)
 def get_gcode_controller(db: Any = Depends(get_db)) -> GCodeController:
     persistence_provider = SQLAlchemyConfigProvider(db)
 
-    # Dominio y Servicios base
     geom_processor = EnvoltorioGeometria()
     geom_service = ServicioGeometria(procesador_geometria=geom_processor)
     
@@ -41,13 +44,11 @@ def get_gcode_controller(db: Any = Depends(get_db)) -> GCodeController:
     pattern_generator = GeneradorPatronesDiamante()
     path_optimizer = OptimizadorTrayectoriaVoraz()
 
-    # Servicios de Aplicación
     prep_service = ServicioPreparacionTrayectoria(
-        transformer=geometry_transformer, 
-        pattern_generator=pattern_generator
+        transformador=geometry_transformer, 
+        generador_patrones=pattern_generator
     )
 
-    # Infraestructura / Gateways
     gcode_wrapper = PyGCodeWrapper()
     generator = PyGeneradorGCode(
         wrapper=gcode_wrapper, 
@@ -55,29 +56,27 @@ def get_gcode_controller(db: Any = Depends(get_db)) -> GCodeController:
         truncate_limit=settings.GCODE_TRUNCATE_LIMIT, 
         arc_tolerance=settings.ARC_TOLERANCE
     )
-    
+
     repo = SQLAlchemyRepositorioConfiguracionMaquina(provider=persistence_provider)
 
-    # Caso de Uso SVG
     svg_wrapper = SvgTrayectoriaToolsWrapper()
     svg_parser = SvgTrayectoriaToolsParser(wrapper=svg_wrapper)
     svg_converter = ConvertirSVGAGCode(
-        parser=svg_parser, 
-        generator=generator, 
-        repo=repo, 
-        preparation_service=prep_service,
-        optimizer=path_optimizer
+        analizador=svg_parser, 
+        generador=generator, 
+        repositorio=repo, 
+        servicio_preparacion=prep_service,
+        optimizador=path_optimizer
     )
 
-    # Caso de Uso Imagen
     raster_processor = ScikitImageWrapper(skeleton_wrapper_factory=NumpySkeletonWrapper)
     raster_parser = AnalizadorRaster(processor=raster_processor)
     image_converter = ConvertirImagenAGCode(
-        parser=raster_parser, 
-        generator=generator, 
-        repo=repo, 
-        preparation_service=prep_service,
-        optimizer=path_optimizer
+        analizador=raster_parser, 
+        generador=generator, 
+        repositorio=repo, 
+        servicio_preparacion=prep_service,
+        optimizador=path_optimizer
     )
     
-    return GCodeController(svg_converter=svg_converter, image_converter=image_converter, repo=repo)
+    return GCodeController(svg_converter=svg_converter, image_converter=image_converter, repositorio=repo)

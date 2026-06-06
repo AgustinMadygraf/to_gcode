@@ -13,14 +13,14 @@ from src.dominio.entidades.geometria import Trayectoria
 class ConvertirSVGAGCode(ConvertidorBaseGCode):
     def __init__(
         self, 
-        parser: AnalizadorVectorial, 
-        generator: GeneradorGCode, 
-        repo: RepositorioConfiguracionMaquina,
-        preparation_service: ServicioPreparacionTrayectoria,
-        optimizer: OptimizadorTrayectoria
+        analizador: AnalizadorVectorial, 
+        generador: GeneradorGCode, 
+        repositorio: RepositorioConfiguracionMaquina,
+        servicio_preparacion: ServicioPreparacionTrayectoria,
+        optimizador: OptimizadorTrayectoria
     ):
-        super().__init__(generator, repo, preparation_service, optimizer)
-        self.parser = parser
+        super().__init__(generador=generador, repositorio=repositorio, servicio_preparacion=servicio_preparacion, optimizador=optimizador)
+        self.analizador = analizador
 
     def _parsear_entrada(self, input_data: str) -> List[Trayectoria]:
-        return self.parser.parsear_svg(input_data)
+        return self.analizador.parsear_svg(input_data)

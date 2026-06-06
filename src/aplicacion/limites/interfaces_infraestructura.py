@@ -18,17 +18,19 @@ class SkeletonAbstraction(ABC):
     @property
     @abstractmethod
     def width(self) -> int: ...
+
     @property
     @abstractmethod
     def height(self) -> int: ...
-    
-    # Compatibilidad con implementación original
+
     @property
     @abstractmethod
     def rows(self) -> int: ...
+
     @property
     @abstractmethod
     def cols(self) -> int: ...
+
     
     @abstractmethod
     def is_pixel_on(self, x: int, y: int) -> bool: ...
@@ -42,7 +44,6 @@ class EnvoltorioLibreriaSvg(ABC):
 
     @abstractmethod
     def muestrear_trayectoria_a_dominio(self, path: Any, num_samples: int) -> List[Punto]:
-        """Contrato mejorado: devuelve tipos de dominio, no tipos de librería."""
         pass
 
 class ProcesadorImagenRaster(ABC):

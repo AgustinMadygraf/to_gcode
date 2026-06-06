@@ -1,5 +1,5 @@
 """
-Trayectoria: src/aplicacion.servicios/path_preparation_service.py
+Path: src/aplicacion/servicios/servicio_preparacion_trayectoria.py
 """
 
 from typing import List
