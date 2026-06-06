@@ -1,6 +1,6 @@
 from typing import List, Set, Tuple
 from src.dominio.entidades.geometria import Trayectoria as DomainTrayectoria, Punto
-from src.aplicacion.limites.interfaces_infraestructura import SkeletonAbstraction, ProcesadorImagenRaster
+from src.adapters.gateways.envoltorios_tecnicos import SkeletonAbstraction, ProcesadorImagenRaster
 from src.aplicacion.limites.puertos import AnalizadorRaster as AnalizadorRasterBoundary
 
 class AnalizadorRaster(AnalizadorRasterBoundary):

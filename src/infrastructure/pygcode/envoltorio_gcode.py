@@ -4,7 +4,7 @@ Trayectoria: src/infrastructure/pygcode/wrapper.py
 
 import pygcode # type: ignore
 from typing import Dict, Optional, Any
-from src.aplicacion.limites.interfaces_infraestructura import EnvoltorioLibreriaGCode
+from src.adapters.gateways.envoltorios_tecnicos import EnvoltorioLibreriaGCode
 
 class PyGCodeWrapper(EnvoltorioLibreriaGCode):
     def formatear_linea(self, command: str, params: Optional[Dict[str, float]] = None) -> str:

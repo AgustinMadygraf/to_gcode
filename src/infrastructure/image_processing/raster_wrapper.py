@@ -4,7 +4,7 @@ from skimage.morphology import skeletonize  # type: ignore[reportUnknownVariable
 from skimage.color import rgb2gray  # type: ignore[reportUnknownVariableType]
 from skimage.filters import threshold_otsu  # type: ignore[reportUnknownVariableType]
 import io as pyio
-from src.aplicacion.limites.interfaces_infraestructura import SkeletonAbstraction, ImageLike, ProcesadorImagenRaster
+from src.adapters.gateways.envoltorios_tecnicos import SkeletonAbstraction, ImageLike, ProcesadorImagenRaster
 
 class ScikitImageWrapper(ProcesadorImagenRaster):
     def __init__(self, skeleton_wrapper_factory: Callable[[Any], SkeletonAbstraction]):

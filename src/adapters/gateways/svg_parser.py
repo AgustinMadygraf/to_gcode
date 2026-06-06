@@ -1,6 +1,6 @@
 from typing import List
 from src.aplicacion.limites.puertos import AnalizadorVectorial
-from src.aplicacion.limites.interfaces_infraestructura import EnvoltorioLibreriaSvg
+from src.adapters.gateways.envoltorios_tecnicos import EnvoltorioLibreriaSvg
 from src.dominio.entidades.geometria import Trayectoria as DomainTrayectoria
 
 class SvgTrayectoriaToolsParser(AnalizadorVectorial):

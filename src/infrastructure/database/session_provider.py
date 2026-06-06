@@ -3,7 +3,7 @@ Trayectoria: src/infrastructure/database/session_provider.py
 """
 
 from typing import Generator, Any
-from src.aplicacion.limites.interfaces_infraestructura import ProveedorSesionBaseDatos
+from src.adapters.gateways.envoltorios_tecnicos import ProveedorSesionBaseDatos
 from src.infrastructure.database.models import SessionLocal
 
 class SqlAlchemySessionProvider(ProveedorSesionBaseDatos):

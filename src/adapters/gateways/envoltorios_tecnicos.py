@@ -1,12 +1,6 @@
-"""
-Path: src/aplicacion/limites/interfaces_infraestructura.py
-"""
-
 from abc import ABC, abstractmethod
 from typing import List, Any, Dict, Optional, Generator, Protocol, runtime_checkable
 from src.dominio.entidades.geometria import Punto
-
-# --- Protocols para desacoplamiento técnico ---
 
 @runtime_checkable
 class ImageLike(Protocol):
@@ -30,12 +24,9 @@ class SkeletonAbstraction(ABC):
     @property
     @abstractmethod
     def cols(self) -> int: ...
-
     
     @abstractmethod
     def is_pixel_on(self, x: int, y: int) -> bool: ...
-
-# --- Interfaces de Wrappers ---
 
 class EnvoltorioLibreriaSvg(ABC):
     @abstractmethod

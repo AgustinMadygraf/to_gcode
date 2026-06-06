@@ -1,7 +1,7 @@
 from typing import Optional, Dict, Any
 from sqlalchemy import select, update
 from sqlalchemy.orm import Session
-from src.aplicacion.limites.interfaces_infraestructura import ProveedorPersistenciaConfiguracion
+from src.adapters.gateways.envoltorios_tecnicos import ProveedorPersistenciaConfiguracion
 from src.infrastructure.database.models import ConfiguracionMaquinaModel
 from src.infrastructure.settings.logger import logger
 

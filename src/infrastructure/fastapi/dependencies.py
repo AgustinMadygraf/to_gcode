@@ -21,7 +21,7 @@ from src.aplicacion.servicios.servicio_preparacion_trayectoria import ServicioPr
 from src.aplicacion.casos_de_uso.convertir_svg import ConvertirSVGAGCode
 from src.aplicacion.casos_de_uso.convertir_imagen import ConvertirImagenAGCode
 from src.adapters.controllers.gcode_controller import GCodeController
-from src.aplicacion.limites.interfaces_infraestructura import ProveedorSesionBaseDatos
+from src.adapters.gateways.envoltorios_tecnicos import ProveedorSesionBaseDatos
 from src.infrastructure.numpy.skeleton_wrapper import NumpySkeletonWrapper
 from src.infrastructure.math.geometry_wrapper import EnvoltorioGeometria
 from src.infrastructure.math.geometry_transformer_impl import ImplementacionTransformadorGeometria
