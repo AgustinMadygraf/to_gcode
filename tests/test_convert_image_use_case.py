@@ -14,10 +14,10 @@ def test_convertir_imagen_success():
 
     # Setup
     config = ConfiguracionMaquina(
-        name="test", width=100.0, height=100.0,
-        max_x=100.0, max_y=100.0,
-        pen_up_command="M5", pen_down_command="M3",
-        feedrate_draw=10.0, feedrate_move=10.0
+        nombre="test", ancho=100.0, alto=100.0,
+        ancho_maximo_maquina=100.0, alto_maximo_maquina=100.0,
+        comando_pluma_arriba="M5", comando_pluma_abajo="M3",
+        velocidad_dibujo=10.0, velocidad_movimiento=10.0
     )
     mock_repo.get_config.return_value = config
 

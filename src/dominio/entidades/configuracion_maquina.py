@@ -15,7 +15,7 @@ class EstadoHerramienta(Enum):
 class AccionHerramienta:
     """Representa una acción de la herramienta sin depender de strings G-Code."""
     estado: EstadoHerramienta
-    comando_override: Optional[str] = None # Solo para excepciones técnicas
+    comando_anulado: Optional[str] = None # Solo para excepciones técnicas
 
 VelocidadAvance = NewType('VelocidadAvance', float)
 
@@ -23,30 +23,30 @@ VelocidadAvance = NewType('VelocidadAvance', float)
 class ConfiguracionMaquina:
     """Configuración de la máquina plotter con validación de consistencia física."""
     nombre: str
-    width: float   # Área de trabajo lógica
-    height: float  # Área de trabajo lógica
-    max_x: float   # Límite físico hardware
-    max_y: float   # Límite físico hardware
-    pen_up_comando: str   # Se mantiene para infraestructura pero el dominio usará EstadoHerramienta
-    pen_down_comando: str
-    feedrate_draw: VelocidadAvance
-    feedrate_move: VelocidadAvance
-    invert_y: bool = True
-    scale_to_fit: bool = True
+    ancho_area_trabajo: float
+    alto_area_trabajo: float
+    ancho_maximo_maquina: float
+    alto_maximo_maquina: float
+    comando_pluma_arriba: str
+    comando_pluma_abajo: str
+    velocidad_dibujo: VelocidadAvance
+    velocidad_movimiento: VelocidadAvance
+    invertir_eje_y: bool = True
+    ajustar_a_escala: bool = True
 
     def __post_init__(self):
         """Validación de consistencia física y lógica."""
-        if self.width <= 0 or self.height <= 0:
+        if self.ancho_area_trabajo <= 0 or self.alto_area_trabajo <= 0:
             raise ValueError("Las dimensiones deben ser positivas")
         
         # El área de trabajo no puede exceder los límites físicos del hardware
-        if self.width > self.max_x or self.height > self.max_y:
+        if self.ancho_area_trabajo > self.ancho_maximo_maquina or self.alto_area_trabajo > self.alto_maximo_maquina:
             raise ValueError(
-                f"El área de trabajo ({self.width}x{self.height}) excede "
-                f"los límites físicos ({self.max_x}x{self.max_y})"
+                f"El área de trabajo ({self.ancho_area_trabajo}x{self.alto_area_trabajo}) excede "
+                f"los límites físicos ({self.ancho_maximo_maquina}x{self.alto_maximo_maquina})"
             )
         
-        if self.feedrate_draw <= 0 or self.feedrate_move <= 0:
+        if self.velocidad_dibujo <= 0 or self.velocidad_movimiento <= 0:
             raise ValueError("Las velocidades de avance deben ser positivas")
 
     @property

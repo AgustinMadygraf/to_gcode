@@ -15,16 +15,16 @@ class ConfiguracionMaquinaModel(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
     nombre: Mapped[str] = mapped_column(String(50), unique=True, index=True)
-    width: Mapped[float] = mapped_column(Float)
-    height: Mapped[float] = mapped_column(Float)
-    max_x: Mapped[float] = mapped_column(Float, default=0.0)
-    max_y: Mapped[float] = mapped_column(Float, default=0.0)
-    pen_up_comando: Mapped[str] = mapped_column(String(20))
-    pen_down_comando: Mapped[str] = mapped_column(String(20))
-    feedrate_draw: Mapped[float] = mapped_column(Float)
-    feedrate_move: Mapped[float] = mapped_column(Float)
-    invert_y: Mapped[bool] = mapped_column(Boolean, default=True)
-    scale_to_fit: Mapped[bool] = mapped_column(Boolean, default=True)
+    ancho_area_trabajo: Mapped[float] = mapped_column(Float)
+    alto_area_trabajo: Mapped[float] = mapped_column(Float)
+    ancho_maximo_maquina: Mapped[float] = mapped_column(Float, default=0.0)
+    alto_maximo_maquina: Mapped[float] = mapped_column(Float, default=0.0)
+    comando_pluma_arriba: Mapped[str] = mapped_column(String(20))
+    comando_pluma_abajo: Mapped[str] = mapped_column(String(20))
+    velocidad_dibujo: Mapped[float] = mapped_column(Float)
+    velocidad_movimiento: Mapped[float] = mapped_column(Float)
+    invertir_eje_y: Mapped[bool] = mapped_column(Boolean, default=True)
+    ajustar_a_escala: Mapped[bool] = mapped_column(Boolean, default=True)
 
 def init_db():
     Base.metadata.create_all(bind=engine)
@@ -33,16 +33,16 @@ def init_db():
     if session.query(ConfiguracionMaquinaModel).count() == 0:
         default_config = ConfiguracionMaquinaModel(
             nombre="default",
-            width=210.0,
-            height=297.0,
-            max_x=210.0,
-            max_y=297.0,
-            pen_up_comando="M5",
-            pen_down_comando="M3",
-            feedrate_draw=100.0,
-            feedrate_move=500.0,
-            invert_y=True,
-            scale_to_fit=True
+            ancho_area_trabajo=210.0,
+            alto_area_trabajo=297.0,
+            ancho_maximo_maquina=210.0,
+            alto_maximo_maquina=297.0,
+            comando_pluma_arriba="M5",
+            comando_pluma_abajo="M3",
+            velocidad_dibujo=100.0,
+            velocidad_movimiento=500.0,
+            invertir_eje_y=True,
+            ajustar_a_escala=True
         )
         session.add(default_config)
         session.commit()

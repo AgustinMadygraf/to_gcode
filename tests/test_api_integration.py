@@ -20,14 +20,14 @@ def test_convert_endpoint_success():
     # Pre-configurar máquina necesaria para el use case
     config_data = {
         "name": "test_plotter",
-        "width": 100.0,
-        "height": 100.0,
+        "ancho": 100.0,
+        "alto": 100.0,
         "max_x": 100.0,
         "max_y": 100.0,
         "pen_up_command": "M5",
         "pen_down_command": "M3",
-        "feedrate_draw": 1000.0,
-        "feedrate_move": 2000.0
+        "velocidad_dibujo": 1000.0,
+        "velocidad_movimiento": 2000.0
     }
     client.post("/config", json=config_data)
     
@@ -53,14 +53,14 @@ def test_convert_invalid_svg():
     # Pre-configurar máquina necesaria
     config_data = {
         "name": "test_plotter",
-        "width": 100.0,
-        "height": 100.0,
+        "ancho": 100.0,
+        "alto": 100.0,
         "max_x": 100.0,
         "max_y": 100.0,
         "pen_up_command": "M5",
         "pen_down_command": "M3",
-        "feedrate_draw": 1000.0,
-        "feedrate_move": 2000.0
+        "velocidad_dibujo": 1000.0,
+        "velocidad_movimiento": 2000.0
     }
     client.post("/config", json=config_data)
     
@@ -75,14 +75,14 @@ def test_config_lifecycle():
     # Test POST /config
     config_data = {
         "name": "production_plotter",
-        "width": 200.0,
-        "height": 200.0,
+        "ancho": 200.0,
+        "alto": 200.0,
         "max_x": 200.0,
         "max_y": 200.0,
         "pen_up_command": "M5",
         "pen_down_command": "M3",
-        "feedrate_draw": 500.0,
-        "feedrate_move": 1000.0
+        "velocidad_dibujo": 500.0,
+        "velocidad_movimiento": 1000.0
     }
     response = client.post("/config", json=config_data)
     assert response.status_code == 201

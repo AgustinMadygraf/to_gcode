@@ -2,16 +2,16 @@ from pydantic import BaseModel
 
 class ConfigSchema(BaseModel):
     nombre: str
-    width: float
-    height: float
-    max_x: float
-    max_y: float
-    pen_up_comando: str
-    pen_down_comando: str
-    feedrate_draw: float
-    feedrate_move: float
-    invert_y: bool = True
-    scale_to_fit: bool = True
+    ancho_area_trabajo: float
+    alto_area_trabajo: float
+    ancho_maximo_maquina: float
+    alto_maximo_maquina: float
+    comando_pluma_arriba: str
+    comando_pluma_abajo: str
+    velocidad_dibujo: float
+    velocidad_movimiento: float
+    invertir_eje_y: bool = True
+    ajustar_a_escala: bool = True
 
 class UrlSchema(BaseModel):
     url: str

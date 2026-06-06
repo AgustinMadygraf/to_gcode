@@ -9,17 +9,14 @@ import math
 
 @dataclass(frozen=True)
 class Punto:
-    """Representa un punto en el plano 2D con comportamiento métrico."""
     x: float
     y: float
 
     def distancia_a(self, otro: 'Punto') -> float:
-        """Calcula la distancia euclidiana hacia otro punto."""
         return math.sqrt((self.x - otro.x)**2 + (self.y - otro.y)**2)
 
 @dataclass(frozen=True)
 class Arco:
-    """Representa un arco circular puro."""
     centro: Punto
     radio: float
     punto_inicio: Punto
@@ -27,7 +24,6 @@ class Arco:
     es_horario: bool = True
 
 class Segmento(ABC):
-    """Interfaz para segmentos de trayectoria."""
     @property
     @abstractmethod
     def inicio(self) -> Punto: pass
@@ -38,7 +34,6 @@ class Segmento(ABC):
 
 @dataclass(frozen=True)
 class SegmentoLinea(Segmento):
-    """Segmento de línea recta."""
     p1: Punto
     p2: Punto
     
@@ -50,7 +45,6 @@ class SegmentoLinea(Segmento):
 
 @dataclass(frozen=True)
 class SegmentoArco(Segmento):
-    """Segmento de arco circular."""
     arco: Arco
     
     @property
@@ -61,9 +55,6 @@ class SegmentoArco(Segmento):
 
 @dataclass(frozen=True)
 class Trayectoria:
-    """
-    Representa una trayectoria compuesta por puntos y/o segmentos.
-    """
     puntos: List[Punto]
     segmentos: Optional[List[Segmento]] = None
     info_arco: Optional[Arco] = None
@@ -94,9 +85,6 @@ class Trayectoria:
         return dist
 
     def simplificada(self, tolerancia: float = 1e-9) -> 'Trayectoria':
-        """
-        Retorna una versión simplificada de la trayectoria eliminando puntos colineales.
-        """
         if len(self.puntos) < 3:
             return self
         

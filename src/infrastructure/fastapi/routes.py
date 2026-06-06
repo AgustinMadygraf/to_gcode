@@ -15,10 +15,10 @@ def set_config(
     try:
         datos = config.model_dump()
         # Normalización técnica pre-entrada al núcleo
-        if datos.get('max_x') is None or datos.get('max_x') == 0:
-            datos['max_x'] = datos.get('width')
-        if datos.get('max_y') is None or datos.get('max_y') == 0:
-            datos['max_y'] = datos.get('height')
+        if datos.get('ancho_maximo_maquina') is None or datos.get('ancho_maximo_maquina') == 0:
+            datos['ancho_maximo_maquina'] = datos.get('ancho_area_trabajo')
+        if datos.get('alto_maximo_maquina') is None or datos.get('alto_maximo_maquina') == 0:
+            datos['alto_maximo_maquina'] = datos.get('alto_area_trabajo')
             
         return controller.establecer_configuracion(datos)
     except ValueError as e:
@@ -68,7 +68,7 @@ async def convert_url(
         try:
             response = await client.get(payload.url)
             response.raise_for_status()
-            content = response.texto
+            content = response.text
             return controller.convertir_svg(content)
         except Exception as e:
             logger.error(f"Error fetching SVG from URL: {str(e)}")

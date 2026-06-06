@@ -1,3 +1,7 @@
+"""
+Path: src/adaptadores/pasarelas/envoltorios_tecnicos.py
+"""
+
 from abc import ABC, abstractmethod
 from typing import List, Any, Dict, Optional, Generator, Protocol, runtime_checkable
 from src.dominio.entidades.geometria import Punto

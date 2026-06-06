@@ -4,8 +4,7 @@ Path: src/dominio/interfaces/transformador_geometria.py
 
 from abc import ABC, abstractmethod
 from typing import List, Tuple
-from src.dominio.entidades.geometria import Trayectoria
-from src.dominio.entidades.geometria import Rectangulo
+from src.dominio.entidades.geometria import Trayectoria, Rectangulo
 
 class TransformadorGeometria(ABC):
     @abstractmethod

@@ -26,10 +26,10 @@ def controller(mock_svg_converter, mock_image_converter, mock_repo):
 def test_set_config(controller, mock_repo):
     # Ahora el controlador recibe datos ya normalizados por la infraestructura
     config_data = {
-        "name": "test", "width": 100.0, "height": 100.0,
+        "name": "test", "ancho": 100.0, "alto": 100.0,
         "max_x": 100.0, "max_y": 100.0,
         "pen_up_command": "M5", "pen_down_command": "M3",
-        "feedrate_draw": 10.0, "feedrate_move": 10.0
+        "velocidad_dibujo": 10.0, "velocidad_movimiento": 10.0
     }
     controller.set_config(config_data)
     
@@ -45,17 +45,17 @@ def test_get_config_not_found(controller, mock_repo):
 
 def test_get_config_found(controller, mock_repo):
     config = ConfiguracionMaquina(
-        name="test", width=100.0, height=100.0,
-        max_x=100.0, max_y=100.0,
-        pen_up_command="M5", pen_down_command="M3",
-        feedrate_draw=10.0, feedrate_move=10.0
+        nombre="test", ancho=100.0, alto=100.0,
+        ancho_maximo_maquina=100.0, alto_maximo_maquina=100.0,
+        comando_pluma_arriba="M5", comando_pluma_abajo="M3",
+        velocidad_dibujo=10.0, velocidad_movimiento=10.0
     )
     mock_repo.get_config.return_value = config
     
     result = controller.get_config()
     # Validar que el Presenter estructuró la salida correctamente
     assert result["name"] == "test"
-    assert result["dimensions"]["width"] == 100.0
+    assert result["dimensions"]["ancho"] == 100.0
     assert result["limits"]["max_x"] == 100.0
     assert result["speeds"]["draw"] == 10.0
 

@@ -10,10 +10,6 @@ from src.dominio.entidades.configuracion_maquina import ConfiguracionMaquina
 from src.dominio.servicios.servicio_geometria import ServicioGeometria
 
 class GeneradorGCodePy(GeneradorGCode):
-    """
-    Adaptador purificado para generación de G-Code. 
-    Su única responsabilidad es traducir objetos del dominio a sintaxis técnica.
-    """
     def __init__(
         self, 
         envoltorio: EnvoltorioLibreriaGCode, 
@@ -28,7 +24,6 @@ class GeneradorGCodePy(GeneradorGCode):
         self.ultimo_comando_modal: Optional[str] = None
 
     def _formatear_modal(self, comando: str, parametros: Optional[Dict[str, float]] = None) -> str:
-        """Maneja comandos modales de G-Code (G0, G1, etc.) para evitar repeticiones."""
         if comando == self.ultimo_comando_modal:
             if parametros:
                 return " ".join([f"{k}{v:.3f}" for k, v in parametros.items()])
@@ -41,10 +36,10 @@ class GeneradorGCodePy(GeneradorGCode):
         self.ultimo_comando_modal = None
         
         gcode_lines: List[str] = [
-            self.envoltorio.formatear_linea("G21") + " " + self.envoltorio.obtener_comentario("Units in mm"),
-            self.envoltorio.formatear_linea("G90") + " " + self.envoltorio.obtener_comentario("Absolute coordinates"),
-            self.envoltorio.formatear_linea("G0", {"F": config.feedrate_move}),
-            self.envoltorio.formatear_linea("G1", {"F": config.feedrate_draw})
+            self.envoltorio.formatear_linea("G21") + " " + self.envoltorio.obtener_comentario("Unidades en mm"),
+            self.envoltorio.formatear_linea("G90") + " " + self.envoltorio.obtener_comentario("Coordenadas absolutas"),
+            self.envoltorio.formatear_linea("G0", {"F": config.velocidad_movimiento}),
+            self.envoltorio.formatear_linea("G1", {"F": config.velocidad_dibujo})
         ]
 
         self.ultimo_comando_modal = "G1" 
@@ -58,9 +53,9 @@ class GeneradorGCodePy(GeneradorGCode):
             points = domain_path.puntos
             
             # Orquestación de traducción a G-Code
-            gcode_lines.append(config.pen_up_comando)
+            gcode_lines.append(config.comando_pluma_arriba)
             gcode_lines.append(self._formatear_modal("G0", {"X": points[0].x, "Y": points[0].y}))
-            gcode_lines.append(config.pen_down_comando)
+            gcode_lines.append(config.comando_pluma_abajo)
 
             # Intento de ajuste de arco (Lógica de dominio vía servicio)
             arc = self.servicio_geometria.ajustar_arco(points, self.tolerancia_arco)
@@ -76,7 +71,7 @@ class GeneradorGCodePy(GeneradorGCode):
                 for p in points[1:]:
                     gcode_lines.append(self._formatear_modal("G1", {"X": p.x, "Y": p.y}))
             
-            gcode_lines.append(config.pen_up_comando)
+            gcode_lines.append(config.comando_pluma_arriba)
 
         gcode_lines.append(self._formatear_modal("G0", {"X": 0, "Y": 0}) + " " + self.envoltorio.obtener_comentario("Return home"))
 

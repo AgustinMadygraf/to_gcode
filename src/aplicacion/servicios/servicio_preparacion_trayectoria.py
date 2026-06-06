@@ -19,12 +19,12 @@ class ServicioPreparacionTrayectoria:
         self.generador_patrones = generador_patrones
 
     def preparar(self, trayectorias: List[Trayectoria], config: ConfiguracionMaquina) -> List[Trayectoria]:
-        patrones = self.generador_patrones.generar(config.max_x, config.max_y, margen=5.0)
+        patrones = self.generador_patrones.generar(config.ancho_maximo_maquina, config.alto_maximo_maquina, margen=5.0)
         
         todas_las_trayectorias = patrones + trayectorias
         
-        limites_paisaje = Rectangulo(0.0, 0.0, config.max_x, config.max_y)
-        limites_retrato = Rectangulo(0.0, 0.0, config.max_y, config.max_x)
+        limites_paisaje = Rectangulo(0.0, 0.0, config.ancho_maximo_maquina, config.alto_maximo_maquina)
+        limites_retrato = Rectangulo(0.0, 0.0, config.alto_maximo_maquina, config.ancho_maximo_maquina)
         
         trayectorias_transformadas, _ = self.transformador.ajustar_y_orientar(
             todas_las_trayectorias, limites_paisaje, limites_retrato

@@ -1,3 +1,7 @@
+"""
+Path: src/adaptadores/pasarelas/analizador_vectorial.py
+"""
+
 from typing import List
 from src.aplicacion.limites.puertos import AnalizadorVectorial
 from src.adaptadores.pasarelas.envoltorios_tecnicos import EnvoltorioLibreriaSvg
