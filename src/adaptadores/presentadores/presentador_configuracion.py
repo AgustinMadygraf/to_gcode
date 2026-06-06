@@ -1,3 +1,7 @@
+"""
+Path: src/adaptadores/presentadores/presentador_configuracion.py
+"""
+
 from typing import Dict, Any
 from src.dominio.entidades.configuracion_maquina import ConfiguracionMaquina
 
@@ -5,28 +9,27 @@ class PresentadorConfiguracion:
     """Encargado de formatear la salida de configuración para el cliente (API/UI)."""
     
     @staticmethod
-    def to_http(config: ConfiguracionMaquina) -> Dict[str, Any]:
-        """Convierte la entidad a un formato amigable para JSON/HTTP."""
+    def a_http(config: ConfiguracionMaquina) -> Dict[str, Any]:
         return {
-            "name": config.name,
-            "dimensions": {
-                "width": config.width,
-                "height": config.height
+            "nombre": config.name,
+            "dimensiones": {
+                "ancho": config.width,
+                "alto": config.height
             },
-            "limits": {
+            "limites": {
                 "max_x": config.max_x,
                 "max_y": config.max_y
             },
-            "commands": {
-                "up": config.pen_up_command,
-                "down": config.pen_down_command
+            "comandos": {
+                "arriba": config.pen_up_command,
+                "abajo": config.pen_down_command
             },
-            "speeds": {
-                "draw": config.feedrate_draw,
-                "move": config.feedrate_move
+            "velocidades": {
+                "dibujo": config.feedrate_draw,
+                "movimiento": config.feedrate_move
             },
-            "options": {
-                "invert_y": config.invert_y,
-                "scale_to_fit": config.scale_to_fit
+            "opciones": {
+                "invertir_y": config.invert_y,
+                "ajustar_a_escala": config.scale_to_fit
             }
         }
