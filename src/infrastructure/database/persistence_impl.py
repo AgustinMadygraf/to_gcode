@@ -1,15 +1,15 @@
 from typing import Optional, Dict, Any
 from sqlalchemy import select, update
 from sqlalchemy.orm import Session
-from src.application.boundaries.infrastructure_interfaces import ConfigPersistenceProvider
+from src.aplicacion.limites.interfaces_infraestructura import ProveedorPersistenciaConfiguracion
 from src.infrastructure.database.models import ConfiguracionMaquinaModel
 from src.infrastructure.settings.logger import logger
 
-class SQLAlchemyConfigProvider(ConfigPersistenceProvider):
+class SQLAlchemyConfigProvider(ProveedorPersistenciaConfiguracion):
     def __init__(self, session: Session):
         self.session = session
 
-    def find_first(self) -> Optional[Dict[str, Any]]:
+    def buscar_primero(self) -> Optional[Dict[str, Any]]:
         logger.debug("Fetching first machine configuration from database.")
         stmt = select(ConfiguracionMaquinaModel)
         # Usamos .first() para evitar excepciones si hay múltiples configuraciones por error
@@ -32,7 +32,7 @@ class SQLAlchemyConfigProvider(ConfigPersistenceProvider):
             "scale_to_fit": model.scale_to_fit
         }
 
-    def upsert(self, name: str, data: Dict[str, Any]) -> None:
+    def actualizar_o_insertar(self, name: str, data: Dict[str, Any]) -> None:
         logger.info(f"Upserting configuration for: {name}")
         stmt = select(ConfiguracionMaquinaModel).filter_by(name=name)
         model = self.session.execute(stmt).scalars().first()

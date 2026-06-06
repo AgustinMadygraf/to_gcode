@@ -1,5 +1,5 @@
 """
-Trayectoria: src/domain/services/path_optimizer.py
+Path: src/dominio/servicios/servicio_optimizador_trayectoria.py
 """
 
 from typing import List

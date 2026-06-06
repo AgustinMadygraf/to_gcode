@@ -1,11 +1,11 @@
 import svgpathtools # type: ignore
 import os
 from typing import List, Any
-from src.application.boundaries.infrastructure_interfaces import SvgLibraryWrapper
+from src.aplicacion.limites.interfaces_infraestructura import EnvoltorioLibreriaSvg
 from src.dominio.entidades.geometria import Punto
 
-class SvgTrayectoriaToolsWrapper(SvgLibraryWrapper):
-    def get_paths_from_str(self, svg_content: str) -> List[Any]:
+class SvgTrayectoriaToolsWrapper(EnvoltorioLibreriaSvg):
+    def obtener_trayectorias_desde_str(self, svg_content: str) -> List[Any]:
         temp_filename = "tmp.svg"
         try:
             with open(temp_filename, "w") as f:
@@ -17,7 +17,7 @@ class SvgTrayectoriaToolsWrapper(SvgLibraryWrapper):
             if os.path.exists(temp_filename):
                 os.remove(temp_filename)
 
-    def sample_path_to_domain(self, path: Any, num_samples: int) -> List[Punto]:
+    def muestrear_trayectoria_a_dominio(self, path: Any, num_samples: int) -> List[Punto]:
         """Implementación técnica que traduce números complejos a Puntos de dominio."""
         samples = [path.point(i / num_samples) for i in range(num_samples + 1)]
         return [Punto(x=float(pos.real), y=float(pos.imag)) for pos in samples]

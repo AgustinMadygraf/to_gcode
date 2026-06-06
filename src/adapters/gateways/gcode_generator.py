@@ -1,18 +1,22 @@
+"""
+Path: src/adapters/gateways/gcode_generator.py
+"""
+
 from typing import Dict, List, Optional
-from src.application.boundaries.gateways import GCodeGenerator
-from src.application.boundaries.infrastructure_interfaces import GCodeLibraryWrapper
+from src.aplicacion.limites.puertos import GeneradorGCode
+from src.aplicacion.limites.interfaces_infraestructura import EnvoltorioLibreriaGCode
 from src.dominio.entidades.geometria import Trayectoria
 from src.dominio.entidades.configuracion_maquina import ConfiguracionMaquina
-from src.dominio.servicios.geometry_service import ServicioGeometria
+from src.dominio.servicios.servicio_geometria import ServicioGeometria
 
-class PyGCodeGenerator(GCodeGenerator):
+class PyGeneradorGCode(GeneradorGCode):
     """
     Adaptador purificado para generación de G-Code. 
     Su única responsabilidad es traducir objetos del dominio a sintaxis técnica.
     """
     def __init__(
         self, 
-        wrapper: GCodeLibraryWrapper, 
+        wrapper: EnvoltorioLibreriaGCode, 
         geometry_service: ServicioGeometria,
         truncate_limit: Optional[int] = None,
         arc_tolerance: float = 2.0
@@ -31,16 +35,16 @@ class PyGCodeGenerator(GCodeGenerator):
             return ""
 
         self.last_modal_command = command
-        return self.wrapper.format_line(command, params)
+        return self.wrapper.formatear_linea(command, params)
 
-    def generate(self, paths: List[Trayectoria], config: ConfiguracionMaquina) -> str:
+    def generar(self, paths: List[Trayectoria], config: ConfiguracionMaquina) -> str:
         self.last_modal_command = None
         
         gcode_lines: List[str] = [
-            self.wrapper.format_line("G21") + " " + self.wrapper.get_comment("Units in mm"),
-            self.wrapper.format_line("G90") + " " + self.wrapper.get_comment("Absolute coordinates"),
-            self.wrapper.format_line("G0", {"F": config.feedrate_move}),
-            self.wrapper.format_line("G1", {"F": config.feedrate_draw})
+            self.wrapper.formatear_linea("G21") + " " + self.wrapper.obtener_comentario("Units in mm"),
+            self.wrapper.formatear_linea("G90") + " " + self.wrapper.obtener_comentario("Absolute coordinates"),
+            self.wrapper.formatear_linea("G0", {"F": config.feedrate_move}),
+            self.wrapper.formatear_linea("G1", {"F": config.feedrate_draw})
         ]
 
         self.last_modal_command = "G1" 
@@ -74,7 +78,7 @@ class PyGCodeGenerator(GCodeGenerator):
             
             gcode_lines.append(config.pen_up_command)
 
-        gcode_lines.append(self._format_modal("G0", {"X": 0, "Y": 0}) + " " + self.wrapper.get_comment("Return home"))
+        gcode_lines.append(self._format_modal("G0", {"X": 0, "Y": 0}) + " " + self.wrapper.obtener_comentario("Return home"))
 
         filtered_lines = [line for line in gcode_lines if line]
 

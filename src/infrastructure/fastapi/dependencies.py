@@ -4,31 +4,31 @@ from fastapi import Depends
 from src.infrastructure.settings.config import settings
 from src.infrastructure.database.persistence_impl import SQLAlchemyConfigProvider
 from src.infrastructure.database.session_provider import SqlAlchemySessionProvider
-from src.adapters.gateways.implementacion_repositorio_configuracion_maquina import SQLAlchemyConfiguracionMaquinaRepository
+from src.adapters.gateways.implementacion_repositorio_configuracion_maquina import SQLAlchemyRepositorioConfiguracionMaquina
 from src.infrastructure.svgpathtools.envoltorio_svg import SvgTrayectoriaToolsWrapper
 from src.infrastructure.image_processing.raster_wrapper import ScikitImageWrapper
 from src.infrastructure.pygcode.envoltorio_gcode import PyGCodeWrapper
 from src.adapters.gateways.svg_parser import SvgTrayectoriaToolsParser
-from src.adapters.gateways.raster_parser import RasterParser
-from src.adapters.gateways.gcode_generator import PyGCodeGenerator
-from src.dominio.servicios.geometry_service import ServicioGeometria
-from src.dominio.servicios.path_optimizer import OptimizadorTrayectoriaVoraz
-from src.application.services.servicio_preparacion_trayectoria import ServicioPreparacionTrayectoria
-from src.application.use_cases.convert_svg import ConvertSVGToGCode
-from src.application.use_cases.convert_image import ConvertImageToGCode
+from src.adapters.gateways.raster_parser import AnalizadorRaster
+from src.adapters.gateways.gcode_generator import PyGeneradorGCode
+from src.dominio.servicios.servicio_geometria import ServicioGeometria
+from src.dominio.servicios.servicio_optimizador_trayectoria import OptimizadorTrayectoriaVoraz
+from src.aplicacion.servicios.servicio_preparacion_trayectoria import ServicioPreparacionTrayectoria
+from src.aplicacion.casos_de_uso.convertir_svg import ConvertirSVGAGCode
+from src.aplicacion.casos_de_uso.convertir_imagen import ConvertirImagenAGCode
 from src.adapters.controllers.gcode_controller import GCodeController
-from src.application.boundaries.infrastructure_interfaces import DatabaseSessionProvider
+from src.aplicacion.limites.interfaces_infraestructura import ProveedorSesionBaseDatos
 from src.infrastructure.numpy.skeleton_wrapper import NumpySkeletonWrapper
 from src.infrastructure.math.geometry_wrapper import EnvoltorioGeometria
 from src.infrastructure.math.geometry_transformer_impl import ImplementacionTransformadorGeometria
 from src.infrastructure.math.diamond_pattern_generator import DiamondPatternGenerator as GeneradorPatronesDiamante
 
 
-def get_session_provider() -> DatabaseSessionProvider:
+def obtener_sesion_provider() -> ProveedorSesionBaseDatos:
     return SqlAlchemySessionProvider()
 
-def get_db(provider: DatabaseSessionProvider = Depends(get_session_provider)) -> Generator[Any, None, None]:
-    yield from provider.get_session()
+def get_db(provider: ProveedorSesionBaseDatos = Depends(obtener_sesion_provider)) -> Generator[Any, None, None]:
+    yield from provider.obtener_sesion()
 
 def get_gcode_controller(db: Any = Depends(get_db)) -> GCodeController:
     persistence_provider = SQLAlchemyConfigProvider(db)
@@ -49,19 +49,19 @@ def get_gcode_controller(db: Any = Depends(get_db)) -> GCodeController:
 
     # Infraestructura / Gateways
     gcode_wrapper = PyGCodeWrapper()
-    generator = PyGCodeGenerator(
+    generator = PyGeneradorGCode(
         wrapper=gcode_wrapper, 
         geometry_service=geom_service, 
         truncate_limit=settings.GCODE_TRUNCATE_LIMIT, 
         arc_tolerance=settings.ARC_TOLERANCE
     )
     
-    repo = SQLAlchemyConfiguracionMaquinaRepository(provider=persistence_provider)
+    repo = SQLAlchemyRepositorioConfiguracionMaquina(provider=persistence_provider)
 
     # Caso de Uso SVG
     svg_wrapper = SvgTrayectoriaToolsWrapper()
     svg_parser = SvgTrayectoriaToolsParser(wrapper=svg_wrapper)
-    svg_converter = ConvertSVGToGCode(
+    svg_converter = ConvertirSVGAGCode(
         parser=svg_parser, 
         generator=generator, 
         repo=repo, 
@@ -71,8 +71,8 @@ def get_gcode_controller(db: Any = Depends(get_db)) -> GCodeController:
 
     # Caso de Uso Imagen
     raster_processor = ScikitImageWrapper(skeleton_wrapper_factory=NumpySkeletonWrapper)
-    raster_parser = RasterParser(processor=raster_processor)
-    image_converter = ConvertImageToGCode(
+    raster_parser = AnalizadorRaster(processor=raster_processor)
+    image_converter = ConvertirImagenAGCode(
         parser=raster_parser, 
         generator=generator, 
         repo=repo, 

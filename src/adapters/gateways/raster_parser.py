@@ -1,14 +1,14 @@
 from typing import List, Set, Tuple
 from src.dominio.entidades.geometria import Trayectoria as DomainTrayectoria, Punto
-from src.application.boundaries.infrastructure_interfaces import SkeletonAbstraction, RasterImageProcessor
-from src.application.boundaries.gateways import RasterParser as RasterParserBoundary
+from src.aplicacion.limites.interfaces_infraestructura import SkeletonAbstraction, ProcesadorImagenRaster
+from src.aplicacion.limites.puertos import AnalizadorRaster as AnalizadorRasterBoundary
 
-class RasterParser(RasterParserBoundary):
-    def __init__(self, processor: RasterImageProcessor):
+class AnalizadorRaster(AnalizadorRasterBoundary):
+    def __init__(self, processor: ProcesadorImagenRaster):
         self.processor = processor
 
-    def parse_image(self, image_bytes: bytes) -> List[DomainTrayectoria]:
-        skeleton = self.processor.process_image_to_skeleton(image_bytes)
+    def parsear_imagen(self, image_bytes: bytes) -> List[DomainTrayectoria]:
+        skeleton = self.processor.procesar_imagen_a_esqueleto(image_bytes)
         return self._trace_skeleton(skeleton)
 
     def _trace_skeleton(self, skeleton: SkeletonAbstraction) -> List[DomainTrayectoria]:

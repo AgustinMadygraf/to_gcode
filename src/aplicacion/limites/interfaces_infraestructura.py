@@ -1,3 +1,7 @@
+"""
+Path: src/aplicacion/limites/interfaces_infraestructura.py
+"""
+
 from abc import ABC, abstractmethod
 from typing import List, Any, Dict, Optional, Generator, Protocol, runtime_checkable
 from src.dominio.entidades.geometria import Punto
@@ -31,40 +35,40 @@ class SkeletonAbstraction(ABC):
 
 # --- Interfaces de Wrappers ---
 
-class SvgLibraryWrapper(ABC):
+class EnvoltorioLibreriaSvg(ABC):
     @abstractmethod
-    def get_paths_from_str(self, svg_content: str) -> List[Any]:
+    def obtener_trayectorias_desde_str(self, svg_content: str) -> List[Any]:
         pass
 
     @abstractmethod
-    def sample_path_to_domain(self, path: Any, num_samples: int) -> List[Punto]:
+    def muestrear_trayectoria_a_dominio(self, path: Any, num_samples: int) -> List[Punto]:
         """Contrato mejorado: devuelve tipos de dominio, no tipos de librería."""
         pass
 
-class RasterImageProcessor(ABC):
+class ProcesadorImagenRaster(ABC):
     @abstractmethod
-    def process_image_to_skeleton(self, image_bytes: bytes) -> SkeletonAbstraction:
+    def procesar_imagen_a_esqueleto(self, image_bytes: bytes) -> SkeletonAbstraction:
         pass
 
-class GCodeLibraryWrapper(ABC):
+class EnvoltorioLibreriaGCode(ABC):
     @abstractmethod
-    def format_line(self, command: str, params: Optional[Dict[str, float]] = None) -> str:
-        pass
-
-    @abstractmethod
-    def get_comment(self, text: str) -> str:
-        pass
-
-class ConfigPersistenceProvider(ABC):
-    @abstractmethod
-    def find_first(self) -> Optional[Dict[str, Any]]:
+    def formatear_linea(self, command: str, params: Optional[Dict[str, float]] = None) -> str:
         pass
 
     @abstractmethod
-    def upsert(self, name: str, data: Dict[str, Any]) -> None:
+    def obtener_comentario(self, text: str) -> str:
         pass
 
-class DatabaseSessionProvider(ABC):
+class ProveedorPersistenciaConfiguracion(ABC):
     @abstractmethod
-    def get_session(self) -> Generator[Any, None, None]:
+    def buscar_primero(self) -> Optional[Dict[str, Any]]:
+        pass
+
+    @abstractmethod
+    def actualizar_o_insertar(self, name: str, data: Dict[str, Any]) -> None:
+        pass
+
+class ProveedorSesionBaseDatos(ABC):
+    @abstractmethod
+    def obtener_sesion(self) -> Generator[Any, None, None]:
         pass

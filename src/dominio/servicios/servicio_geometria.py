@@ -1,5 +1,5 @@
 """
-Trayectoria: src/domain/services/geometry_service.py
+Path: src/dominio/servicios/geometry_service.py
 """
 
 from typing import List, Optional
@@ -14,7 +14,7 @@ class ServicioGeometria:
 
     def ajustar_arco(self, puntos: List[Punto], tolerancia: float) -> Optional[Arco]:
         """
-        Intenta ajustar un arco circular a una secuencia de punsrc.dominio.servicestos.
+        Intenta ajustar un arco circular a una secuencia de puntos.
         Retorna un objeto Arco si el ajuste está dentro de la tolerancia.
         """
         if len(puntos) < 3:
@@ -45,6 +45,6 @@ class ServicioGeometria:
         """
         arco = self.ajustar_arco(trayectoria.puntos, tolerancia)
         if arco:
-            # Retornamos el mismo trayectoria pero enriquecido con info de arco
+            # Retornamos la misma trayectoria pero enriquecida con info de arco
             return [Trayectoria(puntos=trayectoria.puntos, info_arco=arco)]
         return [trayectoria]

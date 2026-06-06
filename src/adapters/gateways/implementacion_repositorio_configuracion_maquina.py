@@ -2,16 +2,16 @@
 Trayectoria: src/adapters/gateways/machine_config_repository.py
 """
 from typing import Optional, Dict, Any
-from src.application.boundaries.interfaz_repositorio_configuracion_maquina import ConfiguracionMaquinaRepository
-from src.application.boundaries.infrastructure_interfaces import ConfigPersistenceProvider
+from src.aplicacion.limites.interfaz_repositorio_configuracion_maquina import RepositorioConfiguracionMaquina
+from src.aplicacion.limites.interfaces_infraestructura import ProveedorPersistenciaConfiguracion
 from src.dominio.entidades.configuracion_maquina import ConfiguracionMaquina
 
-class SQLAlchemyConfiguracionMaquinaRepository(ConfiguracionMaquinaRepository):
-    def __init__(self, provider: ConfigPersistenceProvider):
+class SQLAlchemyRepositorioConfiguracionMaquina(RepositorioConfiguracionMaquina):
+    def __init__(self, provider: ProveedorPersistenciaConfiguracion):
         self.provider = provider
 
-    def get_config(self) -> Optional[ConfiguracionMaquina]:
-        data = self.provider.find_first()
+    def obtener_configuracion(self) -> Optional[ConfiguracionMaquina]:
+        data = self.provider.buscar_primero()
         if not data:
             return None
 
@@ -22,7 +22,7 @@ class SQLAlchemyConfiguracionMaquinaRepository(ConfiguracionMaquinaRepository):
             
         return ConfiguracionMaquina(**data)
 
-    def save_config(self, config: ConfiguracionMaquina) -> None:
+    def guardar_configuracion(self, config: ConfiguracionMaquina) -> None:
         data: Dict[str, Any] = {
             "width": config.width,
             "height": config.height,
@@ -35,4 +35,4 @@ class SQLAlchemyConfiguracionMaquinaRepository(ConfiguracionMaquinaRepository):
             "invert_y": config.invert_y,
             "scale_to_fit": config.scale_to_fit
         }
-        self.provider.upsert(config.name, data)
+        self.provider.actualizar_o_insertar(config.name, data)

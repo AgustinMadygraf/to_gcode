@@ -28,8 +28,8 @@ def set_config(
         raise HTTPException(status_code=500, detail="Internal Server Error")
 
 @router.get("/config")
-def get_config(controller: GCodeController = Depends(get_gcode_controller)):
-    config_output = controller.get_config()
+def obtener_configuracion(controller: GCodeController = Depends(get_gcode_controller)):
+    config_output = controller.obtener_configuracion()
     if not config_output:
         raise HTTPException(status_code=404, detail="Config not found")
     return config_output

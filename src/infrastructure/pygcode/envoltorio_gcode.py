@@ -4,10 +4,10 @@ Trayectoria: src/infrastructure/pygcode/wrapper.py
 
 import pygcode # type: ignore
 from typing import Dict, Optional, Any
-from src.application.boundaries.infrastructure_interfaces import GCodeLibraryWrapper
+from src.aplicacion.limites.interfaces_infraestructura import EnvoltorioLibreriaGCode
 
-class PyGCodeWrapper(GCodeLibraryWrapper):
-    def format_line(self, command: str, params: Optional[Dict[str, float]] = None) -> str:
+class PyGCodeWrapper(EnvoltorioLibreriaGCode):
+    def formatear_linea(self, command: str, params: Optional[Dict[str, float]] = None) -> str:
         pg: Any = pygcode
         
         # Separamos la velocidad de las coordenadas si existe
@@ -36,5 +36,5 @@ class PyGCodeWrapper(GCodeLibraryWrapper):
             
         return result
 
-    def get_comment(self, text: str) -> str:
+    def obtener_comentario(self, text: str) -> str:
         return f"; {text}"

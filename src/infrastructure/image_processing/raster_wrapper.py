@@ -4,13 +4,13 @@ from skimage.morphology import skeletonize  # type: ignore[reportUnknownVariable
 from skimage.color import rgb2gray  # type: ignore[reportUnknownVariableType]
 from skimage.filters import threshold_otsu  # type: ignore[reportUnknownVariableType]
 import io as pyio
-from src.application.boundaries.infrastructure_interfaces import SkeletonAbstraction, ImageLike, RasterImageProcessor
+from src.aplicacion.limites.interfaces_infraestructura import SkeletonAbstraction, ImageLike, ProcesadorImagenRaster
 
-class ScikitImageWrapper(RasterImageProcessor):
+class ScikitImageWrapper(ProcesadorImagenRaster):
     def __init__(self, skeleton_wrapper_factory: Callable[[Any], SkeletonAbstraction]):
         self._factory = skeleton_wrapper_factory
 
-    def process_image_to_skeleton(self, image_bytes: bytes) -> SkeletonAbstraction:
+    def procesar_imagen_a_esqueleto(self, image_bytes: bytes) -> SkeletonAbstraction:
         """
         Processes image bytes into a skeletonized binary representation.
         Assumes dark lines on light background.

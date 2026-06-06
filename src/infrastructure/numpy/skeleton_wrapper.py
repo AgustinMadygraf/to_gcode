@@ -1,5 +1,5 @@
 import numpy as np
-from src.application.boundaries.infrastructure_interfaces import SkeletonAbstraction
+from src.aplicacion.limites.interfaces_infraestructura import SkeletonAbstraction
 
 class NumpySkeletonWrapper(SkeletonAbstraction):
     def __init__(self, skeleton: np.ndarray):

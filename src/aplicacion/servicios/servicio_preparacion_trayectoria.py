@@ -1,5 +1,5 @@
 """
-Trayectoria: src/application/services/path_preparation_service.py
+Trayectoria: src/aplicacion.servicios/path_preparation_service.py
 """
 
 from typing import List
@@ -15,18 +15,18 @@ class ServicioPreparacionTrayectoria:
         transformer: TransformadorGeometria,
         pattern_generator: GeneradorPatrones
     ):
-        self.transformer = transformer
-        self.pattern_generator = pattern_generator
+        self.transformador = transformer
+        self.generador_patrones = pattern_generator
 
-    def prepare(self, paths: List[Trayectoria], config: ConfiguracionMaquina) -> List[Trayectoria]:
-        patterns = self.pattern_generator.generar(config.max_x, config.max_y, margen=5.0)
+    def preparar(self, paths: List[Trayectoria], config: ConfiguracionMaquina) -> List[Trayectoria]:
+        patterns = self.generador_patrones.generar(config.max_x, config.max_y, margen=5.0)
         
         all_paths = patterns + paths
         
         landscape_limits = Rectangulo(0.0, 0.0, config.max_x, config.max_y)
         portrait_limits = Rectangulo(0.0, 0.0, config.max_y, config.max_x)
         
-        transformed_paths, _ = self.transformer.fit_and_orient(
+        transformed_paths, _ = self.transformador.fit_and_orient(
             all_paths, landscape_limits, portrait_limits
         )
         return transformed_paths
