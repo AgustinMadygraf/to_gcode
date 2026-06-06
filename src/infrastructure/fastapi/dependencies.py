@@ -1,27 +1,24 @@
-"""
-Path: src/infrastructure/fastapi/dependencies.py
-"""
-
 from typing import Generator, Any
 from fastapi import Depends
 
 from src.infrastructure.settings.config import settings
 from src.infrastructure.database.persistence_impl import SQLAlchemyConfigProvider
 from src.infrastructure.database.session_provider import SqlAlchemySessionProvider
-from src.adapters.gateways.implementacion_repositorio_configuracion_maquina import SQLAlchemyRepositorioConfiguracionMaquina
+from src.adapters.pasarelas.repositorio_configuracion_maquina_impl import SQLAlchemyRepositorioConfiguracionMaquina
 from src.infrastructure.svgpathtools.envoltorio_svg import SvgTrayectoriaToolsWrapper
 from src.infrastructure.image_processing.raster_wrapper import ScikitImageWrapper
 from src.infrastructure.pygcode.envoltorio_gcode import PyGCodeWrapper
-from src.adapters.gateways.svg_parser import SvgTrayectoriaToolsParser
-from src.adapters.gateways.raster_parser import AnalizadorRaster
-from src.adapters.gateways.gcode_generator import PyGeneradorGCode
+from src.adapters.pasarelas.analizador_svg import SvgTrayectoriaToolsParser
+from src.adapters.pasarelas.analizador_raster import AnalizadorRaster
+from src.adapters.pasarelas.generador_gcode import PyGeneradorGCode
 from src.dominio.servicios.servicio_geometria import ServicioGeometria
 from src.dominio.servicios.servicio_optimizador_trayectoria import OptimizadorTrayectoriaVoraz
 from src.aplicacion.servicios.servicio_preparacion_trayectoria import ServicioPreparacionTrayectoria
 from src.aplicacion.casos_de_uso.convertir_svg import ConvertirSVGAGCode
 from src.aplicacion.casos_de_uso.convertir_imagen import ConvertirImagenAGCode
-from src.adapters.controllers.gcode_controller import GCodeController
-from src.adapters.gateways.envoltorios_tecnicos import ProveedorSesionBaseDatos
+from src.aplicacion.casos_de_uso.gestionar_configuracion import GestionarConfiguracion
+from src.adapters.controladores.controlador_gcode import ControladorGCode
+from src.adapters.pasarelas.envoltorios_tecnicos import ProveedorSesionBaseDatos
 from src.infrastructure.numpy.skeleton_wrapper import NumpySkeletonWrapper
 from src.infrastructure.math.geometry_wrapper import EnvoltorioGeometria
 from src.infrastructure.math.geometry_transformer_impl import ImplementacionTransformadorGeometria
@@ -34,7 +31,7 @@ def obtener_sesion_provider() -> ProveedorSesionBaseDatos:
 def get_db(provider: ProveedorSesionBaseDatos = Depends(obtener_sesion_provider)) -> Generator[Any, None, None]:
     yield from provider.obtener_sesion()
 
-def get_gcode_controller(db: Any = Depends(get_db)) -> GCodeController:
+def get_controlador_gcode(db: Any = Depends(get_db)) -> ControladorGCode:
     persistence_provider = SQLAlchemyConfigProvider(db)
 
     geom_processor = EnvoltorioGeometria()
@@ -79,4 +76,6 @@ def get_gcode_controller(db: Any = Depends(get_db)) -> GCodeController:
         optimizador=path_optimizer
     )
     
-    return GCodeController(svg_converter=svg_converter, image_converter=image_converter, repositorio=repo)
+    gestor_configuracion = GestionarConfiguracion(repositorio=repo)
+    
+    return ControladorGCode(svg_converter=svg_converter, image_converter=image_converter, gestor_configuracion=gestor_configuracion)

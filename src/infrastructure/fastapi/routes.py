@@ -1,6 +1,6 @@
 from fastapi import APIRouter, UploadFile, File, Depends, HTTPException
-from src.adapters.controllers.gcode_controller import GCodeController
-from src.infrastructure.fastapi.dependencies import get_gcode_controller
+from src.adapters.controladores.controlador_gcode import ControladorGCode
+from src.infrastructure.fastapi.dependencies import get_controlador_gcode
 from src.infrastructure.pydantic.schemas import ConfigSchema, UrlSchema
 from src.infrastructure.settings.logger import logger
 import httpx
@@ -10,7 +10,7 @@ router = APIRouter()
 @router.post("/config", status_code=201)
 def set_config(
     config: ConfigSchema,
-    controller: GCodeController = Depends(get_gcode_controller)
+    controller: ControladorGCode = Depends(get_controlador_gcode)
 ):
     try:
         data = config.model_dump()
@@ -28,7 +28,7 @@ def set_config(
         raise HTTPException(status_code=500, detail="Internal Server Error")
 
 @router.get("/config")
-def obtener_configuracion(controller: GCodeController = Depends(get_gcode_controller)):
+def obtener_configuracion(controller: ControladorGCode = Depends(get_controlador_gcode)):
     config_output = controller.obtener_configuracion()
     if not config_output:
         raise HTTPException(status_code=404, detail="Config not found")
@@ -37,7 +37,7 @@ def obtener_configuracion(controller: GCodeController = Depends(get_gcode_contro
 @router.post("/convert")
 async def convert_svg(
     file: UploadFile = File(...),
-    controller: GCodeController = Depends(get_gcode_controller)
+    controller: ControladorGCode = Depends(get_controlador_gcode)
 ):
     if not file.filename or not file.filename.endswith('.svg'):
         raise HTTPException(status_code=400, detail="Only SVG files allowed")
@@ -51,7 +51,7 @@ async def convert_svg(
 @router.post("/convert/image")
 async def convert_image(
     file: UploadFile = File(...),
-    controller: GCodeController = Depends(get_gcode_controller)
+    controller: ControladorGCode = Depends(get_controlador_gcode)
 ):
     content = await file.read()
     try:
@@ -62,7 +62,7 @@ async def convert_image(
 @router.post("/convert/url")
 async def convert_url(
     payload: UrlSchema,
-    controller: GCodeController = Depends(get_gcode_controller)
+    controller: ControladorGCode = Depends(get_controlador_gcode)
 ):
     async with httpx.AsyncClient() as client:
         try:

@@ -1,10 +1,10 @@
 import pytest
 from unittest.mock import MagicMock
-from src.application.use_cases.convert_image import ConvertImageToGCode
+from src.aplicacion.casos_de_uso.convertir_imagen import ConvertirImagenAGCode
 from src.dominio.entidades.configuracion_maquina import ConfiguracionMaquina
 from src.dominio.entidades.geometria import Trayectoria, Punto
 
-def test_convert_image_success():
+def test_convertir_imagen_success():
     # Mocks
     mock_parser = MagicMock()
     mock_generator = MagicMock()
@@ -28,14 +28,14 @@ def test_convert_image_success():
     mock_generator.generate.return_value = "G0 X0 Y0"
 
     # Execution
-    use_case = ConvertImageToGCode(
+    use_case = ConvertirImagenAGCode(
         mock_parser, 
         mock_generator, 
         mock_repo, 
         mock_prep_service,
         mock_optimizer
     )
-    result = use_case.execute(b"fake_image_bytes")
+    result = use_case.ejecutar(b"fake_image_bytes")
 
     # Assertions
     assert result == "G0 X0 Y0"

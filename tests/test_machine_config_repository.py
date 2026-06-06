@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import MagicMock
-from src.adapters.gateways.machine_config_repository import SQLAlchemyConfiguracionMaquinaRepository
+from src.adapters.pasarelas.repositorio_configuracion_maquina_impl import RepositorioConfiguracionMaquinaImpl
 from src.dominio.entidades.configuracion_maquina import ConfiguracionMaquina
 
 @pytest.fixture
@@ -9,7 +9,7 @@ def mock_provider():
 
 @pytest.fixture
 def repo(mock_provider):
-    return SQLAlchemyConfiguracionMaquinaRepository(provider=mock_provider)
+    return RepositorioConfiguracionMaquinaImpl(provider=mock_provider)
 
 def test_get_config_calls_provider(repo, mock_provider):
     mock_provider.find_first.return_value = {

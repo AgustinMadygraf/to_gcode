@@ -1,7 +1,7 @@
 from typing import Dict, Any
 from src.dominio.entidades.configuracion_maquina import ConfiguracionMaquina
 
-class ConfigPresenter:
+class PresentadorConfiguracion:
     """Encargado de formatear la salida de configuración para el cliente (API/UI)."""
     
     @staticmethod

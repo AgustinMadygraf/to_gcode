@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import MagicMock
-from src.adapters.controllers.gcode_controller import GCodeController
+from src.adapters.controladores.controlador_gcode import ControladorGCode
 from src.dominio.entidades.configuracion_maquina import ConfiguracionMaquina
 
 @pytest.fixture
@@ -17,7 +17,7 @@ def mock_repo():
 
 @pytest.fixture
 def controller(mock_svg_converter, mock_image_converter, mock_repo):
-    return GCodeController(
+    return ControladorGCode(
         svg_converter=mock_svg_converter, 
         image_converter=mock_image_converter, 
         repo=mock_repo
@@ -59,9 +59,9 @@ def test_get_config_found(controller, mock_repo):
     assert result["limits"]["max_x"] == 100.0
     assert result["speeds"]["draw"] == 10.0
 
-def test_convert_svg(controller, mock_svg_converter):
+def test_convertir_svg(controller, mock_svg_converter):
     mock_svg_converter.execute.return_value = "G0 X0 Y0"
-    result = controller.convert_svg("<svg>...</svg>")
+    result = controller.convertir_svg("<svg>...</svg>")
     
     mock_svg_converter.execute.assert_called_once()
     assert result["gcode"] == "G0 X0 Y0"

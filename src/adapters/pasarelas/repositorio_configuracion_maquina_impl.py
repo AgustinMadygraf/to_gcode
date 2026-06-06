@@ -1,9 +1,9 @@
 """
-Trayectoria: src/adapters/gateways/machine_config_repository.py
+Trayectoria: src/adapters.pasarelas/machine_config_repository.py
 """
 from typing import Optional, Dict, Any
 from src.aplicacion.limites.interfaz_repositorio_configuracion_maquina import RepositorioConfiguracionMaquina
-from src.adapters.gateways.envoltorios_tecnicos import ProveedorPersistenciaConfiguracion
+from src.adapters.pasarelas.envoltorios_tecnicos import ProveedorPersistenciaConfiguracion
 from src.dominio.entidades.configuracion_maquina import ConfiguracionMaquina
 
 class SQLAlchemyRepositorioConfiguracionMaquina(RepositorioConfiguracionMaquina):
