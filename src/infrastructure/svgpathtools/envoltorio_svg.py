@@ -1,7 +1,7 @@
 import svgpathtools # type: ignore
 import os
 from typing import List, Any
-from src.adapters.pasarelas.envoltorios_tecnicos import EnvoltorioLibreriaSvg
+from src.adaptadores.pasarelas.envoltorios_tecnicos import EnvoltorioLibreriaSvg
 from src.dominio.entidades.geometria import Punto
 
 class SvgTrayectoriaToolsWrapper(EnvoltorioLibreriaSvg):

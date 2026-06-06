@@ -1,5 +1,5 @@
 import numpy as np
-from src.adapters.pasarelas.envoltorios_tecnicos import SkeletonAbstraction
+from src.adaptadores.pasarelas.envoltorios_tecnicos import SkeletonAbstraction
 
 class NumpySkeletonWrapper(SkeletonAbstraction):
     def __init__(self, skeleton: np.ndarray):

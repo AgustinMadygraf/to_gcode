@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import MagicMock
-from src.adapters.pasarelas.repositorio_configuracion_maquina_impl import RepositorioConfiguracionMaquinaImpl
+from src.adaptadores.pasarelas.repositorio_configuracion_maquina_impl import RepositorioConfiguracionMaquinaImpl
 from src.dominio.entidades.configuracion_maquina import ConfiguracionMaquina
 
 @pytest.fixture

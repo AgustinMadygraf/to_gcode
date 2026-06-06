@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import MagicMock
-from src.adapters.controladores.controlador_gcode import ControladorGCode
+from src.adaptadores.controladores.controlador_codigo_g import ControladorCodigoG
 from src.dominio.entidades.configuracion_maquina import ConfiguracionMaquina
 
 @pytest.fixture
@@ -17,7 +17,7 @@ def mock_repo():
 
 @pytest.fixture
 def controller(mock_svg_converter, mock_image_converter, mock_repo):
-    return ControladorGCode(
+    return ControladorCodigoG(
         svg_converter=mock_svg_converter, 
         image_converter=mock_image_converter, 
         repo=mock_repo

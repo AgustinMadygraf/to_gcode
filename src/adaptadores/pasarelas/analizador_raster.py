@@ -1,14 +1,18 @@
+"""
+Path: src/adapters/pasarelas/raster_parser.py
+"""
+
 from typing import List, Set, Tuple
 from src.dominio.entidades.geometria import Trayectoria as DomainTrayectoria, Punto
-from src.adapters.pasarelas.envoltorios_tecnicos import SkeletonAbstraction, ProcesadorImagenRaster
+from src.adaptadores.pasarelas.envoltorios_tecnicos import SkeletonAbstraction, ProcesadorImagenRaster
 from src.aplicacion.limites.puertos import AnalizadorRaster as AnalizadorRasterBoundary
 
 class AnalizadorRaster(AnalizadorRasterBoundary):
     def __init__(self, processor: ProcesadorImagenRaster):
         self.processor = processor
 
-    def parsear_imagen(self, image_bytes: bytes) -> List[DomainTrayectoria]:
-        skeleton = self.processor.procesar_imagen_a_esqueleto(image_bytes)
+    def parsear_imagen(self, bytes_imagen: bytes) -> List[DomainTrayectoria]:
+        skeleton = self.processor.procesar_imagen_a_esqueleto(bytes_imagen)
         return self._trace_skeleton(skeleton)
 
     def _trace_skeleton(self, skeleton: SkeletonAbstraction) -> List[DomainTrayectoria]:
@@ -40,6 +44,5 @@ class AnalizadorRaster(AnalizadorRasterBoundary):
                                         stack.append((nr, nc))
                                         
                     if len(path_points) > 1:
-                        import logging; logging.error(f"DEBUG: Calling Trayectoria with puntos={len([Punto(x=float(c), y=float(rows - r)) for r, c in path_points])}")
                         paths.append(DomainTrayectoria(puntos=[Punto(x=float(c), y=float(rows - r)) for r, c in path_points]))
         return paths

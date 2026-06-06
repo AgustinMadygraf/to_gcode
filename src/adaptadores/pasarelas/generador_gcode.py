@@ -4,7 +4,7 @@ Path: src/adapters.pasarelas/gcode_generator.py
 
 from typing import Dict, List, Optional
 from src.aplicacion.limites.puertos import GeneradorGCode
-from src.adapters.pasarelas.envoltorios_tecnicos import EnvoltorioLibreriaGCode
+from src.adaptadores.pasarelas.envoltorios_tecnicos import EnvoltorioLibreriaGCode
 from src.dominio.entidades.geometria import Trayectoria
 from src.dominio.entidades.configuracion_maquina import ConfiguracionMaquina
 from src.dominio.servicios.servicio_geometria import ServicioGeometria
