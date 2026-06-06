@@ -3,6 +3,7 @@ Path: src/aplicacion/casos_de_uso/convertidor_base.py
 """
 
 from abc import ABC, abstractmethod
+from src.dominio.excepciones.base import ConfiguracionNoEncontradaError
 from typing import Any, List, Optional
 from src.dominio.entidades.configuracion_maquina import ConfiguracionMaquina
 from src.aplicacion.limites.puertos import GeneradorGCode
@@ -31,7 +32,7 @@ class ConvertidorBaseGCode(ABC):
     def ejecutar(self, datos_entrada: Any) -> str:
         config: Optional[ConfiguracionMaquina] = self.repositorio.obtener_configuracion()
         if not config:
-            raise ValueError("Configuración de la máquina no encontrada")
+            raise ConfiguracionNoEncontradaError("Configuración de la máquina no encontrada")
 
         trayectorias_brutas = self._parsear_entrada(datos_entrada)
 

@@ -10,6 +10,7 @@ from src.dominio.interfaces.optimizador_trayectoria import OptimizadorTrayectori
 from src.aplicacion.servicios.servicio_preparacion_trayectoria import ServicioPreparacionTrayectoria
 from src.dominio.entidades.geometria import Trayectoria
 from src.dominio.servicios.especificaciones_trayectoria import TrayectoriaNoVacia
+from src.dominio.excepciones.base import ReglaDeNegocioVioladaError
 
 class ConvertirSVGAGCode(ConvertidorBaseGCode):
     def __init__(
@@ -30,6 +31,6 @@ class ConvertirSVGAGCode(ConvertidorBaseGCode):
         validador = TrayectoriaNoVacia()
         for t in trayectorias:
             if not validador.es_satisfecha_por(t):
-                raise ValueError("Se encontró una trayectoria vacía en el SVG")
+                raise ReglaDeNegocioVioladaError("Se encontró una trayectoria vacía en el SVG")
                 
         return trayectorias
