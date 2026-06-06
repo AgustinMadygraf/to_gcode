@@ -9,6 +9,7 @@ from src.aplicacion.limites.interfaz_repositorio_configuracion_maquina import Re
 from src.dominio.interfaces.optimizador_trayectoria import OptimizadorTrayectoria
 from src.aplicacion.servicios.servicio_preparacion_trayectoria import ServicioPreparacionTrayectoria
 from src.dominio.entidades.geometria import Trayectoria
+from src.dominio.servicios.especificaciones_trayectoria import TrayectoriaNoVacia
 
 class ConvertirSVGAGCode(ConvertidorBaseGCode):
     def __init__(
@@ -23,4 +24,12 @@ class ConvertirSVGAGCode(ConvertidorBaseGCode):
         self.analizador = analizador
 
     def _parsear_entrada(self, input_data: str) -> List[Trayectoria]:
-        return self.analizador.parsear_svg(input_data)
+        trayectorias = self.analizador.parsear_svg(input_data)
+        
+        # Validar usando especificaciones
+        validador = TrayectoriaNoVacia()
+        for t in trayectorias:
+            if not validador.es_satisfecha_por(t):
+                raise ValueError("Se encontró una trayectoria vacía en el SVG")
+                
+        return trayectorias
