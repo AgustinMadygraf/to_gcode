@@ -1,7 +1,9 @@
+"""
+Path: src/infrastructure/database/persitence_impl.py
+"""
+
 from typing import Optional, Dict, Any
-from src.aplicacion.limites.interfaz_repositorio_configuracion_maquina import RepositorioConfiguracionMaquina
 from src.adaptadores.pasarelas.envoltorios_tecnicos import ProveedorPersistenciaConfiguracion
-from src.dominio.entidades.configuracion_maquina import ConfiguracionMaquina
 from src.infrastructure.database.models import ConfiguracionMaquinaModel
 
 class SQLAlchemyConfigProvider(ProveedorPersistenciaConfiguracion):
@@ -12,8 +14,7 @@ class SQLAlchemyConfigProvider(ProveedorPersistenciaConfiguracion):
         model = self.session.query(ConfiguracionMaquinaModel).first()
         if not model:
             return None
-        
-        # Convertir objeto SQLAlchemy a dict
+
         return {
             "nombre": model.nombre,
             "ancho_area_trabajo": model.ancho_area_trabajo,

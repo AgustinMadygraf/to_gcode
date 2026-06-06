@@ -42,7 +42,7 @@ app.mount("/js", StaticFiles(directory="frontend/js"), name="js")
 app.mount("/css", StaticFiles(directory="frontend/css"), name="css")
 
 @app.exception_handler(ValueError)
-async def value_error_handler(request: Request, exc: ValueError) -> JSONResponse:
+async def value_error_handler(_request: Request, exc: ValueError) -> JSONResponse:
     logger.warning(f"Value Error: {exc}")
     return JSONResponse(
         status_code=400,
@@ -50,7 +50,7 @@ async def value_error_handler(request: Request, exc: ValueError) -> JSONResponse
     )
 
 @app.exception_handler(TypeError)
-async def type_error_handler(request: Request, exc: TypeError) -> JSONResponse:
+async def type_error_handler(_request: Request, exc: TypeError) -> JSONResponse:
     logger.error(f"Type Error: {exc}")
     return JSONResponse(
         status_code=422,

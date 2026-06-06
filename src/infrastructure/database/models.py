@@ -1,3 +1,7 @@
+"""
+Path: src/infrastructure/database/models.py
+"""
+
 from sqlalchemy import create_engine, String, Float, Boolean
 from sqlalchemy.orm import sessionmaker, DeclarativeBase, Mapped, mapped_column
 from src.infrastructure.settings.config import settings
@@ -28,7 +32,6 @@ class ConfiguracionMaquinaModel(Base):
 
 def init_db():
     Base.metadata.create_all(bind=engine)
-    # Seed default config if empty
     session = SessionLocal()
     if session.query(ConfiguracionMaquinaModel).count() == 0:
         default_config = ConfiguracionMaquinaModel(
