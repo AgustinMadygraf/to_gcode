@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import MagicMock
 from src.adapters.gateways.machine_config_repository import SQLAlchemyConfiguracionMaquinaRepository
-from src.domain.entities.configuracion_maquina import ConfiguracionMaquina
+from src.dominio.entidades.configuracion_maquina import ConfiguracionMaquina
 
 @pytest.fixture
 def mock_provider():

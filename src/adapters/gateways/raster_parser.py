@@ -1,5 +1,5 @@
 from typing import List, Set, Tuple
-from src.domain.entities.geometria import Trayectoria as DomainTrayectoria, Punto
+from src.dominio.entidades.geometria import Trayectoria as DomainTrayectoria, Punto
 from src.application.boundaries.infrastructure_interfaces import SkeletonAbstraction, RasterImageProcessor
 from src.application.boundaries.gateways import RasterParser as RasterParserBoundary
 

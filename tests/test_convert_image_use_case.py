@@ -1,8 +1,8 @@
 import pytest
 from unittest.mock import MagicMock
 from src.application.use_cases.convert_image import ConvertImageToGCode
-from src.domain.entities.configuracion_maquina import ConfiguracionMaquina
-from src.domain.entities.geometria import Trayectoria, Punto
+from src.dominio.entidades.configuracion_maquina import ConfiguracionMaquina
+from src.dominio.entidades.geometria import Trayectoria, Punto
 
 def test_convert_image_success():
     # Mocks

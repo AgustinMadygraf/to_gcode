@@ -3,13 +3,13 @@ Trayectoria: src/application/services/path_preparation_service.py
 """
 
 from typing import List
-from src.domain.entities.geometria import Trayectoria
-from src.domain.entities.configuracion_maquina import ConfiguracionMaquina
-from src.domain.entities.geometria import Rectangulo
-from src.domain.interfaces.geometry_transformer import GeometryTransformerInterface
-from src.domain.interfaces.pattern_generator import TestPatternGeneratorInterface
+from src.dominio.entidades.geometria import Trayectoria
+from src.dominio.entidades.configuracion_maquina import ConfiguracionMaquina
+from src.dominio.entidades.geometria import Rectangulo
+from src.dominio.interfaces.geometry_transformer import GeometryTransformerInterface
+from src.dominio.interfaces.pattern_generator import TestPatternGeneratorInterface
 
-class TrayectoriaPreparationService:
+class ServicioPreparacionTrayectoria:
     def __init__(
         self, 
         transformer: GeometryTransformerInterface,

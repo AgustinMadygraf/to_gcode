@@ -3,8 +3,8 @@ Trayectoria: src/domain/services/path_optimizer.py
 """
 
 from typing import List
-from src.domain.entities.geometria import Trayectoria
-from src.domain.interfaces.path_optimizer import TrayectoriaOptimizer
+from src.dominio.entidades.geometria import Trayectoria
+from src.dominio.interfaces.path_optimizer import TrayectoriaOptimizer
 
 class GreedyTrayectoriaOptimizer(TrayectoriaOptimizer):
     """

@@ -2,9 +2,9 @@ from abc import ABC, abstractmethod
 from typing import Any, List
 from src.application.boundaries.gateways import GCodeGenerator
 from src.application.boundaries.machine_config_repository import ConfiguracionMaquinaRepository
-from src.domain.interfaces.path_optimizer import TrayectoriaOptimizer
-from src.application.services.path_preparation_service import TrayectoriaPreparationService
-from src.domain.entities.geometria import Trayectoria
+from src.dominio.interfaces.path_optimizer import TrayectoriaOptimizer
+from src.application.services.servicio_preparacion_trayectoria import ServicioPreparacionTrayectoria
+from src.dominio.entidades.geometria import Trayectoria
 
 class BaseGCodeConverter(ABC):
     """
@@ -15,7 +15,7 @@ class BaseGCodeConverter(ABC):
         self,
         generator: GCodeGenerator,
         repo: ConfiguracionMaquinaRepository,
-        preparation_service: TrayectoriaPreparationService,
+        preparation_service: ServicioPreparacionTrayectoria,
         optimizer: TrayectoriaOptimizer
     ):
         self.generator = generator

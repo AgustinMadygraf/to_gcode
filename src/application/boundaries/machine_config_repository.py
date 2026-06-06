@@ -3,7 +3,7 @@ Trayectoria: src/application/boundaries/machine_config_repository.py
 """
 
 from abc import ABC, abstractmethod
-from src.domain.entities.configuracion_maquina import ConfiguracionMaquina
+from src.dominio.entidades.configuracion_maquina import ConfiguracionMaquina
 
 class ConfiguracionMaquinaRepository(ABC):
     @abstractmethod

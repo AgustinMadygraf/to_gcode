@@ -4,8 +4,8 @@ Trayectoria: src/infrastructure/math/geometry_wrapper.py
 
 import math
 from typing import Tuple, Optional, List
-from src.domain.entities.geometria import Punto
-from src.domain.interfaces.geometry_processor import GeometryProcessor
+from src.dominio.entidades.geometria import Punto
+from src.dominio.interfaces.geometry_processor import GeometryProcessor
 
 class GeometryWrapper(GeometryProcessor):
     def get_circle_from_three_points(self, p1: Punto, p2: Punto, p3: Punto) -> Optional[Tuple[Punto, float]]:

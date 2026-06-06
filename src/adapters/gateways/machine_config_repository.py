@@ -4,7 +4,7 @@ Trayectoria: src/adapters/gateways/machine_config_repository.py
 from typing import Optional, Dict, Any
 from src.application.boundaries.machine_config_repository import ConfiguracionMaquinaRepository
 from src.application.boundaries.infrastructure_interfaces import ConfigPersistenceProvider
-from src.domain.entities.configuracion_maquina import ConfiguracionMaquina
+from src.dominio.entidades.configuracion_maquina import ConfiguracionMaquina
 
 class SQLAlchemyConfiguracionMaquinaRepository(ConfiguracionMaquinaRepository):
     def __init__(self, provider: ConfigPersistenceProvider):

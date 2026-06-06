@@ -4,9 +4,9 @@ Trayectoria: src/infrastructure/math/geometry_transformer_impl.py
 
 from typing import List, Tuple
 import math
-from src.domain.entities.geometria import Trayectoria, Punto as DomainPunto
-from src.domain.entities.geometria import Rectangulo
-from src.domain.interfaces.geometry_transformer import GeometryTransformerInterface
+from src.dominio.entidades.geometria import Trayectoria, Punto as DomainPunto
+from src.dominio.entidades.geometria import Rectangulo
+from src.dominio.interfaces.geometry_transformer import GeometryTransformerInterface
 
 class GeometryTransformerImpl(GeometryTransformerInterface):
     def _get_bounding_box(self, paths: List[Trayectoria]) -> Rectangulo:

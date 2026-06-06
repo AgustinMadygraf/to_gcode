@@ -1,9 +1,9 @@
 from typing import List, Optional, Dict
 from src.application.boundaries.gateways import GCodeGenerator
 from src.application.boundaries.infrastructure_interfaces import GCodeLibraryWrapper
-from src.domain.entities.geometria import Trayectoria
-from src.domain.entities.configuracion_maquina import ConfiguracionMaquina
-from src.domain.services.geometry_service import GeometryService
+from src.dominio.entidades.geometria import Trayectoria
+from src.dominio.entidades.configuracion_maquina import ConfiguracionMaquina
+from src.dominio.services.geometry_service import GeometryService
 
 class PyGCodeGenerator(GCodeGenerator):
     """

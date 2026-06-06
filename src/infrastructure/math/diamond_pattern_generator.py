@@ -3,8 +3,8 @@ Trayectoria: src/infrastructure/math/diamond_pattern_generator.py
 """
 
 from typing import List
-from src.domain.entities.geometria import Trayectoria, Punto
-from src.domain.interfaces.pattern_generator import TestPatternGeneratorInterface
+from src.dominio.entidades.geometria import Trayectoria, Punto
+from src.dominio.interfaces.pattern_generator import TestPatternGeneratorInterface
 
 __all__ = ["DiamondPatternGenerator"]
 

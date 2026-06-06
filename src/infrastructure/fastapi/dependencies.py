@@ -11,9 +11,9 @@ from src.infrastructure.pygcode.wrapper import PyGCodeWrapper
 from src.adapters.gateways.svg_parser import SvgTrayectoriaToolsParser
 from src.adapters.gateways.raster_parser import RasterParser
 from src.adapters.gateways.gcode_generator import PyGCodeGenerator
-from src.domain.services.geometry_service import GeometryService
-from src.domain.services.path_optimizer import GreedyTrayectoriaOptimizer
-from src.application.services.path_preparation_service import TrayectoriaPreparationService
+from src.dominio.services.geometry_service import GeometryService
+from src.dominio.services.path_optimizer import GreedyTrayectoriaOptimizer
+from src.application.services.servicio_preparacion_trayectoria import ServicioPreparacionTrayectoria
 from src.application.use_cases.convert_svg import ConvertSVGToGCode
 from src.application.use_cases.convert_image import ConvertImageToGCode
 from src.adapters.controllers.gcode_controller import GCodeController
@@ -41,7 +41,7 @@ def get_gcode_controller(db: Any = Depends(get_db)) -> GCodeController:
     path_optimizer = GreedyTrayectoriaOptimizer()
 
     # Servicios de Aplicación
-    prep_service = TrayectoriaPreparationService(
+    prep_service = ServicioPreparacionTrayectoria(
         transformer=geometry_transformer, 
         pattern_generator=pattern_generator
     )

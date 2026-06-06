@@ -1,7 +1,7 @@
 from typing import List
 from src.application.boundaries.gateways import VectorParser
 from src.application.boundaries.infrastructure_interfaces import SvgLibraryWrapper
-from src.domain.entities.geometria import Trayectoria as DomainTrayectoria
+from src.dominio.entidades.geometria import Trayectoria as DomainTrayectoria
 
 class SvgTrayectoriaToolsParser(VectorParser):
     def __init__(self, wrapper: SvgLibraryWrapper, sampling_resolution: int = 50):

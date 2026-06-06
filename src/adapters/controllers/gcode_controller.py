@@ -2,7 +2,7 @@ from typing import Dict, Any, Optional
 from src.application.use_cases.convert_svg import ConvertSVGToGCode
 from src.application.use_cases.convert_image import ConvertImageToGCode
 from src.application.boundaries.machine_config_repository import ConfiguracionMaquinaRepository
-from src.domain.entities.configuracion_maquina import ConfiguracionMaquina
+from src.dominio.entidades.configuracion_maquina import ConfiguracionMaquina
 from src.adapters.presenters.config_presenter import ConfigPresenter
 
 class GCodeController:

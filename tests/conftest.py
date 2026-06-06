@@ -1,5 +1,5 @@
 import pytest
-from src.domain.entities.configuracion_maquina import ConfiguracionMaquina
+from src.dominio.entidades.configuracion_maquina import ConfiguracionMaquina
 
 @pytest.fixture
 def default_config():

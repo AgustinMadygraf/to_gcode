@@ -2,7 +2,7 @@ import svgpathtools # type: ignore
 import os
 from typing import List, Any
 from src.application.boundaries.infrastructure_interfaces import SvgLibraryWrapper
-from src.domain.entities.geometria import Punto
+from src.dominio.entidades.geometria import Punto
 
 class SvgTrayectoriaToolsWrapper(SvgLibraryWrapper):
     def get_paths_from_str(self, svg_content: str) -> List[Any]:

@@ -4,7 +4,7 @@ Path: src/domain/interfaces/geometry_processor.py
 
 from abc import ABC, abstractmethod
 from typing import List, Optional, Tuple
-from src.domain.entities.geometria import Punto
+from src.dominio.entidades.geometria import Punto
 
 class GeometryProcessor(ABC):
     """Interfaz para procesamiento geométrico avanzado."""

@@ -1,8 +1,8 @@
 import pytest
 import math
-from src.domain.services.geometry_service import GeometryService
+from src.dominio.services.geometry_service import GeometryService
 from src.infrastructure.math.geometry_wrapper import GeometryWrapper
-from src.domain.entities.geometria import Punto, Arco
+from src.dominio.entidades.geometria import Punto, Arco
 
 def test_get_circle_from_three_points():
     p1 = Punto(x=0.0, y=1.0)

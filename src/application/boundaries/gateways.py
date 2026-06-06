@@ -4,8 +4,8 @@ Trayectoria: src/application/boundaries/gateways.py
 
 from abc import ABC, abstractmethod
 from typing import List
-from src.domain.entities.geometria import Trayectoria
-from src.domain.entities.configuracion_maquina import ConfiguracionMaquina
+from src.dominio.entidades.geometria import Trayectoria
+from src.dominio.entidades.configuracion_maquina import ConfiguracionMaquina
 
 class VectorParser(ABC):
     @abstractmethod

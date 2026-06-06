@@ -3,8 +3,8 @@ Trayectoria: src/domain/services/geometry_service.py
 """
 
 from typing import List, Optional
-from src.domain.interfaces.geometry_processor import GeometryProcessor
-from src.domain.entities.geometria import Punto, Arcoo, Trayectoria
+from src.dominio.interfaces.geometry_processor import GeometryProcessor
+from src.dominio.entidades.geometria import Punto, Arco, Trayectoria
 
 class GeometryService:
     """Servicio de dominio para operaciones geométricas complejas."""

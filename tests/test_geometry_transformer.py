@@ -1,6 +1,6 @@
 import pytest
-from src.domain.entities.geometria import Trayectoria, Punto as DomainPunto
-from src.domain.entities.geometria import Rectangulo
+from src.dominio.entidades.geometria import Trayectoria, Punto as DomainPunto
+from src.dominio.entidades.geometria import Rectangulo
 from src.infrastructure.math.geometry_transformer_impl import GeometryTransformerImpl
 
 def test_geometry_transformer_auto_rotates():

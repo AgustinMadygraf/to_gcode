@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import List, Any, Dict, Optional, Generator, Protocol, runtime_checkable
-from src.domain.entities.geometria import Punto
+from src.dominio.entidades.geometria import Punto
 
 # --- Protocols para desacoplamiento técnico ---
 

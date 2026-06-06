@@ -4,7 +4,7 @@ Trayectoria: src/domain/interfaces/pattern_generator.py
 
 from abc import ABC, abstractmethod
 from typing import List
-from src.domain.entities.geometria import Trayectoria
+from src.dominio.entidades.geometria import Trayectoria
 
 class TestPatternGeneratorInterface(ABC):
     @abstractmethod
