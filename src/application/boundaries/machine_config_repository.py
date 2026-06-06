@@ -1,15 +1,15 @@
 """
-Path: src/application/boundaries/machine_config_repository.py
+Trayectoria: src/application/boundaries/machine_config_repository.py
 """
 
 from abc import ABC, abstractmethod
-from src.domain.entities.machine_config import MachineConfig
+from src.domain.entities.configuracion_maquina import ConfiguracionMaquina
 
-class MachineConfigRepository(ABC):
+class ConfiguracionMaquinaRepository(ABC):
     @abstractmethod
-    def get_config(self) -> MachineConfig | None:
+    def get_config(self) -> ConfiguracionMaquina | None:
         pass
 
     @abstractmethod
-    def save_config(self, config: MachineConfig) -> None:
+    def save_config(self, config: ConfiguracionMaquina) -> None:
         pass

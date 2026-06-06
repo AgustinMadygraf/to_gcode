@@ -2,7 +2,7 @@ import pytest
 import os
 from fastapi.testclient import TestClient
 from src.infrastructure.fastapi.app import app
-from src.infrastructure.database.models import init_db, Base, engine, SessionLocal, MachineConfigModel
+from src.infrastructure.database.models import init_db, Base, engine, SessionLocal, ConfiguracionMaquinaModel
 
 # Usar DB en memoria para tests aislados
 os.environ["DATABASE_URL"] = "sqlite:///:memory:"

@@ -2,7 +2,7 @@ from typing import Optional, Dict, Any
 from sqlalchemy import select, update
 from sqlalchemy.orm import Session
 from src.application.boundaries.infrastructure_interfaces import ConfigPersistenceProvider
-from src.infrastructure.database.models import MachineConfigModel
+from src.infrastructure.database.models import ConfiguracionMaquinaModel
 from src.infrastructure.settings.logger import logger
 
 class SQLAlchemyConfigProvider(ConfigPersistenceProvider):
@@ -11,7 +11,7 @@ class SQLAlchemyConfigProvider(ConfigPersistenceProvider):
 
     def find_first(self) -> Optional[Dict[str, Any]]:
         logger.debug("Fetching first machine configuration from database.")
-        stmt = select(MachineConfigModel)
+        stmt = select(ConfiguracionMaquinaModel)
         # Usamos .first() para evitar excepciones si hay múltiples configuraciones por error
         model = self.session.execute(stmt).scalars().first()
         
@@ -34,15 +34,15 @@ class SQLAlchemyConfigProvider(ConfigPersistenceProvider):
 
     def upsert(self, name: str, data: Dict[str, Any]) -> None:
         logger.info(f"Upserting configuration for: {name}")
-        stmt = select(MachineConfigModel).filter_by(name=name)
+        stmt = select(ConfiguracionMaquinaModel).filter_by(name=name)
         model = self.session.execute(stmt).scalars().first()
         
         if model:
             logger.debug(f"Updating existing record for {name}.")
-            update_stmt = update(MachineConfigModel).where(MachineConfigModel.name == name).values(**data)
+            update_stmt = update(ConfiguracionMaquinaModel).where(ConfiguracionMaquinaModel.name == name).values(**data)
             self.session.execute(update_stmt)
         else:
             logger.debug(f"Creating new record for {name}.")
-            new_model = MachineConfigModel(name=name, **data)
+            new_model = ConfiguracionMaquinaModel(name=name, **data)
             self.session.add(new_model)
         self.session.commit()

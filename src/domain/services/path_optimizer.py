@@ -1,18 +1,18 @@
 """
-Path: src/domain/services/path_optimizer.py
+Trayectoria: src/domain/services/path_optimizer.py
 """
 
 from typing import List
-from src.domain.entities.geometry import Path
-from src.domain.interfaces.path_optimizer import PathOptimizer
+from src.domain.entities.geometria import Trayectoria
+from src.domain.interfaces.path_optimizer import TrayectoriaOptimizer
 
-class GreedyPathOptimizer(PathOptimizer):
+class GreedyTrayectoriaOptimizer(TrayectoriaOptimizer):
     """
     Implementación voraz (Greedy) del problema del viajante para trayectorias.
     Busca siempre la trayectoria más cercana al punto actual del cabezal.
     """
 
-    def optimize(self, paths: List[Path]) -> List[Path]:
+    def optimize(self, paths: List[Trayectoria]) -> List[Trayectoria]:
         # Filtrar trayectorias inválidas usando lógica de la entidad
         valid_paths = [p for p in paths if not p.is_empty]
         if not valid_paths:
@@ -38,4 +38,4 @@ class GreedyPathOptimizer(PathOptimizer):
         return optimized
 
 # Mantener compatibilidad temporal con el nombre antiguo si es necesario
-PathOptimizerService = GreedyPathOptimizer
+TrayectoriaOptimizerService = GreedyTrayectoriaOptimizer

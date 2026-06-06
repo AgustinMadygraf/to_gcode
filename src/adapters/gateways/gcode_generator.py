@@ -1,8 +1,8 @@
 from typing import List, Optional, Dict
 from src.application.boundaries.gateways import GCodeGenerator
 from src.application.boundaries.infrastructure_interfaces import GCodeLibraryWrapper
-from src.domain.entities.geometry import Path
-from src.domain.entities.machine_config import MachineConfig
+from src.domain.entities.geometria import Trayectoria
+from src.domain.entities.configuracion_maquina import ConfiguracionMaquina
 from src.domain.services.geometry_service import GeometryService
 
 class PyGCodeGenerator(GCodeGenerator):
@@ -33,7 +33,7 @@ class PyGCodeGenerator(GCodeGenerator):
         self.last_modal_command = command
         return self.wrapper.format_line(command, params)
 
-    def generate(self, paths: List[Path], config: MachineConfig) -> str:
+    def generate(self, paths: List[Trayectoria], config: ConfiguracionMaquina) -> str:
         self.last_modal_command = None
         
         gcode_lines: List[str] = [

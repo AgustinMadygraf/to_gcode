@@ -1,5 +1,5 @@
 """
-Path: src/infrastructure/settings/config.py
+Trayectoria: src/infrastructure/settings/config.py
 """
 
 from pydantic_settings import BaseSettings, SettingsConfigDict

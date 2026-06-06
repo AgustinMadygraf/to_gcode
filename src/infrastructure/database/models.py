@@ -10,7 +10,7 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 class Base(DeclarativeBase):
     pass
 
-class MachineConfigModel(Base):
+class ConfiguracionMaquinaModel(Base):
     __tablename__ = "machine_configs"
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
@@ -30,8 +30,8 @@ def init_db():
     Base.metadata.create_all(bind=engine)
     # Seed default config if empty
     session = SessionLocal()
-    if session.query(MachineConfigModel).count() == 0:
-        default_config = MachineConfigModel(
+    if session.query(ConfiguracionMaquinaModel).count() == 0:
+        default_config = ConfiguracionMaquinaModel(
             name="default",
             width=210.0,
             height=297.0,

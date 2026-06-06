@@ -1,12 +1,12 @@
 """
-Path: src/domain/interfaces/pattern_generator.py
+Trayectoria: src/domain/interfaces/pattern_generator.py
 """
 
 from abc import ABC, abstractmethod
 from typing import List
-from src.domain.entities.geometry import Path
+from src.domain.entities.geometria import Trayectoria
 
 class TestPatternGeneratorInterface(ABC):
     @abstractmethod
-    def generate(self, width: float, height: float, inset: float) -> List[Path]:
+    def generate(self, width: float, height: float, inset: float) -> List[Trayectoria]:
         pass

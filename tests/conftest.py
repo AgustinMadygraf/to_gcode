@@ -1,9 +1,9 @@
 import pytest
-from src.domain.entities.machine_config import MachineConfig
+from src.domain.entities.configuracion_maquina import ConfiguracionMaquina
 
 @pytest.fixture
 def default_config():
-    return MachineConfig(
+    return ConfiguracionMaquina(
         name="test_machine",
         width=100.0,
         height=100.0,

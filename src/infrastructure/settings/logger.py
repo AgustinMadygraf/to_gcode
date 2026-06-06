@@ -1,5 +1,5 @@
 """
-Path: src/infrastructure/settings/logger.py
+Trayectoria: src/infrastructure/settings/logger.py
 """
 
 import logging

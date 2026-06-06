@@ -1,10 +1,10 @@
 from abc import ABC, abstractmethod
 from typing import Any, List
 from src.application.boundaries.gateways import GCodeGenerator
-from src.application.boundaries.machine_config_repository import MachineConfigRepository
-from src.domain.interfaces.path_optimizer import PathOptimizer
-from src.application.services.path_preparation_service import PathPreparationService
-from src.domain.entities.geometry import Path
+from src.application.boundaries.machine_config_repository import ConfiguracionMaquinaRepository
+from src.domain.interfaces.path_optimizer import TrayectoriaOptimizer
+from src.application.services.path_preparation_service import TrayectoriaPreparationService
+from src.domain.entities.geometria import Trayectoria
 
 class BaseGCodeConverter(ABC):
     """
@@ -14,9 +14,9 @@ class BaseGCodeConverter(ABC):
     def __init__(
         self,
         generator: GCodeGenerator,
-        repo: MachineConfigRepository,
-        preparation_service: PathPreparationService,
-        optimizer: PathOptimizer
+        repo: ConfiguracionMaquinaRepository,
+        preparation_service: TrayectoriaPreparationService,
+        optimizer: TrayectoriaOptimizer
     ):
         self.generator = generator
         self.repo = repo
@@ -24,7 +24,7 @@ class BaseGCodeConverter(ABC):
         self.optimizer = optimizer
 
     @abstractmethod
-    def _parse_input(self, input_data: Any) -> List[Path]:
+    def _parse_input(self, input_data: Any) -> List[Trayectoria]:
         """Método abstracto para que cada formato implemente su propio parseo."""
         pass
 

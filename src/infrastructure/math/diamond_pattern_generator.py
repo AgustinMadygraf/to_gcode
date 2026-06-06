@@ -1,15 +1,15 @@
 """
-Path: src/infrastructure/math/diamond_pattern_generator.py
+Trayectoria: src/infrastructure/math/diamond_pattern_generator.py
 """
 
 from typing import List
-from src.domain.entities.geometry import Path, Point
+from src.domain.entities.geometria import Trayectoria, Punto
 from src.domain.interfaces.pattern_generator import TestPatternGeneratorInterface
 
 __all__ = ["DiamondPatternGenerator"]
 
 class DiamondPatternGenerator(TestPatternGeneratorInterface):
-    def generate(self, width: float, height: float, inset: float) -> List[Path]:
+    def generate(self, width: float, height: float, inset: float) -> List[Trayectoria]:
         size = 10.0
         # Buffer to ensure diamond is fully within boundaries
         buffer = size / 2
@@ -30,15 +30,15 @@ class DiamondPatternGenerator(TestPatternGeneratorInterface):
             (safe_x_max, safe_y_max)
         ]
         
-        paths: List[Path] = []
+        paths: List[Trayectoria] = []
         for cx, cy in corners:
-            # Points around (cx, cy)
+            # Puntos around (cx, cy)
             points = [
-                Point(cx, cy - size/2),
-                Point(cx + size/2, cy),
-                Point(cx, cy + size/2),
-                Point(cx - size/2, cy),
-                Point(cx, cy - size/2)
+                Punto(cx, cy - size/2),
+                Punto(cx + size/2, cy),
+                Punto(cx, cy + size/2),
+                Punto(cx - size/2, cy),
+                Punto(cx, cy - size/2)
             ]
-            paths.append(Path(points=points))
+            paths.append(Trayectoria(points=points))
         return paths

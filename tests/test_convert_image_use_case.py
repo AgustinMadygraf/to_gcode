@@ -1,8 +1,8 @@
 import pytest
 from unittest.mock import MagicMock
 from src.application.use_cases.convert_image import ConvertImageToGCode
-from src.domain.entities.machine_config import MachineConfig
-from src.domain.entities.geometry import Path, Point
+from src.domain.entities.configuracion_maquina import ConfiguracionMaquina
+from src.domain.entities.geometria import Trayectoria, Punto
 
 def test_convert_image_success():
     # Mocks
@@ -13,7 +13,7 @@ def test_convert_image_success():
     mock_optimizer = MagicMock()
 
     # Setup
-    config = MachineConfig(
+    config = ConfiguracionMaquina(
         name="test", width=100.0, height=100.0,
         max_x=100.0, max_y=100.0,
         pen_up_command="M5", pen_down_command="M3",
@@ -21,7 +21,7 @@ def test_convert_image_success():
     )
     mock_repo.get_config.return_value = config
 
-    raw_paths = [Path(points=[Point(x=0, y=0), Point(x=10, y=10)])]
+    raw_paths = [Trayectoria(points=[Punto(x=0, y=0), Punto(x=10, y=10)])]
     mock_parser.parse_image.return_value = raw_paths
     mock_prep_service.prepare.return_value = raw_paths
     mock_optimizer.optimize.return_value = raw_paths

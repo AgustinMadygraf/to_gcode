@@ -1,11 +1,11 @@
 from typing import Dict, Any
-from src.domain.entities.machine_config import MachineConfig
+from src.domain.entities.configuracion_maquina import ConfiguracionMaquina
 
 class ConfigPresenter:
     """Encargado de formatear la salida de configuración para el cliente (API/UI)."""
     
     @staticmethod
-    def to_http(config: MachineConfig) -> Dict[str, Any]:
+    def to_http(config: ConfiguracionMaquina) -> Dict[str, Any]:
         """Convierte la entidad a un formato amigable para JSON/HTTP."""
         return {
             "name": config.name,

@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import List, Any, Dict, Optional, Generator, Protocol, runtime_checkable
-from src.domain.entities.geometry import Point
+from src.domain.entities.geometria import Punto
 
 # --- Protocols para desacoplamiento técnico ---
 
@@ -37,7 +37,7 @@ class SvgLibraryWrapper(ABC):
         pass
 
     @abstractmethod
-    def sample_path_to_domain(self, path: Any, num_samples: int) -> List[Point]:
+    def sample_path_to_domain(self, path: Any, num_samples: int) -> List[Punto]:
         """Contrato mejorado: devuelve tipos de dominio, no tipos de librería."""
         pass
 

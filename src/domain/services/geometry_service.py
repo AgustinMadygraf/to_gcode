@@ -1,10 +1,10 @@
 """
-Path: src/domain/services/geometry_service.py
+Trayectoria: src/domain/services/geometry_service.py
 """
 
 from typing import List, Optional
 from src.domain.interfaces.geometry_processor import GeometryProcessor
-from src.domain.entities.geometry import Point, Arc, Path
+from src.domain.entities.geometria import Punto, Arcoo, Trayectoria
 
 class GeometryService:
     """Servicio de dominio para operaciones geométricas complejas."""
@@ -12,10 +12,10 @@ class GeometryService:
     def __init__(self, geometry_processor: GeometryProcessor):
         self.processor = geometry_processor
 
-    def fit_arc(self, points: List[Point], tolerance: float) -> Optional[Arc]:
+    def fit_arc(self, points: List[Punto], tolerance: float) -> Optional[Arco]:
         """
         Intenta ajustar un arco circular a una secuencia de puntos.
-        Retorna un objeto Arc si el ajuste está dentro de la tolerancia.
+        Retorna un objeto Arco si el ajuste está dentro de la tolerancia.
         """
         if len(points) < 3:
             return None
@@ -29,7 +29,7 @@ class GeometryService:
         max_dev, _ = self.processor.calculate_max_deviation(points, center, radius)
         
         if max_dev <= tolerance:
-            return Arc(
+            return Arco(
                 center=center,
                 radius=radius,
                 start_point=points[0],
@@ -38,13 +38,13 @@ class GeometryService:
         
         return None
 
-    def simplify_path_to_arcs(self, path: Path, tolerance: float) -> List[Path]:
+    def simplify_path_to_arcs(self, path: Trayectoria, tolerance: float) -> List[Trayectoria]:
         """
         Divide una trayectoria en segmentos de líneas o arcos.
-        (Lógica simplificada para ilustración del uso del nuevo VO Arc)
+        (Lógica simplificada para ilustración del uso del nuevo VO Arco)
         """
         arc = self.fit_arc(path.points, tolerance)
         if arc:
             # Retornamos el mismo path pero enriquecido con info de arco
-            return [Path(points=path.points, arc_info=arc)]
+            return [Trayectoria(points=path.points, arc_info=arc)]
         return [path]

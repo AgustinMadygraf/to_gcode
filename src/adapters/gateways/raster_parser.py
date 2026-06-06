@@ -1,5 +1,5 @@
 from typing import List, Set, Tuple
-from src.domain.entities.geometry import Path as DomainPath, Point
+from src.domain.entities.geometria import Trayectoria as DomainTrayectoria, Punto
 from src.application.boundaries.infrastructure_interfaces import SkeletonAbstraction, RasterImageProcessor
 from src.application.boundaries.gateways import RasterParser as RasterParserBoundary
 
@@ -7,12 +7,12 @@ class RasterParser(RasterParserBoundary):
     def __init__(self, processor: RasterImageProcessor):
         self.processor = processor
 
-    def parse_image(self, image_bytes: bytes) -> List[DomainPath]:
+    def parse_image(self, image_bytes: bytes) -> List[DomainTrayectoria]:
         skeleton = self.processor.process_image_to_skeleton(image_bytes)
         return self._trace_skeleton(skeleton)
 
-    def _trace_skeleton(self, skeleton: SkeletonAbstraction) -> List[DomainPath]:
-        paths: List[DomainPath] = []
+    def _trace_skeleton(self, skeleton: SkeletonAbstraction) -> List[DomainTrayectoria]:
+        paths: List[DomainTrayectoria] = []
         visited: Set[Tuple[int, int]] = set()
         rows, cols = skeleton.rows, skeleton.cols
 
@@ -40,5 +40,5 @@ class RasterParser(RasterParserBoundary):
                                         stack.append((nr, nc))
                                         
                     if len(path_points) > 1:
-                        paths.append(DomainPath(points=[Point(x=float(c), y=float(rows - r)) for r, c in path_points]))
+                        paths.append(DomainTrayectoria(points=[Punto(x=float(c), y=float(rows - r)) for r, c in path_points]))
         return paths

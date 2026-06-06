@@ -1,16 +1,16 @@
 """
-Path: src/adapters/gateways/machine_config_repository.py
+Trayectoria: src/adapters/gateways/machine_config_repository.py
 """
 from typing import Optional, Dict, Any
-from src.application.boundaries.machine_config_repository import MachineConfigRepository
+from src.application.boundaries.machine_config_repository import ConfiguracionMaquinaRepository
 from src.application.boundaries.infrastructure_interfaces import ConfigPersistenceProvider
-from src.domain.entities.machine_config import MachineConfig
+from src.domain.entities.configuracion_maquina import ConfiguracionMaquina
 
-class SQLAlchemyMachineConfigRepository(MachineConfigRepository):
+class SQLAlchemyConfiguracionMaquinaRepository(ConfiguracionMaquinaRepository):
     def __init__(self, provider: ConfigPersistenceProvider):
         self.provider = provider
 
-    def get_config(self) -> Optional[MachineConfig]:
+    def get_config(self) -> Optional[ConfiguracionMaquina]:
         data = self.provider.find_first()
         if not data:
             return None
@@ -20,9 +20,9 @@ class SQLAlchemyMachineConfigRepository(MachineConfigRepository):
         if 'max_y' not in data:
             data['max_y'] = data.get('height', 0.0)
             
-        return MachineConfig(**data)
+        return ConfiguracionMaquina(**data)
 
-    def save_config(self, config: MachineConfig) -> None:
+    def save_config(self, config: ConfiguracionMaquina) -> None:
         data: Dict[str, Any] = {
             "width": config.width,
             "height": config.height,

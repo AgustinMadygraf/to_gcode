@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import MagicMock
 from src.adapters.controllers.gcode_controller import GCodeController
-from src.domain.entities.machine_config import MachineConfig
+from src.domain.entities.configuracion_maquina import ConfiguracionMaquina
 
 @pytest.fixture
 def mock_svg_converter():
@@ -35,7 +35,7 @@ def test_set_config(controller, mock_repo):
     
     assert mock_repo.save_config.called
     saved_entity = mock_repo.save_config.call_args[0][0]
-    assert isinstance(saved_entity, MachineConfig)
+    assert isinstance(saved_entity, ConfiguracionMaquina)
     assert saved_entity.name == "test"
 
 def test_get_config_not_found(controller, mock_repo):
@@ -44,7 +44,7 @@ def test_get_config_not_found(controller, mock_repo):
     assert result is None
 
 def test_get_config_found(controller, mock_repo):
-    config = MachineConfig(
+    config = ConfiguracionMaquina(
         name="test", width=100.0, height=100.0,
         max_x=100.0, max_y=100.0,
         pen_up_command="M5", pen_down_command="M3",

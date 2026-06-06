@@ -1,8 +1,8 @@
 from typing import Dict, Any, Optional
 from src.application.use_cases.convert_svg import ConvertSVGToGCode
 from src.application.use_cases.convert_image import ConvertImageToGCode
-from src.application.boundaries.machine_config_repository import MachineConfigRepository
-from src.domain.entities.machine_config import MachineConfig
+from src.application.boundaries.machine_config_repository import ConfiguracionMaquinaRepository
+from src.domain.entities.configuracion_maquina import ConfiguracionMaquina
 from src.adapters.presenters.config_presenter import ConfigPresenter
 
 class GCodeController:
@@ -14,14 +14,14 @@ class GCodeController:
         self, 
         svg_converter: ConvertSVGToGCode, 
         image_converter: ConvertImageToGCode,
-        repo: MachineConfigRepository
+        repo: ConfiguracionMaquinaRepository
     ):
         self.svg_converter = svg_converter
         self.image_converter = image_converter
         self.repo = repo
 
     def set_config(self, config_data: Dict[str, Any]) -> Dict[str, str]:
-        entity = MachineConfig(**config_data)
+        entity = ConfiguracionMaquina(**config_data)
         self.repo.save_config(entity)
         return {"message": "Config saved"}
 

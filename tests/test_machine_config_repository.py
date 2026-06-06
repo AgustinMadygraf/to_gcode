@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import MagicMock
-from src.adapters.gateways.machine_config_repository import SQLAlchemyMachineConfigRepository
-from src.domain.entities.machine_config import MachineConfig
+from src.adapters.gateways.machine_config_repository import SQLAlchemyConfiguracionMaquinaRepository
+from src.domain.entities.configuracion_maquina import ConfiguracionMaquina
 
 @pytest.fixture
 def mock_provider():
@@ -9,7 +9,7 @@ def mock_provider():
 
 @pytest.fixture
 def repo(mock_provider):
-    return SQLAlchemyMachineConfigRepository(provider=mock_provider)
+    return SQLAlchemyConfiguracionMaquinaRepository(provider=mock_provider)
 
 def test_get_config_calls_provider(repo, mock_provider):
     mock_provider.find_first.return_value = {
@@ -27,7 +27,7 @@ def test_get_config_calls_provider(repo, mock_provider):
     assert config.max_x == 100.0
 
 def test_save_config_calls_provider(repo, mock_provider):
-    config = MachineConfig(
+    config = ConfiguracionMaquina(
         name="test", width=100.0, height=100.0,
         max_x=100.0, max_y=100.0,
         pen_up_command="M5", pen_down_command="M3",

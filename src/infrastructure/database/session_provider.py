@@ -1,5 +1,5 @@
 """
-Path: src/infrastructure/database/session_provider.py
+Trayectoria: src/infrastructure/database/session_provider.py
 """
 
 from typing import Generator, Any

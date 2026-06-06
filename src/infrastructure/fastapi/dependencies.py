@@ -4,16 +4,16 @@ from fastapi import Depends
 from src.infrastructure.settings.config import settings
 from src.infrastructure.database.persistence_impl import SQLAlchemyConfigProvider
 from src.infrastructure.database.session_provider import SqlAlchemySessionProvider
-from src.adapters.gateways.machine_config_repository import SQLAlchemyMachineConfigRepository
-from src.infrastructure.svgpathtools.wrapper import SvgPathToolsWrapper
+from src.adapters.gateways.machine_config_repository import SQLAlchemyConfiguracionMaquinaRepository
+from src.infrastructure.svgpathtools.wrapper import SvgTrayectoriaToolsWrapper
 from src.infrastructure.image_processing.raster_wrapper import ScikitImageWrapper
 from src.infrastructure.pygcode.wrapper import PyGCodeWrapper
-from src.adapters.gateways.svg_parser import SvgPathToolsParser
+from src.adapters.gateways.svg_parser import SvgTrayectoriaToolsParser
 from src.adapters.gateways.raster_parser import RasterParser
 from src.adapters.gateways.gcode_generator import PyGCodeGenerator
 from src.domain.services.geometry_service import GeometryService
-from src.domain.services.path_optimizer import GreedyPathOptimizer
-from src.application.services.path_preparation_service import PathPreparationService
+from src.domain.services.path_optimizer import GreedyTrayectoriaOptimizer
+from src.application.services.path_preparation_service import TrayectoriaPreparationService
 from src.application.use_cases.convert_svg import ConvertSVGToGCode
 from src.application.use_cases.convert_image import ConvertImageToGCode
 from src.adapters.controllers.gcode_controller import GCodeController
@@ -38,10 +38,10 @@ def get_gcode_controller(db: Any = Depends(get_db)) -> GCodeController:
     
     geometry_transformer = GeometryTransformerImpl()
     pattern_generator = DiamondPatternGenerator()
-    path_optimizer = GreedyPathOptimizer()
+    path_optimizer = GreedyTrayectoriaOptimizer()
 
     # Servicios de Aplicación
-    prep_service = PathPreparationService(
+    prep_service = TrayectoriaPreparationService(
         transformer=geometry_transformer, 
         pattern_generator=pattern_generator
     )
@@ -55,11 +55,11 @@ def get_gcode_controller(db: Any = Depends(get_db)) -> GCodeController:
         arc_tolerance=settings.ARC_TOLERANCE
     )
     
-    repo = SQLAlchemyMachineConfigRepository(provider=persistence_provider)
+    repo = SQLAlchemyConfiguracionMaquinaRepository(provider=persistence_provider)
 
     # Caso de Uso SVG
-    svg_wrapper = SvgPathToolsWrapper()
-    svg_parser = SvgPathToolsParser(wrapper=svg_wrapper)
+    svg_wrapper = SvgTrayectoriaToolsWrapper()
+    svg_parser = SvgTrayectoriaToolsParser(wrapper=svg_wrapper)
     svg_converter = ConvertSVGToGCode(
         parser=svg_parser, 
         generator=generator, 

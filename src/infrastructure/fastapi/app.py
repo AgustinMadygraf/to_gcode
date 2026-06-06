@@ -1,5 +1,5 @@
 """
-Path: src/infrastructure/fastapi/app.py
+Trayectoria: src/infrastructure/fastapi/app.py
 """
 
 from typing import Dict, Any

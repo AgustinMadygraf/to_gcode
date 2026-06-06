@@ -1,19 +1,19 @@
 import pytest
-from src.domain.entities.geometry import Path, Point as DomainPoint
-from src.domain.entities.geometry import Rect
+from src.domain.entities.geometria import Trayectoria, Punto as DomainPunto
+from src.domain.entities.geometria import Rectangulo
 from src.infrastructure.math.geometry_transformer_impl import GeometryTransformerImpl
 
 def test_geometry_transformer_auto_rotates():
-    path = Path(points=[
-        DomainPoint(0.0, 0.0),
-        DomainPoint(20.0, 0.0),
-        DomainPoint(20.0, 10.0),
-        DomainPoint(0.0, 10.0)
+    path = Trayectoria(points=[
+        DomainPunto(0.0, 0.0),
+        DomainPunto(20.0, 0.0),
+        DomainPunto(20.0, 10.0),
+        DomainPunto(0.0, 10.0)
     ])
     
     transformer = GeometryTransformerImpl()
-    landscape_limits = Rect(0.0, 0.0, 100.0, 50.0)
-    portrait_limits = Rect(0.0, 0.0, 50.0, 100.0)
+    landscape_limits = Rectangulo(0.0, 0.0, 100.0, 50.0)
+    portrait_limits = Rectangulo(0.0, 0.0, 50.0, 100.0)
     
     transformed_paths, orientation = transformer.fit_and_orient(
         [path], landscape_limits, portrait_limits
@@ -25,16 +25,16 @@ def test_geometry_transformer_auto_rotates():
     assert final_box.height == pytest.approx(50.0)
 
 def test_geometry_transformer_chooses_portrait():
-    path = Path(points=[
-        DomainPoint(0.0, 0.0),
-        DomainPoint(10.0, 0.0),
-        DomainPoint(10.0, 20.0),
-        DomainPoint(0.0, 20.0)
+    path = Trayectoria(points=[
+        DomainPunto(0.0, 0.0),
+        DomainPunto(10.0, 0.0),
+        DomainPunto(10.0, 20.0),
+        DomainPunto(0.0, 20.0)
     ])
     
     transformer = GeometryTransformerImpl()
-    landscape_limits = Rect(0.0, 0.0, 100.0, 50.0)
-    portrait_limits = Rect(0.0, 0.0, 50.0, 100.0)
+    landscape_limits = Rectangulo(0.0, 0.0, 100.0, 50.0)
+    portrait_limits = Rectangulo(0.0, 0.0, 50.0, 100.0)
     
     transformed_paths, orientation = transformer.fit_and_orient(
         [path], landscape_limits, portrait_limits
