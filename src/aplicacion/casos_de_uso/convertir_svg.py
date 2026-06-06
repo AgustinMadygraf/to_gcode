@@ -1,3 +1,5 @@
+from src.aplicacion.limites.puertos_casos_de_uso import PuertoConversionSVG
+from src.aplicacion.limites.puertos_casos_de_uso import PuertoConversionSVG
 """
 Path: src/aplicacion/casos_de_uso/convertir_svg.py
 """
@@ -12,7 +14,7 @@ from src.dominio.entidades.geometria import Trayectoria
 from src.dominio.servicios.especificaciones_trayectoria import TrayectoriaNoVacia
 from src.dominio.excepciones.base import ReglaDeNegocioVioladaError
 
-class ConvertirSVGAGCode(ConvertidorBaseGCode):
+class ConvertirSVGAGCode(ConvertidorBaseGCode, PuertoConversionSVG):
     def __init__(
         self, 
         analizador: AnalizadorVectorial, 

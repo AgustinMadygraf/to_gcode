@@ -1,3 +1,5 @@
+from src.aplicacion.limites.puertos_casos_de_uso import PuertoConversionImagen
+from src.aplicacion.limites.puertos_casos_de_uso import PuertoConversionImagen
 """
 Path: src/aplicacion/casos_de_uso/convertir_imagen.py
 """
@@ -10,7 +12,7 @@ from src.dominio.interfaces.optimizador_trayectoria import OptimizadorTrayectori
 from src.aplicacion.servicios.servicio_preparacion_trayectoria import ServicioPreparacionTrayectoria
 from src.dominio.entidades.geometria import Trayectoria
 
-class ConvertirImagenAGCode(ConvertidorBaseGCode):
+class ConvertirImagenAGCode(ConvertidorBaseGCode, PuertoConversionImagen):
     def __init__(
         self, 
         analizador: AnalizadorRaster, 

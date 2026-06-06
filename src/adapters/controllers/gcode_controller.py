@@ -1,32 +1,24 @@
-"""
-Path: src/adapters/controllers/gcode_controller.py
-"""
-
 from typing import Dict, Any, Optional
-from src.aplicacion.casos_de_uso.convertir_svg import ConvertirSVGAGCode
-from src.aplicacion.casos_de_uso.convertir_imagen import ConvertirImagenAGCode
-from src.aplicacion.limites.interfaz_repositorio_configuracion_maquina import RepositorioConfiguracionMaquina
-from src.dominio.entidades.configuracion_maquina import ConfiguracionMaquina
+from src.aplicacion.limites.puertos_casos_de_uso import PuertoConversionSVG, PuertoConversionImagen, PuertoGestionConfiguracion
 from src.adapters.presenters.config_presenter import ConfigPresenter
 
 class GCodeController:
     def __init__(
         self, 
-        svg_converter: ConvertirSVGAGCode, 
-        image_converter: ConvertirImagenAGCode,
-        repositorio: RepositorioConfiguracionMaquina
+        svg_converter: PuertoConversionSVG, 
+        image_converter: PuertoConversionImagen,
+        gestor_configuracion: PuertoGestionConfiguracion
     ):
         self.svg_converter = svg_converter
         self.image_converter = image_converter
-        self.repositorio = repositorio
+        self.gestor_configuracion = gestor_configuracion
 
     def set_config(self, config_data: Dict[str, Any]) -> Dict[str, str]:
-        entity = ConfiguracionMaquina(**config_data)
-        self.repositorio.guardar_configuracion(entity)
+        self.gestor_configuracion.guardar(config_data)
         return {"message": "Config saved"}
 
     def obtener_configuracion(self) -> Optional[Dict[str, Any]]:
-        config = self.repositorio.obtener_configuracion()
+        config = self.gestor_configuracion.obtener()
         if not config:
             return None
         return ConfigPresenter.to_http(config)
