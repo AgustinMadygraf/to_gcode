@@ -13,6 +13,7 @@ def test_convertir_svg_success():
     mock_repo = MagicMock()
     mock_prep_service = MagicMock()
     mock_optimizer = MagicMock()
+    mock_transformador = MagicMock()
 
     # Setup
     config = ConfiguracionMaquina(
@@ -38,7 +39,8 @@ def test_convertir_svg_success():
         mock_generator, 
         mock_repo, 
         mock_prep_service,
-        mock_optimizer
+        mock_optimizer,
+        mock_transformador
     )
     result = use_case.ejecutar(ConversionSvgRequest(contenido_svg=svg_content))
 
@@ -56,6 +58,7 @@ def test_convertir_svg_no_config():
         MagicMock(), 
         MagicMock(), 
         mock_repo, 
+        MagicMock(),
         MagicMock(),
         MagicMock()
     )

@@ -1,7 +1,3 @@
-"""
-Path: src/infrastructure/math/geometry_transformer_impl.py
-"""
-
 from typing import List, Tuple
 import math
 from src.dominio.entidades.geometria import Trayectoria, Punto as DomainPunto
@@ -19,6 +15,17 @@ class ImplementacionTransformadorGeometria(TransformadorGeometria):
         min_y = min(p.y for p in all_points)
         max_y = max(p.y for p in all_points)
         return Rectangulo(min_x=min_x, min_y=min_y, max_x=max_x, max_y=max_y)
+
+    def invertir_eje_y(self, trayectorias: List[Trayectoria]) -> List[Trayectoria]:
+        box = self._get_bounding_box(trayectorias)
+        inverted_trayectorias: List[Trayectoria] = []
+        for path in trayectorias:
+            new_points = [
+                DomainPunto(x=p.x, y=box.max_y - (p.y - box.min_y))
+                for p in path.puntos
+            ]
+            inverted_trayectorias.append(Trayectoria(puntos=new_points))
+        return inverted_trayectorias
 
     def _rotate_path(self, path: Trayectoria, angle_deg: float) -> Trayectoria:
         angle_rad = math.radians(angle_deg)
@@ -62,14 +69,12 @@ class ImplementacionTransformadorGeometria(TransformadorGeometria):
             final_drawing_box = drawing_box
             target_box = limites_paisaje
             
-        # Calcular margen para centrado
         ancho_dibujo_escalado = final_drawing_box.ancho * best_scale
         alto_dibujo_escalado = final_drawing_box.altura * best_scale
         
         margen_x = (target_box.ancho - ancho_dibujo_escalado) / 2
         margen_y = (target_box.altura - alto_dibujo_escalado) / 2
         
-        # Ajustar offset para centrar
         offset = DomainPunto(
             x=target_box.min_x - final_drawing_box.min_x * best_scale + margen_x,
             y=target_box.min_y - final_drawing_box.min_y * best_scale + margen_y

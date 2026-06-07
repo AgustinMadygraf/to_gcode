@@ -63,7 +63,7 @@ def get_controlador_codigo_g(db: Any = Depends(get_db)) -> ControladorCodigoG:
         generador=generator, 
         repositorio=repo, 
         servicio_preparacion=prep_service,
-        optimizador=path_optimizer
+        optimizador=path_optimizer, transformador=geometry_transformer
     )
 
     raster_processor = ScikitImageWrapper(skeleton_wrapper_factory=NumpySkeletonWrapper)
