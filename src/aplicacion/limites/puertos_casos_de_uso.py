@@ -1,9 +1,14 @@
+"""
+Path: src/aplicacion/limites/puertos_casos_de_uso.py
+"""
+
 from abc import ABC, abstractmethod
-from typing import Dict, Any, Optional
+from typing import Dict, Any
+from src.aplicacion.dto.solicitudes import ConversionSvgRequest
 
 class PuertoConversionSVG(ABC):
     @abstractmethod
-    def ejecutar(self, contenido_svg: str) -> str:
+    def ejecutar(self, datos_entrada: ConversionSvgRequest) -> str:
         pass
 
 class PuertoConversionImagen(ABC):

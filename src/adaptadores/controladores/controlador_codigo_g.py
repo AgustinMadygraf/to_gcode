@@ -5,6 +5,7 @@ Path: src/adaptadores/controladores/controlador_codigo_g.py
 from typing import Dict, Any, Optional
 from src.aplicacion.limites.puertos_casos_de_uso import PuertoConversionSVG, PuertoConversionImagen, PuertoGestionConfiguracion
 from src.adaptadores.presentadores.presentador_configuracion import PresentadorConfiguracion
+from src.aplicacion.dto.solicitudes import ConversionSvgRequest
 
 class ControladorCodigoG:
     def __init__(
@@ -28,7 +29,9 @@ class ControladorCodigoG:
         return PresentadorConfiguracion.a_http(config)
 
     def convertir_svg(self, contenido_svg: str) -> Dict[str, str]:
-        gcode = self.conversor_svg.ejecutar(contenido_svg)
+        # Mapeo de datos a DTO
+        request = ConversionSvgRequest(contenido_svg=contenido_svg)
+        gcode = self.conversor_svg.ejecutar(request)
         return {"gcode": gcode}
 
     def convertir_imagen(self, bytes_imagen: bytes) -> Dict[str, str]:
