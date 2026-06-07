@@ -1,5 +1,5 @@
 """
-Trayectoria: src/infrastructure/math/geometry_transformer_impl.py
+Path: src/infrastructure/math/geometry_transformer_impl.py
 """
 
 from typing import List, Tuple
@@ -62,8 +62,18 @@ class ImplementacionTransformadorGeometria(TransformadorGeometria):
             final_drawing_box = drawing_box
             target_box = limites_paisaje
             
-        offset = DomainPunto(x=target_box.min_x - final_drawing_box.min_x * best_scale, 
-                             y=target_box.min_y - final_drawing_box.min_y * best_scale)
+        # Calcular margen para centrado
+        ancho_dibujo_escalado = final_drawing_box.ancho * best_scale
+        alto_dibujo_escalado = final_drawing_box.altura * best_scale
+        
+        margen_x = (target_box.ancho - ancho_dibujo_escalado) / 2
+        margen_y = (target_box.altura - alto_dibujo_escalado) / 2
+        
+        # Ajustar offset para centrar
+        offset = DomainPunto(
+            x=target_box.min_x - final_drawing_box.min_x * best_scale + margen_x,
+            y=target_box.min_y - final_drawing_box.min_y * best_scale + margen_y
+        )
         
         trayectorias_transformadas = self._scale_and_translate(trayectorias, best_scale, offset)
         
